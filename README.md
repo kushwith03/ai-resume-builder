@@ -66,7 +66,7 @@ Build a clean, professional resume in minutes. Describe your background in plain
 - Vite dev/build/preview scripts
 
 ---
-
+## 🗂️ Project Structure
 ```
 SCT_WD_3/
 ├─ index.html
@@ -94,5 +94,5 @@ SCT_WD_3/
 └─ public/
 └─ vite.svg
 ```
-## 🗂️ Project Structure
+
 
