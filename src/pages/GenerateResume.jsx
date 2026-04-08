@@ -63,17 +63,17 @@ const GenerateResume = () => {
     setLoading(true);
     try {
       const response = await generateResume(description);
-      const duration = performanceTracker.endMeasure("AI_Generation");
       reset(response.data);
       setShowFormUI(true);
       setShowPromptInput(false);
-      setCurrentMetrics(performanceTracker.getAverageMetrics());
-      trackAnalytics("generate_resume", { duration });
+      trackAnalytics("generate_resume");
       toast.success("AI draft created successfully");
     } catch (error) {
       toast.error(error.response?.data?.error || "AI service unavailable");
     } finally {
       setLoading(false);
+      performanceTracker.endMeasure("AI_Generation");
+      setCurrentMetrics(performanceTracker.getAverageMetrics());
     }
   };
 
@@ -115,6 +115,14 @@ const GenerateResume = () => {
       </button>
     </FormSection>
   );
+
+  const resetGenerator = () => {
+    setShowPromptInput(true);
+    setShowFormUI(false);
+    setShowResumeUI(false);
+    setJobDescription("");
+    setDescription("");
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-10 min-h-[90vh] pb-32">
@@ -197,6 +205,7 @@ const GenerateResume = () => {
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
             <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-outline btn-lg px-12">Return to Editor</button>
+            <button onClick={resetGenerator} className="btn btn-accent btn-lg px-12">Generate Another</button>
             <button 
               onClick={async () => {
                 try {

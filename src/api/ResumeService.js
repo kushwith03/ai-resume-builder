@@ -27,9 +27,12 @@ export const generateResume = async (description) => {
 
 export const trackAnalytics = async (action, metadata = {}) => {
     try {
+        // Limit metadata size to prevent large payloads
+        const safeMetadata = JSON.parse(JSON.stringify(metadata).slice(0, 1000));
+        
         await axiosInstance.post("/api/v1/analytics", {
             action,
-            metadata
+            metadata: safeMetadata
         });
     } catch (err) {
         console.error("Failed to track analytics:", err);

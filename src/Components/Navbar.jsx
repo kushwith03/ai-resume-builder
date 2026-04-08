@@ -6,9 +6,12 @@ function Navbar() {
   const navigate = useNavigate();
   const authenticated = isAuthenticated();
   
-  let user = {};
+  let user = { name: "User" };
   try {
-    user = JSON.parse(localStorage.getItem("user") || "{}");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.name) {
+      user = storedUser;
+    }
   } catch (e) {
     console.error("Failed to parse user from localStorage", e);
   }

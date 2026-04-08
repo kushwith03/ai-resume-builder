@@ -1,3 +1,10 @@
+const getNow = () => {
+  if (typeof performance !== 'undefined' && performance.now) {
+    return performance.now();
+  }
+  return Date.now();
+};
+
 export const performanceTracker = {
   metrics: {
     renderTimes: [],
@@ -6,12 +13,12 @@ export const performanceTracker = {
   },
 
   startMeasure() {
-    this.metrics.startTime = performance.now();
+    this.metrics.startTime = getNow();
   },
 
   endMeasure(componentName) {
     if (this.metrics.startTime === null || this.metrics.startTime === undefined) return 0;
-    const duration = performance.now() - this.metrics.startTime;
+    const duration = getNow() - this.metrics.startTime;
     
     this.metrics.renderTimes.push({ componentName, duration });
     if (this.metrics.renderTimes.length > 50) this.metrics.renderTimes.shift();
@@ -22,7 +29,7 @@ export const performanceTracker = {
 
   trackInputLatency(startTime) {
     if (startTime === null || startTime === undefined) return;
-    const latency = performance.now() - startTime;
+    const latency = getNow() - startTime;
     
     this.metrics.inputLatencies.push(latency);
     if (this.metrics.inputLatencies.length > 50) this.metrics.inputLatencies.shift();

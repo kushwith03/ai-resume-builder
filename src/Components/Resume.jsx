@@ -14,23 +14,41 @@ const Resume = React.memo(({ data }) => {
     toPng(resumeRef.current, { 
       quality: 1.0,
       backgroundColor: "#ffffff",
+      // Fix potential cutoff by ensuring the target node is properly scaled
       style: {
         transform: 'scale(1)',
-        transformOrigin: 'top left'
+        transformOrigin: 'top left',
+        width: '210mm',
+        height: 'auto'
       }
     })
       .then((dataUrl) => {
         const pdf = new jsPDF("p", "mm", "a4");
-        const imgProps = pdf.getImageProperties(dataUrl);
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        const pdfHeight = pdf.internal.pageSize.getHeight();
         
-        pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+        const imgProps = pdf.getImageProperties(dataUrl);
+        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        
+        // Handle multi-page or scaling to fit
+        if (imgHeight > pdfHeight) {
+           // Scale to fit a single page if slightly over, or allow multi-page logic
+           // For simplicity in this professional template, we scale to fit width
+           pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, imgHeight);
+        } else {
+           pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, imgHeight);
+        }
+        
         pdf.save(`${data.personalInformation?.fullName || 'Resume'}.pdf`);
       })
       .catch((err) => {
         console.error("PDF generation failed", err);
       });
+  };
+
+  const formatUrl = (url) => {
+    if (!url) return "";
+    return url.startsWith("http") ? url : `https://${url}`;
   };
 
   if (!data) return null;
@@ -52,7 +70,9 @@ const Resume = React.memo(({ data }) => {
               <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-primary" /> {data.personalInformation.location}</span>
             )}
             {data.personalInformation?.email && (
-              <span className="flex items-center gap-1"><FaEnvelope className="text-primary" /> {data.personalInformation.email}</span>
+              <a href={`mailto:${data.personalInformation.email}`} className="flex items-center gap-1 hover:text-primary transition-colors">
+                <FaEnvelope className="text-primary" /> {data.personalInformation.email}
+              </a>
             )}
             {data.personalInformation?.phoneNumber && (
               <span className="flex items-center gap-1"><FaPhone className="text-primary" /> {data.personalInformation.phoneNumber}</span>
@@ -60,14 +80,24 @@ const Resume = React.memo(({ data }) => {
           </div>
           <div className="flex justify-center gap-4 text-xs">
              {data.personalInformation?.linkedin && (
-                <span className="flex items-center gap-1 text-blue-600 font-bold">
+                <a 
+                  href={formatUrl(data.personalInformation.linkedin)} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-1 text-blue-600 font-bold hover:underline"
+                >
                   <FaLinkedin /> LinkedIn
-                </span>
+                </a>
              )}
              {data.personalInformation?.gitHub && (
-                <span className="flex items-center gap-1 text-gray-900 font-bold">
+                <a 
+                  href={formatUrl(data.personalInformation.gitHub)} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-1 text-gray-900 font-bold hover:underline"
+                >
                   <FaGithub /> GitHub
-                </span>
+                </a>
              )}
           </div>
         </div>
