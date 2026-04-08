@@ -1,254 +1,133 @@
 import React from "react";
 import "daisyui";
-import { FaGithub, FaLinkedin, FaPhone, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt, FaGlobe } from "react-icons/fa";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 import { useRef } from "react";
-import { useReactToPrint } from "react-to-print";
 
-const Resume = ({ data }) => {
+const Resume = React.memo(({ data }) => {
   const resumeRef = useRef(null);
 
   const handleDownloadPdf = () => {
-    toPng(resumeRef.current, { quality: 1.0 })
+    if (!resumeRef.current) return;
+    
+    toPng(resumeRef.current, { 
+      quality: 1.0,
+      backgroundColor: "#ffffff",
+      style: {
+        transform: 'scale(1)',
+        transformOrigin: 'top left'
+      }
+    })
       .then((dataUrl) => {
         const pdf = new jsPDF("p", "mm", "a4");
-        pdf.addImage(dataUrl, "PNG", 10, 10, 190, 0);
-        pdf.save(`${data.personalInformation.fullName}.pdf`);
+        const imgProps = pdf.getImageProperties(dataUrl);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        
+        pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`${data.personalInformation?.fullName || 'Resume'}.pdf`);
       })
       .catch((err) => {
-        console.error("Error generating PDF", err);
+        console.error("PDF generation failed", err);
       });
   };
+
+  if (!data) return null;
+
   return (
-    <>
+    <div className="flex flex-col items-center">
       <div
         ref={resumeRef}
-        className="max-w-4xl  mx-auto shadow-2xl rounded-lg p-8 space-y-6 bg-base-100 text-base-content border border-gray-200 dark:border-gray-700 transition-all duration-300"
+        className="w-[210mm] min-h-[297mm] mx-auto shadow-2xl p-[20mm] space-y-6 bg-white text-gray-800 border border-gray-100"
+        style={{ fontFamily: "'Inter', sans-serif" }}
       >
-        {/* Header Section */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-primary">
-            {data.personalInformation.fullName}
+        {/* Header */}
+        <div className="text-center space-y-3">
+          <h1 className="text-5xl font-black text-gray-900 tracking-tight">
+            {data.personalInformation?.fullName}
           </h1>
-          <p className="text-lg text-gray-500">
-            {data.personalInformation.location}
-          </p>
-
-          <div className="flex justify-center space-x-4 mt-2">
-            {data.personalInformation.email && (
-              <a
-                href={`mailto:${data.personalInformation.email}`}
-                className="flex items-center text-secondary hover:underline"
-              >
-                <FaEnvelope className="mr-2" /> {data.personalInformation.email}
-              </a>
+          <div className="flex justify-center flex-wrap gap-4 text-sm font-medium text-gray-600">
+            {data.personalInformation?.location && (
+              <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-primary" /> {data.personalInformation.location}</span>
             )}
-            {data.personalInformation.phoneNumber && (
-              <p className="flex items-center text-gray-500">
-                <FaPhone className="mr-2" />{" "}
-                {data.personalInformation.phoneNumber}
-              </p>
+            {data.personalInformation?.email && (
+              <span className="flex items-center gap-1"><FaEnvelope className="text-primary" /> {data.personalInformation.email}</span>
+            )}
+            {data.personalInformation?.phoneNumber && (
+              <span className="flex items-center gap-1"><FaPhone className="text-primary" /> {data.personalInformation.phoneNumber}</span>
             )}
           </div>
-
-          <div className="flex justify-center space-x-4 mt-2">
-            {data.personalInformation.gitHub && (
-              <a
-                href={data.personalInformation.gitHub}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-700 flex items-center"
-              >
-                <FaGithub className="mr-2" /> GitHub
-              </a>
-            )}
-            {data.personalInformation.linkedIn && (
-              <a
-                href={data.personalInformation.linkedIn}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 flex items-center"
-              >
-                <FaLinkedin className="mr-2" /> LinkedIn
-              </a>
-            )}
+          <div className="flex justify-center gap-4 text-xs">
+             {data.personalInformation?.linkedin && <span className="text-blue-600 font-bold">LinkedIn</span>}
+             {data.personalInformation?.gitHub && <span className="text-gray-900 font-bold">GitHub</span>}
           </div>
         </div>
 
-        <div className="divider"></div>
+        <div className="h-px bg-gray-200"></div>
 
-        {/* Summary Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Summary</h2>
-          <p className="text-gray-700 dark:text-gray-300">{data.summary}</p>
+        {/* Summary */}
+        <section className="space-y-2">
+          <h2 className="text-lg font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block">Professional Summary</h2>
+          <p className="text-sm leading-relaxed text-gray-700">{data.summary}</p>
         </section>
 
-        <div className="divider"></div>
+        {/* Skills */}
+        {data.skills?.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-lg font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block">Core Competencies</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.skills.map((skill, index) => (
+                <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs font-semibold">
+                  {skill.title} • {skill.level}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* Skills Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Skills</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-            {data.skills.map((skill, index) => (
-              <div
-                key={index}
-                className="badge badge-outline badge-lg px-4 py-2"
-              >
-                {skill.title} -{" "}
-                <span className="ml-1 font-semibold">{skill.level}</span>
+        {/* Experience */}
+        {data.experience?.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="text-lg font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block">Work Experience</h2>
+            {data.experience.map((exp, index) => (
+              <div key={index} className="space-y-1">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="text-md font-bold text-gray-900">{exp.jobTitle}</h3>
+                  <span className="text-xs font-bold text-gray-500">{exp.duration}</span>
+                </div>
+                <div className="flex justify-between items-baseline text-xs text-gray-600 italic">
+                  <span>{exp.company}</span>
+                  <span>{exp.location}</span>
+                </div>
+                <p className="text-sm text-gray-700 mt-1 whitespace-pre-line">{exp.responsibility}</p>
               </div>
             ))}
-          </div>
-        </section>
+          </section>
+        )}
 
-        <div className="divider"></div>
-
-        {/* Experience Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Experience</h2>
-          {data.experience.map((exp, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{exp.jobTitle}</h3>
-              <p className="text-gray-500">
-                {exp.company} | {exp.location}
-              </p>
-              <p className="text-gray-400">{exp.duration}</p>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">
-                {exp.responsibility}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Education Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Education</h2>
-          {data.education.map((edu, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{edu.degree}</h3>
-              <p className="text-gray-500">
-                {edu.university}, {edu.location}
-              </p>
-              <p className="text-gray-400">
-                🎓 Graduation Year: {edu.graduationYear}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Certifications Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">
-            Certifications
-          </h2>
-          {data.certifications.map((cert, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{cert.title}</h3>
-              <p className="text-gray-500">
-                {cert.issuingOrganization} - {cert.year}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Projects Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Projects</h2>
-          {data.projects.map((proj, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{proj.title}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {proj.description}
-              </p>
-              <p className="text-gray-500">
-                🛠 Technologies: {proj.technologiesUsed.join(", ")}
-              </p>
-              {proj.githubLink && (
-                <a
-                  href={proj.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
-                >
-                  🔗 GitHub Link
-                </a>
-              )}
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Achievements Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">
-            Achievements
-          </h2>
-          {data.achievements.map((ach, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{ach.title}</h3>
-              <p className="text-gray-500">{ach.year}</p>
-              <p className="text-gray-600 dark:text-gray-300">
-                {ach.extraInformation}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Languages Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Languages</h2>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
-            {data.languages.map((lang, index) => (
-              <li key={index}>{lang.name}</li>
+        {/* Projects */}
+        {data.projects?.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="text-lg font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block">Key Projects</h2>
+            {data.projects.map((proj, index) => (
+              <div key={index} className="space-y-1">
+                <h3 className="text-md font-bold text-gray-900">{proj.title}</h3>
+                <p className="text-sm text-gray-700">{proj.description}</p>
+                <p className="text-xs font-medium text-gray-500 italic">Tech: {proj.technologiesUsed}</p>
+              </div>
             ))}
-          </ul>
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Interests Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Interests</h2>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
-            {data.interests.map((interest, index) => (
-              <li key={index}>{interest.name}</li>
-            ))}
-          </ul>
-        </section>
+          </section>
+        )}
       </div>
 
-      <section className="flex justify-center mt-4 ">
-        <div onClick={handleDownloadPdf} className="btn btn-primary">
-          Print
-        </div>
-      </section>
-    </>
+      <div className="mt-8 mb-12">
+        <button onClick={handleDownloadPdf} className="btn btn-primary btn-wide shadow-xl">
+          Export Professional PDF
+        </button>
+      </div>
+    </div>
   );
-};
+});
 
 export default Resume;

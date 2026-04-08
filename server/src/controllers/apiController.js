@@ -1,0 +1,75 @@
+const Resume = require('../models/Resume');
+const Analytics = require('../models/Analytics');
+
+exports.generateResumeAI = async (req, res) => {
+  const { userDescription } = req.body;
+  
+  const mockGeneratedResume = {
+    personalInformation: {
+      fullName: "Generated User",
+      email: "ai@example.com",
+      phoneNumber: "123-456-7890",
+      location: "San Francisco, CA",
+      linkedin: "linkedin.com/in/generated",
+      gitHub: "github.com/generated",
+      portfolio: "generated.dev"
+    },
+    summary: `Dynamic and results-driven professional based on: "${userDescription || 'Provided description'}"`,
+    skills: [{ title: "JavaScript", level: "Expert" }],
+    experience: [],
+    education: [],
+    certifications: [],
+    projects: [],
+    languages: [],
+    interests: []
+  };
+
+  try {
+    res.status(200).json({ data: mockGeneratedResume });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to generate resume" });
+  }
+};
+
+exports.saveResume = async (req, res) => {
+  try {
+    const { data, atsScore } = req.body;
+    const userId = req.user.id;
+
+    const newResume = await Resume.create({
+      userId,
+      data,
+      atsScore
+    });
+
+    res.status(201).json({ message: "Resume saved successfully", resume: newResume });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to save resume" });
+  }
+};
+
+exports.getUserResumes = async (req, res) => {
+  try {
+    const resumes = await Resume.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json({ resumes });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch resumes" });
+  }
+};
+
+exports.trackAnalytics = async (req, res) => {
+  try {
+    const { action, metadata } = req.body;
+    const userId = req.user.id;
+    
+    await Analytics.create({
+      userId,
+      action,
+      metadata
+    });
+
+    res.status(200).json({ message: "Analytics tracked" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to track analytics" });
+  }
+};
