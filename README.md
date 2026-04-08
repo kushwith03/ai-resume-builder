@@ -56,7 +56,7 @@ The project follows a modular **Client-Server Architecture**:
 │   └── src/routes/       # API Endpoints (Auth, Resume, Metrics)
 ├── src/                  # React Frontend
 │   ├── api/              # Axios Interceptors & Service Layer
-│   ├── components/       # Memoized UI Components
+│   ├── Components/       # Memoized UI Components
 │   ├── services/         # ATS & Impact Logic
 │   └── utils/            # Performance Tracking Utilities
 ```

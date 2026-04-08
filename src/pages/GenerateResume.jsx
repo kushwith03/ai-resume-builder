@@ -1,17 +1,13 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
-import { FaBrain, FaTrash, FaPaperPlane, FaSave, FaPlusCircle, FaChartBar } from "react-icons/fa";
+import { FaPaperPlane, FaSave, FaPlusCircle, FaChartBar } from "react-icons/fa";
 import { generateResume, trackAnalytics, saveResumeToDB } from "../api/ResumeService";
-import { BiBook } from "react-icons/bi";
 import { useForm, useFieldArray } from "react-hook-form";
 import Resume from "../Components/Resume";
 import { performanceTracker } from "../utils/performanceTracker";
 import { calculateATSScore } from "../services/atsService";
-import { isAuthenticated } from "../api/AuthService";
-import { useNavigate } from "react-router-dom";
 import { useDebounce } from "../hooks/useDebounce";
 
-// Memoized form section for structural stability
 const FormSection = React.memo(({ title, children }) => (
   <div className="form-control w-full mb-8 p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm transition-all hover:shadow-md">
     <h3 className="text-xl font-bold mb-6 text-primary flex items-center gap-2 border-b border-base-200 pb-3">
@@ -22,15 +18,6 @@ const FormSection = React.memo(({ title, children }) => (
 ));
 
 const GenerateResume = () => {
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      toast.error("Access restricted: Please log in.");
-      navigate("/login");
-    }
-  }, [navigate]);
-
   const [data, setData] = useState({
     personalInformation: { fullName: "" },
     summary: "",
@@ -40,7 +27,7 @@ const GenerateResume = () => {
     projects: [],
   });
 
-  const { register, handleSubmit, control, reset, watch } = useForm({
+  const { register, handleSubmit, control, reset } = useForm({
     defaultValues: data,
   });
 
@@ -50,8 +37,6 @@ const GenerateResume = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
-  
-  // Performance metrics for display
   const [currentMetrics, setCurrentMetrics] = useState(performanceTracker.getAverageMetrics());
 
   const debouncedJD = useDebounce(jobDescription, 800);
@@ -170,6 +155,7 @@ const GenerateResume = () => {
 
           {renderFieldArray(fieldArrays.skills, "Skills", "skills", ["title", "level"])}
           {renderFieldArray(fieldArrays.experience, "Experience", "experience", ["jobTitle", "company", "duration", "responsibility"])}
+          {renderFieldArray(fieldArrays.education, "Education", "education", ["degree", "university", "location", "graduationYear"])}
           {renderFieldArray(fieldArrays.projects, "Projects", "projects", ["title", "description", "technologiesUsed"])}
 
           <div className="flex justify-end gap-4 sticky bottom-6 bg-base-100/80 backdrop-blur p-4 rounded-2xl shadow-xl border border-base-200 z-10">

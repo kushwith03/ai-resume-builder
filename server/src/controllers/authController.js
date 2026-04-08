@@ -1,6 +1,10 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+if (!process.env.JWT_SECRET) {
+  throw new Error('FATAL ERROR: JWT_SECRET is not defined.');
+}
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
@@ -13,7 +17,9 @@ const validateEmail = (email) => {
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+    const email = req.body.email?.toLowerCase();
+
     if (!name || !email || !password) return res.status(400).json({ error: 'All fields are required' });
     if (!validateEmail(email)) return res.status(400).json({ error: 'Invalid email format' });
     if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
@@ -33,7 +39,9 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = req.body.email?.toLowerCase();
+
     if (!email || !password) return res.status(400).json({ error: 'All fields are required' });
 
     const user = await User.findOne({ email });

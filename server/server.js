@@ -7,7 +7,12 @@ const authRoutes = require('./src/routes/auth');
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGIN || '*',
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes

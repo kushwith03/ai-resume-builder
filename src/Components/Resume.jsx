@@ -1,6 +1,6 @@
 import React from "react";
 import "daisyui";
-import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt, FaGlobe } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 import { useRef } from "react";
@@ -59,8 +59,16 @@ const Resume = React.memo(({ data }) => {
             )}
           </div>
           <div className="flex justify-center gap-4 text-xs">
-             {data.personalInformation?.linkedin && <span className="text-blue-600 font-bold">LinkedIn</span>}
-             {data.personalInformation?.gitHub && <span className="text-gray-900 font-bold">GitHub</span>}
+             {data.personalInformation?.linkedin && (
+                <span className="flex items-center gap-1 text-blue-600 font-bold">
+                  <FaLinkedin /> LinkedIn
+                </span>
+             )}
+             {data.personalInformation?.gitHub && (
+                <span className="flex items-center gap-1 text-gray-900 font-bold">
+                  <FaGithub /> GitHub
+                </span>
+             )}
           </div>
         </div>
 
@@ -106,6 +114,25 @@ const Resume = React.memo(({ data }) => {
           </section>
         )}
 
+        {/* Education */}
+        {data.education?.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="text-lg font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block">Education</h2>
+            {data.education.map((edu, index) => (
+              <div key={index} className="space-y-1">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="text-md font-bold text-gray-900">{edu.degree}</h3>
+                  <span className="text-xs font-bold text-gray-500">{edu.graduationYear}</span>
+                </div>
+                <div className="flex justify-between items-baseline text-xs text-gray-600 italic">
+                  <span>{edu.university}</span>
+                  <span>{edu.location}</span>
+                </div>
+              </div>
+            ))}
+          </section>
+        )}
+
         {/* Projects */}
         {data.projects?.length > 0 && (
           <section className="space-y-4">
@@ -114,7 +141,11 @@ const Resume = React.memo(({ data }) => {
               <div key={index} className="space-y-1">
                 <h3 className="text-md font-bold text-gray-900">{proj.title}</h3>
                 <p className="text-sm text-gray-700">{proj.description}</p>
-                <p className="text-xs font-medium text-gray-500 italic">Tech: {proj.technologiesUsed}</p>
+                {proj.technologiesUsed && (
+                  <p className="text-xs font-medium text-gray-500 italic">
+                    Tech: {Array.isArray(proj.technologiesUsed) ? proj.technologiesUsed.join(", ") : proj.technologiesUsed}
+                  </p>
+                )}
               </div>
             ))}
           </section>

@@ -10,17 +10,22 @@ export const performanceTracker = {
   },
 
   endMeasure(componentName) {
-    if (!this.metrics.startTime) return 0;
+    if (this.metrics.startTime === null || this.metrics.startTime === undefined) return 0;
     const duration = performance.now() - this.metrics.startTime;
+    
     this.metrics.renderTimes.push({ componentName, duration });
+    if (this.metrics.renderTimes.length > 50) this.metrics.renderTimes.shift();
+    
     this.metrics.startTime = null;
-    return duration.toFixed(2);
+    return Number(duration.toFixed(2));
   },
 
   trackInputLatency(startTime) {
-    if (!startTime) return;
+    if (startTime === null || startTime === undefined) return;
     const latency = performance.now() - startTime;
+    
     this.metrics.inputLatencies.push(latency);
+    if (this.metrics.inputLatencies.length > 50) this.metrics.inputLatencies.shift();
   },
 
   getAverageMetrics() {
@@ -33,8 +38,8 @@ export const performanceTracker = {
       : 0;
     
     return {
-      avgRenderTime: avgRender.toFixed(2),
-      avgInputLatency: avgLatency.toFixed(2),
+      avgRenderTime: Number(avgRender.toFixed(2)),
+      avgInputLatency: Number(avgLatency.toFixed(2)),
       smoothnessScore: avgLatency < 16 ? "60 FPS" : "Variable"
     };
   }
