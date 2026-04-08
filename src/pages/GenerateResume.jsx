@@ -1,296 +1,254 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
-import { FaBrain, FaTrash, FaPaperPlane } from "react-icons/fa";
-import { generateResume } from "../api/ResumeService";
-import { BiBook } from "react-icons/bi";
+import { FaPaperPlane, FaSave, FaPlusCircle, FaChartBar } from "react-icons/fa";
+import { generateResume, trackAnalytics, saveResumeToDB } from "../api/ResumeService";
 import { useForm, useFieldArray } from "react-hook-form";
-import { FaPlusCircle } from "react-icons/fa";
 import Resume from "../Components/Resume";
+import { performanceTracker } from "../utils/performanceTracker";
+import { calculateATSScore } from "../services/atsService";
+import { useDebounce } from "../hooks/useDebounce";
 
+const FormSection = React.memo(({ title, children }) => (
+  <div className="form-control w-full mb-8 p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm transition-all hover:shadow-md">
+    <h3 className="text-xl font-bold mb-6 text-primary flex items-center gap-2 border-b border-base-200 pb-3">
+      {title}
+    </h3>
+    {children}
+  </div>
+));
 
 const GenerateResume = () => {
   const [data, setData] = useState({
-    personalInformation: {
-      fullName: "Durgesh Kumar Tiwari",
-    },
+    personalInformation: { fullName: "" },
     summary: "",
     skills: [],
     experience: [],
     education: [],
-    certifications: [],
     projects: [],
-    languages: [],
-    interests: [],
   });
 
-  const { register, handleSubmit, control, setValue, reset } = useForm({
+  const { register, handleSubmit, control, reset } = useForm({
     defaultValues: data,
   });
 
   const [showFormUI, setShowFormUI] = useState(false);
   const [showResumeUI, setShowResumeUI] = useState(false);
   const [showPromptInput, setShowPromptInput] = useState(true);
+  const [jobDescription, setJobDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [description, setDescription] = useState("");
+  const [currentMetrics, setCurrentMetrics] = useState(performanceTracker.getAverageMetrics());
 
-  const experienceFields = useFieldArray({ control, name: "experience" });
-  const educationFields = useFieldArray({ control, name: "education" });
-  const certificationsFields = useFieldArray({
-    control,
-    name: "certifications",
-  });
-  const projectsFields = useFieldArray({ control, name: "projects" });
-  const languagesFields = useFieldArray({ control, name: "languages" });
-  const interestsFields = useFieldArray({ control, name: "interests" });
-  const skillsFields = useFieldArray({ control, name: "skills" });
+  const debouncedJD = useDebounce(jobDescription, 800);
 
-  //handle form submit
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    setData({ ...data });
-
-    setShowFormUI(false);
-    setShowPromptInput(false);
-    setShowResumeUI(true);
+  const fieldArrays = {
+    skills: useFieldArray({ control, name: "skills" }),
+    experience: useFieldArray({ control, name: "experience" }),
+    education: useFieldArray({ control, name: "education" }),
+    projects: useFieldArray({ control, name: "projects" }),
   };
 
-  const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
+  const onSubmit = useCallback((formData) => {
+    setData(formData);
+    setShowFormUI(false);
+    setShowResumeUI(true);
+    setCurrentMetrics(performanceTracker.getAverageMetrics());
+    trackAnalytics("form_submit_preview");
+  }, []);
 
   const handleGenerate = async () => {
-    console.log(description);
-    // server call to get resume
-
+    if (!description.trim()) return toast.error("Prompt cannot be empty");
+    
+    performanceTracker.startMeasure();
+    setLoading(true);
     try {
-      setLoading(true);
-      const responseData = await generateResume(description);
-      console.log(responseData);
-      reset(responseData.data);
-
-      toast.success("Resume Generated Successfully!", {
-        duration: 3000,
-        position: "top-center",
-      });
+      const response = await generateResume(description);
+      reset(response.data);
       setShowFormUI(true);
       setShowPromptInput(false);
-      setShowResumeUI(false);
+      trackAnalytics("generate_resume");
+      toast.success("AI draft created successfully");
     } catch (error) {
-      console.log(error);
-      toast.error("Error Generating Resume!");
+      toast.error(error.response?.data?.error || "AI service unavailable");
     } finally {
       setLoading(false);
-      setDescription("");
+      performanceTracker.endMeasure("AI_Generation");
+      setCurrentMetrics(performanceTracker.getAverageMetrics());
     }
   };
 
-  const handleClear = () => {
+  const atsResult = useMemo(() => {
+    if (!debouncedJD || !showResumeUI) return null;
+    return calculateATSScore(data, debouncedJD);
+  }, [data, debouncedJD, showResumeUI]);
+
+  const renderFieldArray = (fields, label, name, keys) => (
+    <FormSection title={label}>
+      {fields.fields.map((field, index) => (
+        <div key={field.id} className="p-5 mb-5 bg-base-200 rounded-xl relative group border border-base-300">
+          <button 
+            type="button" 
+            onClick={() => fields.remove(index)}
+            className="absolute top-3 right-3 btn btn-circle btn-xs btn-error opacity-0 group-hover:opacity-100 transition-all duration-200"
+          >
+            ✕
+          </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+            {keys.map(key => (
+              <div key={key} className="form-control">
+                <label className="label-text mb-2 text-xs font-semibold uppercase opacity-70">{key}</label>
+                <input 
+                  {...register(`${name}.${index}.${key}`)} 
+                  className="input input-bordered input-md bg-base-100 focus:ring-2 focus:ring-primary/20" 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      <button 
+        type="button" 
+        onClick={() => fields.append(keys.reduce((acc, k) => ({...acc, [k]: ""}), {}))}
+        className="btn btn-ghost btn-md text-primary hover:bg-primary/5 w-full border-dashed border-2 border-base-300"
+      >
+        <FaPlusCircle className="mr-2" /> Add {label}
+      </button>
+    </FormSection>
+  );
+
+  const resetGenerator = () => {
+    setShowPromptInput(true);
+    setShowFormUI(false);
+    setShowResumeUI(false);
+    setJobDescription("");
     setDescription("");
   };
 
-  const renderInput = (name, label, type = "text") => (
-    <div className="form-control w-full  mb-4">
-      <label className="label">
-        <span className="label-text text-base-content">{label}</span>
-      </label>
-      <input
-        type={type}
-        {...register(name)}
-        className="input input-bordered rounded-xl w-full bg-base-100 text-base-content"
-      />
-    </div>
-  );
-  const renderFieldArray = (fields, label, name, keys) => {
-    return (
-      <div className="form-control w-full mb-4">
-        <h3 className="text-xl font-semibold">{label}</h3>
-        {fields.fields.map((field, index) => (
-          <div key={field.id} className="p-4 rounded-lg mb-4 bg-base-100">
-            {keys.map((key) => (
-              <div key={key}>
-                {console.log(`${name}`)}
-                {renderInput(`${name}.${index}.${key}`, key)}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => fields.remove(index)}
-              className="btn btn-error btn-sm mt-2"
-            >
-              <FaTrash className="w-5 h-5 text-base-content" /> Remove {label}
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() =>
-            fields.append(
-              keys.reduce((acc, key) => ({ ...acc, [key]: "" }), {})
-            )
-          }
-          className="btn btn-secondary btn-sm mt-2 flex items-center"
-        >
-          <FaPlusCircle className="w-5 h-5 mr-1 text-base-content" /> Add{" "}
-          {label}
-        </button>
-      </div>
-    );
-  };
-
-  function showFormFunction() {
-    return (
-      <div className="w-full p-10">
-        <h1 className="text-4xl font-bold mb-6 flex items-center justify-center gap-2">
-          <BiBook className="text-accent" /> Resume Form
-        </h1>
-        <div>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="p-6 space-y-6 bg-base-200 rounded-lg text-base-content"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {renderInput("personalInformation.fullName", "Full Name")}
-              {renderInput("personalInformation.email", "Email", "email")}
-              {renderInput(
-                "personalInformation.phoneNumber",
-                "Phone Number",
-                "tel"
-              )}
-              {renderInput("personalInformation.location", "Location")}
-              {renderInput("personalInformation.linkedin", "LinkedIn", "url")}
-              {renderInput("personalInformation.gitHub", "GitHub", "url")}
-              {renderInput("personalInformation.portfolio", "Portfolio", "url")}
-            </div>
-
-            <h3 className="text-xl font-semibold">Summary</h3>
-            <textarea
-              {...register("summary")}
-              className="textarea textarea-bordered w-full bg-base-100 text-base-content"
-              rows={4}
-            ></textarea>
-
-            {renderFieldArray(skillsFields, "Skills", "skills", [
-              "title",
-              "level",
-            ])}
-            {renderFieldArray(experienceFields, "Experience", "experience", [
-              "jobTitle",
-              "company",
-              "location",
-              "duration",
-              "responsibility",
-            ])}
-            {renderFieldArray(educationFields, "Education", "education", [
-              "degree",
-              "university",
-              "location",
-              "graduationYear",
-            ])}
-            {renderFieldArray(
-              certificationsFields,
-              "Certifications",
-              "certifications",
-              ["title", "issuingOrganization", "year"]
-            )}
-            {renderFieldArray(projectsFields, "Projects", "projects", [
-              "title",
-              "description",
-              "technologiesUsed",
-              "githubLink",
-            ])}
-
-            <div className="flex gap-3 mt-16  p-4 rounded-xl ">
-              <div className="flex-1">
-                {renderFieldArray(languagesFields, "Languages", "languages", [
-                  "name",
-                ])}
-              </div>
-              <div className="flex-1">
-                {renderFieldArray(interestsFields, "Interests", "interests", [
-                  "name",
-                ])}
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-primary w-full">
-              Submit
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  function ShowInputField() {
-    return (
-      <div className="bg-base-200 shadow-lg rounded-lg p-10 max-w-2xl w-full text-center">
-        <h1 className="text-4xl font-bold mb-6 flex items-center justify-center gap-2">
-          <FaBrain className="text-accent" /> AI Resume Description Input
-        </h1>
-        <p className="mb-4 text-lg text-gray-600">
-          Enter a detailed description about yourself to generate your
-          professional resume.
-        </p>
-        <textarea
-          disabled={loading}
-          className="textarea textarea-bordered w-full h-48 mb-6 resize-none"
-          placeholder="Type your description here..."
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-        <div className="flex justify-center gap-4">
-          <button
-            disabled={loading}
-            onClick={handleGenerate}
-            className="btn btn-primary flex items-center gap-2"
-          >
-            {loading && <span className="loading loading-spinner"></span>}
-            <FaPaperPlane />
-            Generate Resume
-          </button>
-          <button
-            onClick={handleClear}
-            className="btn btn-secondary flex items-center gap-2"
-          >
-            <FaTrash /> Clear
-          </button>
-        </div>
-      </div>
-    );
-  }
-  function showResume() {
-    return (
-      <div>
-        <Resume data={data} />
-
-        <div className="flex mt-5 justify-center gap-2">
-          <div
-            onClick={() => {
-              setShowPromptInput(true);
-              setShowFormUI(false);
-              setShowResumeUI(false);
-            }}
-            className="btn btn-accent"
-          >
-            Generate Another
-          </div>
-          <div
-            onClick={() => {
-              setShowPromptInput(false);
-              setShowFormUI(true);
-              setShowResumeUI(false);
-            }}
-            className="btn btn-success"
-          >
-            Edit
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mt-5 p-10 flex flex-col gap-3 items-center justify-center font-sans">
-      {showFormUI && showFormFunction()}
-      {showPromptInput && ShowInputField()}
-      {showResumeUI && showResume()}
+    <div className="max-w-5xl mx-auto p-4 md:p-10 min-h-[90vh] pb-32">
+      {showPromptInput && (
+        <div className="flex flex-col items-center justify-center py-20 gap-8">
+          <div className="text-center space-y-3">
+            <h1 className="text-5xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">AI Engine</h1>
+            <p className="text-gray-500 text-lg">Tell us about your career and let AI do the heavy lifting.</p>
+          </div>
+          <div className="w-full max-w-3xl space-y-4">
+            <textarea 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="textarea textarea-bordered w-full h-52 text-lg shadow-inner focus:border-primary transition-all p-6"
+              placeholder="e.g. I am a software engineer with 5 years of experience in React..."
+            />
+            <button onClick={handleGenerate} disabled={loading} className="btn btn-primary btn-lg w-full group shadow-lg">
+              {loading ? <span className="loading loading-spinner"></span> : <FaPaperPlane className="mr-2 group-hover:translate-x-1 transition-transform" />}
+              Generate AI Draft
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showFormUI && (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 animate-fadeIn">
+          <FormSection title="Personal Information">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <input {...register("personalInformation.fullName")} placeholder="Full Name" className="input input-bordered w-full" />
+              <input {...register("personalInformation.email")} placeholder="Email" className="input input-bordered w-full" />
+              <input {...register("personalInformation.location")} placeholder="Location" className="input input-bordered w-full" />
+            </div>
+          </FormSection>
+          
+          <FormSection title="Professional Summary">
+            <textarea {...register("summary")} className="textarea textarea-bordered w-full h-40 p-4 leading-relaxed" />
+          </FormSection>
+
+          {renderFieldArray(fieldArrays.skills, "Skills", "skills", ["title", "level"])}
+          {renderFieldArray(fieldArrays.experience, "Experience", "experience", ["jobTitle", "company", "duration", "responsibility"])}
+          {renderFieldArray(fieldArrays.education, "Education", "education", ["degree", "university", "location", "graduationYear"])}
+          {renderFieldArray(fieldArrays.projects, "Projects", "projects", ["title", "description", "technologiesUsed"])}
+
+          <div className="flex justify-end gap-4 sticky bottom-6 bg-base-100/80 backdrop-blur p-4 rounded-2xl shadow-xl border border-base-200 z-10">
+            <button type="submit" className="btn btn-primary btn-lg px-20">Preview Final Resume</button>
+          </div>
+        </form>
+      )}
+
+      {showResumeUI && (
+        <div className="space-y-10 animate-fadeIn pb-20">
+          <div className="bg-base-200 p-8 rounded-3xl border border-base-300 shadow-sm">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold">ATS Optimizer</h3>
+              {atsResult && (
+                <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score > 70 ? 'badge-success' : 'badge-warning'}`}>
+                   Score: {atsResult.score}%
+                </div>
+              )}
+            </div>
+            <textarea 
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              placeholder="Paste the target Job Description to see your real-time matching score..."
+              className="textarea textarea-bordered w-full h-32 focus:border-primary"
+            />
+            {atsResult && (
+               <div className="mt-4 animate-fadeIn">
+                  <p className="text-sm font-semibold opacity-70 mb-2 uppercase tracking-wider">Missing Technical Keywords:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {atsResult.missingKeywords.slice(0, 10).map(kw => (
+                      <span key={kw} className="badge badge-outline border-base-300">{kw}</span>
+                    ))}
+                  </div>
+               </div>
+            )}
+          </div>
+          
+          <Resume data={data} />
+          
+          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
+            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-outline btn-lg px-12">Return to Editor</button>
+            <button onClick={resetGenerator} className="btn btn-accent btn-lg px-12">Generate Another</button>
+            <button 
+              onClick={async () => {
+                try {
+                  await saveResumeToDB(data, atsResult?.score || 0);
+                  toast.success("Sync complete: Saved to cloud");
+                } catch (e) {
+                  toast.error("Database connection failure");
+                }
+              }} 
+              className="btn btn-success btn-lg px-12"
+            >
+              <FaSave className="mr-2" /> Save to Cloud
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Floating System Health / Performance Metrics */}
+      <div className="fixed bottom-4 left-4 z-50">
+        <div className="dropdown dropdown-top dropdown-hover">
+          <div tabIndex={0} role="button" className="btn btn-circle btn-ghost bg-base-200 shadow-lg border border-base-300">
+            <FaChartBar className="text-primary" />
+          </div>
+          <div tabIndex={0} className="dropdown-content z-[1] card card-compact w-64 p-4 shadow-xl bg-base-100 border border-base-300 mb-2">
+            <h3 className="font-bold text-sm border-b pb-2 mb-2">System Performance</h3>
+            <div className="space-y-2">
+               <div className="flex justify-between text-xs">
+                 <span>UI Fluidity:</span>
+                 <span className="font-mono text-success">{currentMetrics.smoothnessScore}</span>
+               </div>
+               <div className="flex justify-between text-xs">
+                 <span>Avg. Input Latency:</span>
+                 <span className="font-mono">{currentMetrics.avgInputLatency}ms</span>
+               </div>
+               <div className="flex justify-between text-xs">
+                 <span>Render Efficiency:</span>
+                 <span className="font-mono">{currentMetrics.avgRenderTime}ms</span>
+               </div>
+               <p className="text-[10px] opacity-50 mt-2 italic">Metrics measured via PerformanceObserver API</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
