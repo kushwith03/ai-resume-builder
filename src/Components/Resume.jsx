@@ -149,3 +149,5 @@ const Resume = React.memo(({ data }) => {
 });
 
 export default Resume;
+
+export default Resume;
