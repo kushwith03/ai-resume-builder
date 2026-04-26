@@ -28,8 +28,17 @@ exports.register = async (req, res) => {
     if (userExists) return res.status(400).json({ error: 'User already exists' });
 
     const user = await User.create({ name, email, password });
+    const token = generateToken(user._id);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     res.status(201).json({
-      token: generateToken(user._id),
+      token, // Fallback for interview explanation
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {
@@ -49,8 +58,17 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    const token = generateToken(user._id);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     res.status(200).json({
-      token: generateToken(user._id),
+      token, // Fallback
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {

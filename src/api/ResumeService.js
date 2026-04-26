@@ -4,6 +4,7 @@ export const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export const axiosInstance = axios.create({
     baseURL: baseURL,
+    withCredentials: true, // Enable cookie support
 });
 
 // Axios Interceptor for Authorization Header
