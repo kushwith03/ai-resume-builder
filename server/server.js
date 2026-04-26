@@ -2,18 +2,21 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const apiRoutes = require('./src/routes/api');
 const authRoutes = require('./src/routes/auth');
 
 const app = express();
 
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGIN || '*',
+  origin: process.env.ALLOWED_ORIGIN || 'http://localhost:5173', // Be explicit for cookies
+  credentials: true, // Required for cookies
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
 app.use('/api/v1', apiRoutes);

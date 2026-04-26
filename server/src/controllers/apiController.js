@@ -1,33 +1,20 @@
 const Resume = require('../models/Resume');
 const Analytics = require('../models/Analytics');
+const aiService = require('../services/aiService');
 
 exports.generateResumeAI = async (req, res) => {
   const { userDescription } = req.body;
   
-  const mockGeneratedResume = {
-    personalInformation: {
-      fullName: "Generated User",
-      email: "ai@example.com",
-      phoneNumber: "123-456-7890",
-      location: "San Francisco, CA",
-      linkedin: "linkedin.com/in/generated",
-      gitHub: "github.com/generated",
-      portfolio: "generated.dev"
-    },
-    summary: `Dynamic and results-driven professional based on: "${userDescription || 'Provided description'}"`,
-    skills: [{ title: "JavaScript", level: "Expert" }],
-    experience: [],
-    education: [],
-    certifications: [],
-    projects: [],
-    languages: [],
-    interests: []
-  };
+  if (!userDescription) {
+    return res.status(400).json({ error: "User description is required" });
+  }
 
   try {
-    res.status(200).json({ data: mockGeneratedResume });
+    const generatedData = await aiService.generateResumeData(userDescription);
+    res.status(200).json({ data: generatedData });
   } catch (error) {
-    res.status(500).json({ error: "Failed to generate resume" });
+    console.error("AI Generation Error:", error);
+    res.status(500).json({ error: "Failed to generate resume via AI" });
   }
 };
 

@@ -1,21 +1,13 @@
 import React, { useState, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
-import { FaPaperPlane, FaSave, FaPlusCircle, FaChartBar } from "react-icons/fa";
+import { FaPaperPlane, FaSave, FaChartBar } from "react-icons/fa";
 import { generateResume, trackAnalytics, saveResumeToDB } from "../api/ResumeService";
 import { useForm, useFieldArray } from "react-hook-form";
 import Resume from "../Components/Resume";
 import { performanceTracker } from "../utils/performanceTracker";
 import { calculateATSScore } from "../services/atsService";
 import { useDebounce } from "../hooks/useDebounce";
-
-const FormSection = React.memo(({ title, children }) => (
-  <div className="form-control w-full mb-8 p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm transition-all hover:shadow-md">
-    <h3 className="text-xl font-bold mb-6 text-primary flex items-center gap-2 border-b border-base-200 pb-3">
-      {title}
-    </h3>
-    {children}
-  </div>
-));
+import FormSection, { RenderFieldArray } from "../Components/ResumeFormSections";
 
 const GenerateResume = () => {
   const [data, setData] = useState({
@@ -82,40 +74,6 @@ const GenerateResume = () => {
     return calculateATSScore(data, debouncedJD);
   }, [data, debouncedJD, showResumeUI]);
 
-  const renderFieldArray = (fields, label, name, keys) => (
-    <FormSection title={label}>
-      {fields.fields.map((field, index) => (
-        <div key={field.id} className="p-5 mb-5 bg-base-200 rounded-xl relative group border border-base-300">
-          <button 
-            type="button" 
-            onClick={() => fields.remove(index)}
-            className="absolute top-3 right-3 btn btn-circle btn-xs btn-error opacity-0 group-hover:opacity-100 transition-all duration-200"
-          >
-            ✕
-          </button>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-            {keys.map(key => (
-              <div key={key} className="form-control">
-                <label className="label-text mb-2 text-xs font-semibold uppercase opacity-70">{key}</label>
-                <input 
-                  {...register(`${name}.${index}.${key}`)} 
-                  className="input input-bordered input-md bg-base-100 focus:ring-2 focus:ring-primary/20" 
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-      <button 
-        type="button" 
-        onClick={() => fields.append(keys.reduce((acc, k) => ({...acc, [k]: ""}), {}))}
-        className="btn btn-ghost btn-md text-primary hover:bg-primary/5 w-full border-dashed border-2 border-base-300"
-      >
-        <FaPlusCircle className="mr-2" /> Add {label}
-      </button>
-    </FormSection>
-  );
-
   const resetGenerator = () => {
     setShowPromptInput(true);
     setShowFormUI(false);
@@ -161,10 +119,10 @@ const GenerateResume = () => {
             <textarea {...register("summary")} className="textarea textarea-bordered w-full h-40 p-4 leading-relaxed" />
           </FormSection>
 
-          {renderFieldArray(fieldArrays.skills, "Skills", "skills", ["title", "level"])}
-          {renderFieldArray(fieldArrays.experience, "Experience", "experience", ["jobTitle", "company", "duration", "responsibility"])}
-          {renderFieldArray(fieldArrays.education, "Education", "education", ["degree", "university", "location", "graduationYear"])}
-          {renderFieldArray(fieldArrays.projects, "Projects", "projects", ["title", "description", "technologiesUsed"])}
+          <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["title", "level"]} register={register} />
+          <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />
+          <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />
+          <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} />
 
           <div className="flex justify-end gap-4 sticky bottom-6 bg-base-100/80 backdrop-blur p-4 rounded-2xl shadow-xl border border-base-200 z-10">
             <button type="submit" className="btn btn-primary btn-lg px-20">Preview Final Resume</button>

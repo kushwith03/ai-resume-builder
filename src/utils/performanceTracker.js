@@ -47,7 +47,7 @@ export const performanceTracker = {
     return {
       avgRenderTime: Number(avgRender.toFixed(2)),
       avgInputLatency: Number(avgLatency.toFixed(2)),
-      smoothnessScore: avgLatency < 16 ? "60 FPS" : "Variable"
+      smoothnessScore: avgLatency < 16 ? "Stable" : "Variable"
     };
   }
 };

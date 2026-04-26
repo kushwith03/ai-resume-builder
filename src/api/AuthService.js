@@ -4,6 +4,7 @@ const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 const api = axios.create({
   baseURL: `${baseURL}/api/v1/auth`,
+  withCredentials: true,
 });
 
 export const login = async (email, password) => {
