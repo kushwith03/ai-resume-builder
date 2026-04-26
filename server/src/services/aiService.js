@@ -33,5 +33,20 @@ exports.generateResumeData = async (userDescription) => {
 
   const result = await model.generateContent(prompt);
   const response = await result.response;
-  return JSON.parse(response.text());
+  const data = JSON.parse(response.text());
+
+  // Basic schema validation
+  const requiredSections = ['personalInformation', 'summary', 'skills', 'experience', 'education', 'projects'];
+  const missingSections = requiredSections.filter(section => !data[section]);
+
+  if (missingSections.length > 0) {
+    throw new Error(`AI generated an incomplete resume. Missing: ${missingSections.join(', ')}`);
+  }
+
+  // Ensure personalInformation has at least a name
+  if (!data.personalInformation.fullName) {
+    throw new Error("AI generated a resume without a full name.");
+  }
+
+  return data;
 };

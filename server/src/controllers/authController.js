@@ -38,7 +38,9 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({
-      token, // Fallback for interview explanation
+      // Token is returned for frontend fallback/local storage, 
+      // though httpOnly cookie is the primary secure transport.
+      token, 
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {
@@ -68,7 +70,8 @@ exports.login = async (req, res) => {
     });
 
     res.status(200).json({
-      token, // Fallback
+      // Fallback for demo purposes; production should rely on cookies.
+      token, 
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {
