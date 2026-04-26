@@ -1,68 +1,26 @@
 import React from "react";
 import "daisyui";
-import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { toPng } from "html-to-image";
-import { jsPDF } from "jspdf";
-import { useRef } from "react";
+import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFilePdf } from "react-icons/fa";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ResumePDF from "./ResumePDF";
 
 const Resume = React.memo(({ data }) => {
-  const resumeRef = useRef(null);
-
-  const handleDownloadPdf = () => {
-    if (!resumeRef.current) return;
-    
-    toPng(resumeRef.current, { 
-      quality: 1.0,
-      backgroundColor: "#ffffff",
-      // Fix potential cutoff by ensuring the target node is properly scaled
-      style: {
-        transform: 'scale(1)',
-        transformOrigin: 'top left',
-        width: '210mm',
-        height: 'auto'
-      }
-    })
-      .then((dataUrl) => {
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        
-        const imgProps = pdf.getImageProperties(dataUrl);
-        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        
-        // Handle multi-page or scaling to fit
-        if (imgHeight > pdfHeight) {
-           // Scale to fit a single page if slightly over, or allow multi-page logic
-           // For simplicity in this professional template, we scale to fit width
-           pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, imgHeight);
-        } else {
-           pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, imgHeight);
-        }
-        
-        pdf.save(`${data.personalInformation?.fullName || 'Resume'}.pdf`);
-      })
-      .catch((err) => {
-        console.error("PDF generation failed", err);
-      });
-  };
+  if (!data) return null;
 
   const formatUrl = (url) => {
     if (!url) return "";
     return url.startsWith("http") ? url : `https://${url}`;
   };
 
-  if (!data) return null;
-
   return (
     <div className="flex flex-col items-center">
       <div
-        ref={resumeRef}
-        className="w-[210mm] min-h-[297mm] mx-auto shadow-2xl p-[20mm] space-y-6 bg-white text-gray-800 border border-gray-100"
+        className="w-full max-w-[210mm] min-h-[297mm] mx-auto shadow-2xl p-6 md:p-[20mm] space-y-6 bg-white text-gray-800 border border-gray-100"
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {/* Header */}
         <div className="text-center space-y-3">
-          <h1 className="text-5xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
             {data.personalInformation?.fullName}
           </h1>
           <div className="flex justify-center flex-wrap gap-4 text-sm font-medium text-gray-600">
@@ -80,22 +38,12 @@ const Resume = React.memo(({ data }) => {
           </div>
           <div className="flex justify-center gap-4 text-xs">
              {data.personalInformation?.linkedin && (
-                <a 
-                  href={formatUrl(data.personalInformation.linkedin)} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex items-center gap-1 text-blue-600 font-bold hover:underline"
-                >
+                <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 font-bold hover:underline">
                   <FaLinkedin /> LinkedIn
                 </a>
              )}
              {data.personalInformation?.gitHub && (
-                <a 
-                  href={formatUrl(data.personalInformation.gitHub)} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex items-center gap-1 text-gray-900 font-bold hover:underline"
-                >
+                <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-gray-900 font-bold hover:underline">
                   <FaGithub /> GitHub
                 </a>
              )}
@@ -173,7 +121,7 @@ const Resume = React.memo(({ data }) => {
                 <p className="text-sm text-gray-700">{proj.description}</p>
                 {proj.technologiesUsed && (
                   <p className="text-xs font-medium text-gray-500 italic">
-                    Tech: {Array.isArray(proj.technologiesUsed) ? proj.technologiesUsed.join(", ") : proj.technologiesUsed}
+                    Tech: {proj.technologiesUsed}
                   </p>
                 )}
               </div>
@@ -183,12 +131,23 @@ const Resume = React.memo(({ data }) => {
       </div>
 
       <div className="mt-8 mb-12">
-        <button onClick={handleDownloadPdf} className="btn btn-primary btn-wide shadow-xl">
-          Export Professional PDF
-        </button>
+        <PDFDownloadLink
+          document={<ResumePDF data={data} />}
+          fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
+          className="btn btn-primary btn-wide shadow-xl"
+        >
+          {({ loading }) => (
+            <>
+              <FaFilePdf className="mr-2" />
+              {loading ? "Preparing PDF..." : "Download ATS-Friendly PDF"}
+            </>
+          )}
+        </PDFDownloadLink>
       </div>
     </div>
   );
 });
+
+export default Resume;
 
 export default Resume;
