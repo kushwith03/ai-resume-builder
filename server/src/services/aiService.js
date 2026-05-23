@@ -3,7 +3,15 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 exports.generateResumeData = async (userDescription) => {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_google_gemini_api_key_here') {
+    throw new Error('Missing Gemini API Key. Please add a valid key to server/.env');
+  }
+
+  // Force v1 stable API to avoid v1beta 404 issues
+  const model = genAI.getGenerativeModel(
+    { model: "gemini-1.5-flash" },
+    { apiVersion: "v1" }
+  );
 
   const prompt = `
     You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
