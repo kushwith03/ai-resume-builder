@@ -7,9 +7,9 @@ exports.generateResumeData = async (userDescription) => {
     throw new Error('Missing Gemini API Key. Please add a valid key to server/.env');
   }
 
-  // Force v1 stable API to avoid v1beta 404 issues
+  // Using 'gemini-1.5-flash-latest' with 'models/' prefix is often more robust
   const model = genAI.getGenerativeModel(
-    { model: "gemini-1.5-flash" },
+    { model: "models/gemini-1.5-flash-latest" },
     { apiVersion: "v1" }
   );
 
