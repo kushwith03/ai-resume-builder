@@ -23,9 +23,14 @@ app.use('/api/v1', apiRoutes);
 app.use('/api/v1/auth', authRoutes);
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000,
+})
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => {
+    console.error('MongoDB connection error. Please check if your IP is whitelisted in MongoDB Atlas.');
+    console.error(err.message);
+  });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
