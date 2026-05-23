@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const resumeSchema = new mongoose.Schema({
   userId: { 
-    type: String, // Keeping it simple as String for mock, could be ObjectId ref to User
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true 
   },
   data: { 
