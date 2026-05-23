@@ -16,8 +16,9 @@ export const calculateATSScore = (resumeData, jobDescription) => {
   // Extract words from Job Description, filtering out common stop words and small words
   const rawKeywords = jobDescription.toLowerCase().match(/\b(\w+)\b/g) || [];
   
-  // Filter for meaningful technical/domain keywords (simple heuristic: > 4 chars)
-  const technicalKeywords = [...new Set(rawKeywords)].filter(word => word.length > 4);
+  // Filter for meaningful technical/domain keywords (excluding common small words)
+  const stopWords = ['and', 'the', 'for', 'with', 'from', 'this', 'that', 'have', 'your', 'are', 'you', 'will', 'our', 'not', 'can', 'has', 'any', 'all'];
+  const technicalKeywords = [...new Set(rawKeywords)].filter(word => word.length > 2 && !stopWords.includes(word));
   
   // IF no valid keywords are found in JD, we return 0 match rather than false 100%
   if (technicalKeywords.length === 0) return { score: 0, matchingKeywords: [], missingKeywords: [] };
