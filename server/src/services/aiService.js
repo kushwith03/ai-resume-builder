@@ -7,8 +7,6 @@ exports.generateResumeData = async (userDescription) => {
     throw new Error('Missing Gemini API Key. Please add a valid key to server/.env');
   }
 
-  // Use the generic alias to ensure we always use the latest available flash model
-  // This avoids 404 errors when specific versioned models (like 1.5-flash) are retired.
   const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
   const prompt = `
@@ -39,7 +37,7 @@ exports.generateResumeData = async (userDescription) => {
     const response = await result.response;
     let text = response.text();
 
-    // Clean up markdown if AI includes it despite instructions
+    // Strip markdown formatting if AI hallucinates code blocks
     if (text.includes('```')) {
       text = text.replace(/```json\n?/, '').replace(/```\n?/, '').replace(/\n?```/, '');
     }
