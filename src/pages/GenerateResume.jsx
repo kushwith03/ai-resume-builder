@@ -19,9 +19,11 @@ const GenerateResume = () => {
     projects: [],
   });
 
-  const { register, handleSubmit, control, reset } = useForm({
+  const { register, handleSubmit, control, reset, watch } = useForm({
     defaultValues: data,
   });
+
+  const formData = watch();
 
   const [showFormUI, setShowFormUI] = useState(false);
   const [showResumeUI, setShowResumeUI] = useState(false);
@@ -70,9 +72,9 @@ const GenerateResume = () => {
   };
 
   const atsResult = useMemo(() => {
-    if (!debouncedJD || !showResumeUI) return null;
-    return calculateATSScore(data, debouncedJD);
-  }, [data, debouncedJD, showResumeUI]);
+    if (!debouncedJD) return null;
+    return calculateATSScore(showFormUI ? formData : data, debouncedJD);
+  }, [formData, data, debouncedJD, showFormUI]);
 
   const resetGenerator = () => {
     setShowPromptInput(true);
@@ -107,6 +109,14 @@ const GenerateResume = () => {
 
       {showFormUI && (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 animate-fadeIn">
+          {atsResult && (
+            <div className="sticky top-0 z-20 bg-base-100/90 backdrop-blur-md p-4 rounded-xl border border-base-300 shadow-sm flex items-center justify-between">
+              <span className="text-sm font-bold opacity-60 uppercase tracking-widest">Live Optimization Score</span>
+              <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score >= 70 ? 'badge-success' : atsResult.score >= 40 ? 'badge-warning' : 'badge-error'}`}>
+                {atsResult.score}% Match
+              </div>
+            </div>
+          )}
           <FormSection title="Personal Information">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <input {...register("personalInformation.fullName")} placeholder="Full Name" className="input input-bordered w-full" />
