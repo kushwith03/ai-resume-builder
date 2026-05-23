@@ -1,91 +1,91 @@
-# AI Resume Maker 🚀
-### *Turn your career story into a professional resume with AI-driven precision.*
+# AI Resume Builder
 
-Built for modern job seekers, this **Full-Stack AI Resume Builder** combines high-performance React architecture with intelligent data parsing. It doesn't just build resumes—it optimizes them for ATS compatibility and ensures a fluid, professional experience.
+A full-stack web application that allows users to quickly generate professional resumes using AI. Users can input a brief description of their experience, and the integrated Gemini AI will structure it into a complete, editable resume.
 
----
-
-## ✨ Key Features
-
-- 🤖 **AI-Powered Generation:** Real integration with **Google Gemini 1.5 Flash** to transform career bios into structured, professional resumes instantly.
-- 🎯 **Live ATS Optimizer:** Real-time keyword matching against job descriptions with actionable gap identification.
-- 🏎️ **Performance First:** Optimized rendering engine maintaining UI fluidity during complex data entry using `react-hook-form` and structural memoization.
-- 📄 **ATS-Friendly PDF:** Text-based professional PDF generation using `@react-pdf/renderer` (not image-based, ensuring 100% parsability by recruitment software).
-- 🔒 **Secure Persistence:** JWT authentication with **httpOnly cookies** and MongoDB storage for anytime-access to your resumes.
-- 📊 **Metric-Driven UI:** Integrated performance monitoring to track UI fluidity and render latency in real-time via the PerformanceObserver API.
+**[View Live Demo]** 
+*Frontend: [Vercel Deployment Link Placeholder]* | *Backend API: [Render Deployment Link Placeholder]*
 
 ---
 
-## 🛠 Tech Stack
-
-**Frontend:**
-- **React 18** (Vite)
-- **Tailwind CSS + DaisyUI** (Aesthetic & Responsive UI)
-- **React Hook Form** (Uncontrolled inputs for high-performance form management)
-- **@react-pdf/renderer** (Text-based, declarative document generation)
-
-**Backend:**
-- **Node.js + Express** (RESTful API with **Controller-Service** architecture)
-- **Google Gemini SDK** (LLM integration for resume content generation)
-- **MongoDB + Mongoose** (Data Persistence)
-- **JWT + Cookie-Parser** (Secure Authentication with httpOnly cookies)
+## 📸 Previews
+*[Insert Animated GIF/Video Demo Placeholder]*
+*[Insert Screenshot of PDF Preview Placeholder]*
 
 ---
 
-## 🏗 System Architecture
+## ⚡ Features
 
-The project follows a modular **Controller-Service-Repository** pattern:
-- **Frontend:** Modular component architecture with decoupled API services, performance tracking utilities, and a dedicated PDF template layer.
-- **Backend:** Business logic (AI prompt engineering, validation) is isolated in the **Service Layer**, keeping controllers lean and focused on request orchestration.
-
----
-
-## 📈 Key Highlights
-
-- **UI Fluidity:** Achieved a stable and responsive user experience by implementing `React.memo` and utilizing uncontrolled components for high-frequency input sections.
-- **ATS Compatibility:** Switched to text-layer PDF generation, ensuring resumes are fully readable by corporate Applicant Tracking Systems.
-- **Security:** Enhanced authentication security by moving JWT storage from localStorage to secure **httpOnly cookies**.
+- **AI-Powered Generation:** Converts natural language descriptions into structured JSON resumes using Google Gemini.
+- **Live PDF Preview:** Debounced client-side rendering ensures the UI remains at 60FPS during continuous typing.
+- **Secure Authentication:** JWT-based authentication using `httpOnly` cookies to protect user data and sessions.
+- **Persistent Storage:** Resumes are saved to MongoDB, allowing users to return and edit their documents later.
+- **ATS Friendly:** The generated PDF layouts are text-selectable and designed to pass standard Applicant Tracking Systems.
 
 ---
 
-## 📂 Folder Structure
+## 🛠️ Architecture & Tech Stack
 
-```text
-├── server/               # Node.js + Express Backend
-│   ├── src/models/       # Mongoose Schemas (User, Resume, Analytics)
-│   ├── src/services/     # Business Logic (AI integration, validation)
-│   ├── src/controllers/  # Request Handlers
-│   └── src/middleware/   # Auth & Validation Middleware
-├── src/                  # React Frontend
-│   ├── api/              # Axios Interceptors & Service Layer
-│   ├── Components/       # Modular UI & PDF Components
-│   ├── services/         # ATS Logic
-│   └── utils/            # Performance Tracking & Utilities
-```
+### Frontend
+- **Framework:** React 18 (Vite)
+- **Styling:** Tailwind CSS + DaisyUI
+- **State & Forms:** `react-hook-form`
+- **PDF Generation:** `@react-pdf/renderer`
 
----
-
-## 🚀 Setup Instructions
-
-1. **Clone the repository**
-2. **Backend Setup:**
-   ```bash
-   cd server
-   npm install
-   # Create .env based on .env.example with:
-   # PORT, MONGODB_URI, JWT_SECRET, and GEMINI_API_KEY
-   npm start
-   ```
-3. **Frontend Setup:**
-   ```bash
-   npm install
-   # Create .env with VITE_API_URL=http://localhost:8080
-   npm run dev
-   ```
+### Backend
+- **Runtime:** Node.js (Express)
+- **Database:** MongoDB (Mongoose)
+- **AI Integration:** Google Generative AI SDK (`gemini-flash-latest`)
+- **Authentication:** `jsonwebtoken`, `bcryptjs`
 
 ---
 
-## 🔮 Future Improvements
-- **Multi-template Support:** Switch between Modern, Academic, and Minimalist layouts.
-- **LinkedIn Sync:** One-click import via LinkedIn profile scraping.
-- **Real-time Collaboration:** Shareable links for resume review.
+## 🚀 Local Development Setup
+
+### 1. Prerequisites
+- [Node.js](https://nodejs.org/) (v18+)
+- [MongoDB](https://www.mongodb.com/) (running locally or an Atlas connection string)
+- [Google Gemini API Key](https://aistudio.google.com/)
+
+### 2. Backend Setup
+\`\`\`bash
+cd server
+npm install
+cp .env.example .env
+\`\`\`
+Edit `server/.env` with your credentials:
+\`\`\`env
+PORT=8080
+MONGODB_URI=mongodb://localhost:27017/resume-builder
+JWT_SECRET=your_super_secret_key_here
+GEMINI_API_KEY=your_actual_api_key_here
+ALLOWED_ORIGIN=http://localhost:5173
+\`\`\`
+Start the server:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+### 3. Frontend Setup
+\`\`\`bash
+# From the project root
+npm install
+cp .env.example .env
+\`\`\`
+Edit `.env` (default usually works):
+\`\`\`env
+VITE_API_URL=http://localhost:8080/api/v1
+\`\`\`
+Start the client:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+---
+
+## 🧠 Technical Highlights
+
+### Debounced PDF Rendering
+Generating complex PDFs on the main thread is computationally expensive. To prevent UI lockups while typing in the form, the `ResumePDF` component is wrapped with a custom `useDebounce` hook. This ensures the renderer only recalculates the layout after the user pauses typing, sustaining a smooth 60FPS input experience.
+
+### AI Error Recovery
+The Gemini API occasionally wraps its JSON responses in markdown blocks (e.g., \`\`\`json\`). The `aiService` includes a stripping utility to clean hallucinated markdown before parsing, preventing hard crashes during resume generation.
