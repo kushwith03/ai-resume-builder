@@ -38,8 +38,6 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({
-      // Token is returned for frontend fallback/local storage, 
-      // though httpOnly cookie is the primary secure transport.
       token, 
       user: { id: user._id, name: user.name, email: user.email }
     });
@@ -70,7 +68,6 @@ exports.login = async (req, res) => {
     });
 
     res.status(200).json({
-      // Fallback for demo purposes; production should rely on cookies.
       token, 
       user: { id: user._id, name: user.name, email: user.email }
     });
