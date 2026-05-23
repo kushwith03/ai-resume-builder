@@ -136,7 +136,7 @@ const GenerateResume = () => {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold">ATS Optimizer</h3>
               {atsResult && (
-                <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score > 70 ? 'badge-success' : 'badge-warning'}`}>
+                <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score >= 70 ? 'badge-success' : atsResult.score >= 40 ? 'badge-warning' : 'badge-error'}`}>
                    Score: {atsResult.score}%
                 </div>
               )}
