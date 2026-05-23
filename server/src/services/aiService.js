@@ -7,11 +7,9 @@ exports.generateResumeData = async (userDescription) => {
     throw new Error('Missing Gemini API Key. Please add a valid key to server/.env');
   }
 
-  // Using 'gemini-1.5-flash-latest' with 'models/' prefix is often more robust
-  const model = genAI.getGenerativeModel(
-    { model: "models/gemini-1.5-flash-latest" },
-    { apiVersion: "v1" }
-  );
+  // Use the generic alias to ensure we always use the latest available flash model
+  // This avoids 404 errors when specific versioned models (like 1.5-flash) are retired.
+  const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
   const prompt = `
     You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
