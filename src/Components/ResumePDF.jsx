@@ -1,7 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
-// Register fonts if necessary. Standard fonts like Helvetica work out-of-the-box.
 const styles = StyleSheet.create({
   page: {
     padding: 40,
@@ -22,9 +21,11 @@ const styles = StyleSheet.create({
   contact: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 10,
     color: '#4b5563',
     marginBottom: 10,
+  },
+  contactItem: {
+    marginHorizontal: 8,
   },
   section: {
     marginBottom: 15,
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
   itemHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    fontWeight: 'bold',
   },
   itemSubHeader: {
     flexDirection: 'row',
@@ -49,6 +49,9 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: '#4b5563',
     marginBottom: 4,
+  },
+  bold: {
+    fontWeight: 'bold',
   },
   bulletPoint: {
     marginLeft: 10,
@@ -60,71 +63,88 @@ const styles = StyleSheet.create({
   skills: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 5,
   },
   skillBadge: {
     paddingHorizontal: 6,
     paddingVertical: 2,
     backgroundColor: '#f3f4f6',
     borderRadius: 3,
+    marginRight: 6,
+    marginBottom: 4,
   }
 });
 
 const ResumePDF = ({ data }) => {
   if (!data) return null;
 
+  // Destructure with safe defaults
+  const { 
+    personalInformation = {}, 
+    summary = "", 
+    experience = [], 
+    education = [], 
+    skills = [], 
+    projects = [] 
+  } = data;
+
+  // Helper to safely render text
+  const safeText = (text) => {
+    if (text === undefined || text === null) return "";
+    return String(text);
+  };
+
   return (
-    <Document>
+    <Document title={`${safeText(personalInformation?.fullName) || 'Resume'} - ATS Optimized`}>
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>{data.personalInformation?.fullName || 'Your Name'}</Text>
+          <Text style={styles.name}>{safeText(personalInformation?.fullName) || 'Your Name'}</Text>
           <View style={styles.contact}>
-            {data.personalInformation?.email && <Text>{data.personalInformation.email}</Text>}
-            {data.personalInformation?.location && <Text>{data.personalInformation.location}</Text>}
-            {data.personalInformation?.phoneNumber && <Text>{data.personalInformation.phoneNumber}</Text>}
+            {personalInformation?.email && <Text style={styles.contactItem}>{safeText(personalInformation.email)}</Text>}
+            {personalInformation?.location && <Text style={styles.contactItem}>{safeText(personalInformation.location)}</Text>}
+            {personalInformation?.phoneNumber && <Text style={styles.contactItem}>{safeText(personalInformation.phoneNumber)}</Text>}
           </View>
         </View>
 
         {/* Summary */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Professional Summary</Text>
-          <Text style={styles.summary}>{data.summary || ''}</Text>
+          <Text style={styles.summary}>{safeText(summary)}</Text>
         </View>
 
         {/* Experience */}
-        {data.experience?.length > 0 && (
+        {experience?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Work Experience</Text>
-            {data.experience.map((exp, i) => (
+            {experience.map((exp, i) => (
               <View key={i} style={{ marginBottom: 10 }}>
                 <View style={styles.itemHeader}>
-                  <Text style={{ fontWeight: 'bold' }}>{exp?.jobTitle || ''}</Text>
-                  <Text>{exp?.duration || ''}</Text>
+                  <Text style={styles.bold}>{safeText(exp?.jobTitle)}</Text>
+                  <Text>{safeText(exp?.duration)}</Text>
                 </View>
                 <View style={styles.itemSubHeader}>
-                  <Text>{exp?.company || ''}</Text>
-                  <Text>{exp?.location || ''}</Text>
+                  <Text>{safeText(exp?.company)}</Text>
+                  <Text>{safeText(exp?.location)}</Text>
                 </View>
-                <Text style={styles.bulletPoint}>{exp?.responsibility || ''}</Text>
+                <Text style={styles.bulletPoint}>{safeText(exp?.responsibility)}</Text>
               </View>
             ))}
           </View>
         )}
 
         {/* Education */}
-        {data.education?.length > 0 && (
+        {education?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
-            {data.education.map((edu, i) => (
+            {education.map((edu, i) => (
               <View key={i} style={{ marginBottom: 5 }}>
                 <View style={styles.itemHeader}>
-                  <Text style={{ fontWeight: 'bold' }}>{edu?.degree || ''}</Text>
-                  <Text>{edu?.graduationYear || ''}</Text>
+                  <Text style={styles.bold}>{safeText(edu?.degree)}</Text>
+                  <Text>{safeText(edu?.graduationYear)}</Text>
                 </View>
                 <View style={styles.itemSubHeader}>
-                  <Text>{edu?.university || ''}</Text>
-                  <Text>{edu?.location || ''}</Text>
+                  <Text>{safeText(edu?.university)}</Text>
+                  <Text>{safeText(edu?.location)}</Text>
                 </View>
               </View>
             ))}
@@ -132,16 +152,16 @@ const ResumePDF = ({ data }) => {
         )}
 
         {/* Skills */}
-        {data.skills?.length > 0 && (
+        {skills?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Skills & Competencies</Text>
-            {data.skills.map((skillGroup, i) => (
+            {skills.map((skillGroup, i) => (
               <View key={i} style={{ flexDirection: 'row', marginBottom: 5 }}>
-                <Text style={{ fontWeight: 'bold', width: 100 }}>{skillGroup?.category || skillGroup?.title || 'Skills'}:</Text>
+                <Text style={[styles.bold, { width: 100 }]}>{safeText(skillGroup?.category || skillGroup?.title || 'Skills')}:</Text>
                 <View style={styles.skills}>
-                  {(skillGroup?.skills || skillGroup?.level || "").split(",").map((skill, si) => (
+                  {safeText(skillGroup?.skills || skillGroup?.level || "").split(",").map((skill, si) => (
                     skill.trim() && (
-                      <Text key={si} style={styles.skillBadge}>{skill.trim()}</Text>
+                      <Text key={si} style={styles.skillBadge}>{safeText(skill.trim())}</Text>
                     )
                   ))}
                 </View>
@@ -151,14 +171,18 @@ const ResumePDF = ({ data }) => {
         )}
 
         {/* Projects */}
-        {data.projects?.length > 0 && (
+        {projects?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Projects</Text>
-            {data.projects.map((proj, i) => (
+            {projects.map((proj, i) => (
               <View key={i} style={{ marginBottom: 8 }}>
-                <Text style={{ fontWeight: 'bold' }}>{proj?.title || ''}</Text>
-                <Text>{proj?.description || ''}</Text>
-                {proj?.technologiesUsed && <Text style={{ fontSize: 9, color: '#6b7280' }}>Tech: {proj.technologiesUsed}</Text>}
+                <Text style={styles.bold}>{safeText(proj?.title)}</Text>
+                <Text>{safeText(proj?.description)}</Text>
+                {proj?.technologiesUsed && (
+                  <Text style={{ fontSize: 9, color: '#6b7280', marginTop: 2 }}>
+                    Tech: {safeText(proj.technologiesUsed)}
+                  </Text>
+                )}
               </View>
             ))}
           </View>

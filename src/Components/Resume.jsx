@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "daisyui";
 import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFilePdf } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumePDF from "./ResumePDF";
 
 const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   if (!data) return null;
 
   const formatUrl = (url) => {
@@ -147,34 +153,51 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
 
   if (previewMode) return resumeContent;
 
+  const downloadKey = isClient ? JSON.stringify({
+    name: data.personalInformation?.fullName,
+    skillCount: data.skills?.length,
+    expCount: data.experience?.length,
+    eduCount: data.education?.length,
+    projCount: data.projects?.length,
+    summaryLen: data.summary?.length
+  }) : "loading";
+
   return (
     <div className="flex flex-col items-center w-full px-4">
       {resumeContent}
       {!hideDownload && (
         <div className="mt-8 mb-16 w-full flex justify-center">
-          <PDFDownloadLink
-            document={<ResumePDF data={data} />}
-            fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
-            className="btn btn-primary btn-wide shadow-xl"
-          >
-            {({ blob, url, loading, error }) => {
-              if (error) {
-                console.error("PDF generation error:", error);
+          {isClient ? (
+            <PDFDownloadLink
+              key={downloadKey}
+              document={<ResumePDF data={data} />}
+              fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
+              className="btn btn-primary btn-wide shadow-xl"
+            >
+              {({ blob, url, loading, error }) => {
+                if (error) {
+                  console.error("PDF generation error:", error);
+                  return (
+                    <div className="flex items-center gap-2 text-error font-bold">
+                      <FaFilePdf />
+                      <span>Export Failed</span>
+                    </div>
+                  );
+                }
                 return (
                   <>
-                    <FaFilePdf className="mr-2" />
-                    Error Generating PDF
+                    <FaFilePdf className={loading ? "animate-pulse" : ""} />
+                    {loading ? "Generating PDF..." : "Download ATS-Friendly PDF"}
                   </>
                 );
-              }
-              return (
-                <>
-                  <FaFilePdf className="mr-2" />
-                  {loading ? "Preparing PDF..." : "Download ATS-Friendly PDF"}
-                </>
-              );
-            }}
-          </PDFDownloadLink>
+              }}
+            </PDFDownloadLink>
+          ) : (
+            <button className="btn btn-primary btn-wide opacity-50 cursor-not-allowed">
+               <FaFilePdf className="animate-pulse" />
+               Initializing...
+            </button>
+          )}
         </div>
       )}
     </div>
