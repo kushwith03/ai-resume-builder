@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FaMagic, FaShieldAlt, FaChartBar, FaFilePdf, FaRobot, FaBriefcase, FaArrowRight } from "react-icons/fa";
 

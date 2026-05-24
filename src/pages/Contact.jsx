@@ -1,5 +1,4 @@
-import React from "react";
-import { FaEnvelope, FaMapMarkerAlt, FaLinkedin, FaGithub, FaGlobe, FaCode, FaUserGraduate, FaTerminal, FaRocket } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaLinkedin, FaGithub, FaGlobe, FaUserGraduate, FaTerminal, FaRocket } from "react-icons/fa";
 
 function Contact() {
   const techStack = [
