@@ -184,14 +184,14 @@ const GenerateResume = () => {
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5">
+                <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">
                   Reset
                 </button>
                 <button 
                   onClick={handleSubmit(onSubmit)} 
-                  className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10"
+                  className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10 uppercase tracking-widest"
                 >
-                  Export PDF
+                  Generate Resume
                 </button>
               </div>
             </div>

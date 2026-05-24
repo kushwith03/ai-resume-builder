@@ -46,7 +46,7 @@ function Home() {
                         <div className="relative bg-[#0b1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden aspect-[16/9] md:aspect-[21/9] flex items-center justify-center">
                             <div className="flex flex-col items-center gap-4 text-slate-500 opacity-40">
                                 <FaMagic className="text-5xl" />
-                                <span className="font-bold tracking-widest uppercase text-xs">AI Dashboard Preview</span>
+                                <span className="font-bold tracking-widest uppercase text-xs">Professional Editor Preview</span>
                             </div>
                         </div>
                     </div>

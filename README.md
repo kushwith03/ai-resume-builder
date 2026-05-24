@@ -1,24 +1,44 @@
-# ResuAI - AI Resume Builder
+# ResuAI - Premium AI Resume Builder
 
-ResuAI is a premium, high-performance resume builder powered by Gemini AI. It architects professional, ATS-optimized resumes from simple text descriptions, providing a side-by-side live A4 preview and instant PDF export.
+ResuAI is a high-performance, SaaS-style resume builder powered by Google Gemini AI. It transforms simple career descriptions into professional, ATS-optimized resumes with a real-time side-by-side editing experience and instant high-fidelity PDF export.
+
+## 🔗 Live Demo
+- **Frontend:** [https://ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app)
+- **API Health Check:** [https://instaresume-api-8o52.onrender.com/api/health](https://instaresume-api-8o52.onrender.com/api/health)
+
+---
 
 ## 🚀 Key Features
 
-- **AI-Driven Generation:** Transform career descriptions into structured resume data using Gemini AI.
-- **Side-by-Side Editor:** Professional editing experience with a sticky, real-time A4 preview.
-- **ATS Optimization:** Precision keyword matching and optimization score.
-- **Instant Export:** Generate high-quality, ATS-friendly PDFs directly in the browser.
-- **SaaS Aesthetic:** Modern, medium-dark professional theme with responsive design.
-- **Secure Storage:** Save and sync your progress to the cloud with MongoDB and JWT.
+- **AI-Driven Architecture:** Leverages Gemini 1.5 Flash to generate structured, professional resume content from natural language.
+- **Real-Time A4 Preview:** A dedicated document viewer providing a high-fidelity, side-by-side live preview of your resume.
+- **ATS Optimization:** Intelligent keyword matching and scoring system to ensure your resume passes recruiter filters.
+- **Professional SaaS UI:** Modern, medium-dark "SaaS Dim" aesthetic built with Tailwind CSS and DaisyUI.
+- **Secure Cloud Sync:** JWT-authenticated user sessions with MongoDB Atlas for saving and retrieving resume drafts.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React (Vite), Tailwind CSS, DaisyUI, React Hook Form, @react-pdf/renderer.
-- **Backend:** Node.js, Express, MongoDB Atlas, JWT.
-- **AI:** Google Gemini API (Flash 1.5).
-- **Deployment:** Render (Backend), Vercel (Frontend).
+### Frontend
+- **Framework:** React 18 (Vite)
+- **Styling:** Tailwind CSS + DaisyUI
+- **PDF Engine:** @react-pdf/renderer
+- **State Management:** React Hook Form
+- **Icons:** React Icons
+
+### Backend
+- **Runtime:** Node.js + Express
+- **AI Integration:** Google Gemini AI API
+- **Database:** MongoDB Atlas (Mongoose)
+- **Security:** JWT Authentication + BcryptJS
+- **Middleware:** CORS, Cookie-Parser, Dotenv
+
+---
+
+## 📸 Screenshots & Demo
+
+*(Add high-resolution screenshots or a GIF here for portfolio showcase)*
 
 ---
 
@@ -26,72 +46,55 @@ ResuAI is a premium, high-performance resume builder powered by Gemini AI. It ar
 
 ### 1. Prerequisites
 - Node.js (v18+)
-- MongoDB Atlas account (or local MongoDB)
-- Google Gemini API Key
+- MongoDB Atlas account
+- Google Gemini AI API Key
 
-### 2. Backend Setup
+### 2. Backend Installation
 ```bash
 cd server
 npm install
 cp .env.example .env
-# Update .env with your credentials
+# Update .env with your MONGODB_URI and GEMINI_API_KEY
 npm start
 ```
 
-### 3. Frontend Setup
+### 3. Frontend Installation
 ```bash
 # In the root directory
 npm install
-cp .env.example .env
 # Update .env with VITE_API_URL=http://localhost:8080
 npm run dev
 ```
 
 ---
 
-## 🌐 Deployment Instructions
+## 🌐 Production Deployment
 
 ### Backend (Render)
-1. Create a **New Web Service** on Render.
-2. Set **Root Directory** to `server`.
-3. Build Command: `npm install`.
-4. Start Command: `npm start`.
-5. Add Environment Variables:
-   - `MONGODB_URI`: Your MongoDB connection string.
-   - `GEMINI_API_KEY`: Your Gemini API key.
-   - `JWT_SECRET`: A long random string.
-   - `ALLOWED_ORIGIN`: Your production frontend URL (once deployed).
+1. **New Web Service:** Connect your GitHub repo.
+2. **Root Directory:** `server`.
+3. **Build Command:** `npm install`.
+4. **Start Command:** `npm start`.
+5. **Environment Variables:**
+   - `MONGODB_URI`: Your production database string.
+   - `GEMINI_API_KEY`: Your API key.
+   - `JWT_SECRET`: A secure random string.
+   - `ALLOWED_ORIGIN`: `https://ai-resume-builder-sigma-jet.vercel.app`.
 
 ### Frontend (Vercel)
-1. Create a **New Project** on Vercel.
-2. Framework Preset: **Vite**.
-3. Set **Root Directory** to `./`.
-4. Build Command: `npm run build`.
-5. Output Directory: `dist`.
-6. Add Environment Variable:
-   - `VITE_API_URL`: Your Render backend URL.
+1. **New Project:** Connect your GitHub repo.
+2. **Framework Preset:** `Vite`.
+3. **Output Directory:** `dist`.
+4. **Environment Variables:**
+   - `VITE_API_URL`: `https://instaresume-api-8o52.onrender.com`.
 
 ---
 
-## 📝 Environment Variables
-
-### Backend (`server/.env`)
-- `PORT`: Server port (default: 8080).
-- `MONGODB_URI`: MongoDB connection string.
-- `JWT_SECRET`: Secret key for authentication.
-- `GEMINI_API_KEY`: Google Gemini API key.
-- `ALLOWED_ORIGIN`: Frontend URL for CORS.
-
-### Frontend (`.env`)
-- `VITE_API_URL`: Backend server URL.
-
----
-
-## 🛡️ Production Readiness
-- ✅ **Health Check:** `GET /api/health` available for monitoring.
-- ✅ **CORS:** Hardened for production with dynamic origin validation.
-- ✅ **SPA Routing:** `vercel.json` included for seamless page refreshes.
-- ✅ **Security:** JWT-based auth and environment-driven secrets.
+## 🛡️ Engineering Standards
+- ✅ **Dynamic CORS:** Adaptive origin validation for production and local environments.
+- ✅ **SPA Routing:** `vercel.json` rewrite rules for seamless React Router refreshes.
+- ✅ **Performance:** Debounced rendering logic for smooth real-time preview updates.
+- ✅ **Security:** Zero-secrets committed; all sensitive data managed via environment variables.
 
 ---
 
