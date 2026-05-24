@@ -77,7 +77,7 @@ The system follows a classic **client-server architecture** with a heavy focus o
 
 - **LLM Integration:** Successfully implemented prompt engineering patterns to ensure deterministic and structured JSON outputs from AI.
 - **Full-Stack Engineering:** Deepened my understanding of the MERN stack, specifically handling complex nested states in React and architecting secure backend routes.
-- **UX Design:** Focused on building a premium "SaaS-like" experience using custom CSS variables and modern UI libraries while maintaining performance.
+- **UX Design:** Focused on building a highly polished, interactive experience using custom CSS variables and modern UI libraries while maintaining performance.
 
 ---
 
