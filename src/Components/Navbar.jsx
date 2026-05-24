@@ -48,7 +48,7 @@ function Navbar() {
                     to={link.path}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${    
                       isActive(link.path)
-                        ? "text-white bg-white/5"
+                        ? "text-white bg-white/10"
                         : "text-slate-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
@@ -62,7 +62,7 @@ function Navbar() {
                     to="/generate-resume"
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${    
                       isActive("/generate-resume")
-                        ? "text-white bg-white/5"
+                        ? "text-white bg-white/10 shadow-lg shadow-primary/5"
                         : "text-slate-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
@@ -71,6 +71,36 @@ function Navbar() {
                 </li>
               )}
             </ul>
+          </div>
+
+          {/* Mobile Menu (DaisyUI Dropdown) */}
+          <div className="lg:hidden flex mr-2">
+            <div className="dropdown dropdown-bottom dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-ghost btn-sm px-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+              </div>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-2xl bg-base-200 rounded-2xl border border-white/5 w-52 mt-4 space-y-1">
+                {[
+                  { label: "Home", path: "/" },
+                  { label: "About", path: "/about" },
+                  { label: "Services", path: "/services" },
+                  { label: "Contact", path: "/contact" }
+                ].map((link) => (
+                  <li key={link.path}>
+                    <Link to={link.path} className={`rounded-xl font-medium ${isActive(link.path) ? "bg-primary/20 text-white" : "text-slate-400"}`}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+                {authenticated && (
+                  <li>
+                    <Link to="/generate-resume" className={`rounded-xl font-medium ${isActive("/generate-resume") ? "bg-primary/20 text-white" : "text-slate-400"}`}>
+                      Build Resume
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
 
           <div className="navbar-end gap-2 md:gap-3">
