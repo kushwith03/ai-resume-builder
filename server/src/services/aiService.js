@@ -66,9 +66,20 @@ exports.generateResumeData = async (userDescription) => {
 
     return data;
   } catch (error) {
-    if (error.message?.includes('API key not valid')) {
-      throw new Error('Invalid Gemini API Key. Please check your .env file.');
+    // Handle Gemini API Quota / Rate Limit errors
+    if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
+      const quotaError = new Error('AI generation is temporarily busy due to high demand (free-tier quota reached). Please try again in a minute.');
+      quotaError.status = 429;
+      throw quotaError;
     }
-    throw error;
+
+    if (error.message?.includes('API key not valid')) {
+      const authError = new Error('Invalid Gemini API Key configuration.');
+      authError.status = 401;
+      throw authError;
+    }
+
+    console.error("Internal Gemini Error:", error);
+    throw new Error('The AI service encountered an unexpected issue. Please retry shortly.');
   }
 };

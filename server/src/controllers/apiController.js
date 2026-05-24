@@ -13,9 +13,9 @@ exports.generateResumeAI = async (req, res) => {
     const generatedData = await aiService.generateResumeData(userDescription);
     res.status(200).json({ data: generatedData });
   } catch (error) {
-    console.error("AI Generation Error:", error);
-    const message = error.message || "Failed to generate resume via AI";
-    res.status(500).json({ error: message });
+    console.error("AI Generation Controller Error:", error.message);
+    const status = error.status || 500;
+    res.status(status).json({ error: error.message || "Failed to generate resume via AI" });
   }
 };
 
