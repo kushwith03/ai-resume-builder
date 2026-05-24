@@ -14,10 +14,10 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
 
   const resumeContent = (
     <div
-      className={`bg-white text-gray-800 shadow-lg border border-gray-200 transition-all ${
+      className={`bg-white text-gray-800 shadow-2xl border border-gray-100 transition-all ${
         previewMode 
-          ? "w-full aspect-[1/1.414] p-[8%] h-fit" 
-          : "w-full max-w-[210mm] min-h-[297mm] mx-auto p-6 md:p-[20mm]"
+          ? "w-full aspect-[1/1.414] p-[9%] h-fit" 
+          : "w-full max-w-[210mm] min-h-[297mm] mx-auto p-8 md:p-[20mm]"
       }`}
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
@@ -31,11 +31,25 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
             <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-primary" /> {data.personalInformation.location}</span>
           )}
           {data.personalInformation?.email && (
-            <span className="flex items-center gap-1"><FaEnvelope className="text-primary" /> {data.personalInformation.email}</span>
+            <a href={`mailto:${data.personalInformation.email}`} className="flex items-center gap-1 hover:text-primary transition-colors">
+              <FaEnvelope className="text-primary" /> {data.personalInformation.email}
+            </a>
           )}
           {data.personalInformation?.phoneNumber && (
             <span className="flex items-center gap-1"><FaPhone className="text-primary" /> {data.personalInformation.phoneNumber}</span>
           )}
+        </div>
+        <div className={`flex justify-center gap-4 ${previewMode ? 'text-[9px]' : 'text-xs'} mt-1`}>
+           {data.personalInformation?.linkedin && (
+              <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 font-bold hover:underline">
+                <FaLinkedin /> LinkedIn
+              </a>
+           )}
+           {data.personalInformation?.gitHub && (
+              <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-gray-900 font-bold hover:underline">
+                <FaGithub /> GitHub
+              </a>
+           )}
         </div>
       </div>
 
@@ -49,13 +63,24 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
 
       {/* Skills */}
       {data.skills?.length > 0 && (
-        <section className={`${previewMode ? 'space-y-1 mt-3' : 'space-y-3 mt-6'}`}>
+        <section className={`${previewMode ? 'space-y-2 mt-4' : 'space-y-4 mt-8'}`}>
           <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Core Competencies</h2>
-          <div className="flex flex-wrap gap-1">
-            {data.skills.map((skill, index) => (
-              <span key={index} className={`px-2 py-0.5 bg-gray-100 text-gray-700 rounded ${previewMode ? 'text-[9px]' : 'text-xs'} font-semibold`}>
-                {skill.title} • {skill.level}
-              </span>
+          <div className={`flex flex-col ${previewMode ? 'gap-2' : 'gap-3'}`}>
+            {data.skills.map((skillGroup, index) => (
+              <div key={index} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
+                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold text-gray-800 sm:min-w-[140px]`}>
+                  {skillGroup.category || skillGroup.title}:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {(skillGroup.skills || skillGroup.level || "").split(",").map((skill, sIndex) => (
+                    skill.trim() && (
+                      <span key={sIndex} className={`px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-md ${previewMode ? 'text-[9px]' : 'text-xs'} font-medium`}>
+                        {skill.trim()}
+                      </span>
+                    )
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>

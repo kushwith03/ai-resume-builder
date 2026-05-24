@@ -1,9 +1,11 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { isAuthenticated, logout } from "../api/AuthService";
+import { FaRocket, FaUserCircle } from "react-icons/fa";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const authenticated = isAuthenticated();
   
   let user = { name: "User" };
@@ -12,72 +14,87 @@ function Navbar() {
     if (storedUser && storedUser.name) {
       user = storedUser;
     }
-  } catch (e) {
-    console.error("Failed to parse user from localStorage", e);
-  }
+  } catch (e) {}
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <div className="navbar shadow bg-base-100">
-      <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
+    <div className="sticky top-0 z-[100] w-full border-b border-white/5 bg-base-100/80 backdrop-blur-md">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="navbar h-16 min-h-0 p-0">
+          <div className="navbar-start">
+            <Link to="/" className="flex items-center gap-2 group transition-all">
+              <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
+                <FaRocket className="text-primary text-xl" />
+              </div>
+              <span className="text-xl font-black tracking-tighter text-white">Resu<span className="text-primary">AI</span></span>
+            </Link>
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/services">Services</Link></li>
-            <li><Link to="/contact">Contact Us</Link></li>
-            {authenticated && (
-              <li><Link to="/generate-resume">Build Resume</Link></li>
+          
+          <div className="navbar-center hidden lg:flex">
+            <ul className="flex items-center gap-1">
+              {[
+                { label: "About", path: "/about" },
+                { label: "Services", path: "/services" },
+                { label: "Contact", path: "/contact" }
+              ].map((link) => (
+                <li key={link.path}>
+                  <Link 
+                    to={link.path} 
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      isActive(link.path) 
+                        ? "text-white bg-white/5" 
+                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+              {authenticated && (
+                <li>
+                  <Link 
+                    to="/generate-resume" 
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      isActive("/generate-resume") 
+                        ? "text-white bg-white/5" 
+                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    Build Resume
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
+          
+          <div className="navbar-end gap-3">
+            {authenticated ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
+                  <FaUserCircle className="text-slate-400 text-lg" />
+                  <span className="text-xs font-bold text-slate-300 pr-1">{user.name}</span>
+                </div>
+                <button 
+                  onClick={handleLogout} 
+                  className="btn btn-ghost btn-sm text-xs font-bold text-slate-400 hover:text-error hover:bg-error/10 transition-all px-4"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link to="/login" className="btn btn-ghost btn-sm text-sm font-medium text-slate-300">Login</Link>
+                <Link to="/signup" className="btn btn-primary btn-sm px-5 rounded-full text-sm font-bold shadow-lg shadow-primary/20">Sign Up</Link>
+              </div>
             )}
-          </ul>
-        </div>
-        <Link to="/" className="btn btn-ghost text-xl">
-          AI Resume Maker
-        </Link>
-      </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/services">Services</Link></li>
-          <li><Link to="/contact">Contact Us</Link></li>
-          {authenticated && (
-             <li><Link to="/generate-resume">Build Resume</Link></li>
-          )}
-        </ul>
-      </div>
-      <div className="navbar-end gap-2">
-        {authenticated ? (
-          <div className="flex items-center gap-4">
-            <span className="hidden sm:inline-block font-medium">Hi, {user.name}</span>
-            <button onClick={handleLogout} className="btn btn-outline btn-error btn-sm">
-              Logout
-            </button>
           </div>
-        ) : (
-          <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
-        )}
+        </div>
       </div>
     </div>
   );

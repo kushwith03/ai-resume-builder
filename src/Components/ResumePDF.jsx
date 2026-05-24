@@ -133,12 +133,19 @@ const ResumePDF = ({ data }) => (
       {/* Skills */}
       {data.skills?.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills</Text>
-          <View style={styles.skills}>
-            {data.skills.map((skill, i) => (
-              <Text key={i} style={styles.skillBadge}>{skill.title} ({skill.level})</Text>
-            ))}
-          </View>
+          <Text style={styles.sectionTitle}>Skills & Competencies</Text>
+          {data.skills.map((skillGroup, i) => (
+            <View key={i} style={{ flexDirection: 'row', marginBottom: 5 }}>
+              <Text style={{ fontWeight: 'bold', width: 100 }}>{skillGroup.category || skillGroup.title}:</Text>
+              <View style={styles.skills}>
+                {(skillGroup.skills || skillGroup.level || "").split(",").map((skill, si) => (
+                  skill.trim() && (
+                    <Text key={si} style={styles.skillBadge}>{skill.trim()}</Text>
+                  )
+                ))}
+              </View>
+            </View>
+          ))}
         </View>
       )}
 

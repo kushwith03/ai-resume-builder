@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
-import { FaPaperPlane, FaSave, FaChartBar } from "react-icons/fa";
+import { FaPaperPlane, FaSave, FaChartBar, FaUndo, FaMagic } from "react-icons/fa";
 import { generateResume, trackAnalytics, saveResumeToDB } from "../api/ResumeService";
 import { useForm, useFieldArray } from "react-hook-form";
 import Resume from "../Components/Resume";
@@ -86,64 +86,112 @@ const GenerateResume = () => {
   };
 
   return (
-    <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-32 ${showFormUI ? 'max-w-[1400px]' : 'max-w-5xl'}`}>
+    <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1400px]' : 'max-w-4xl'}`}>
       {showPromptInput && (
-        <div className="flex flex-col items-center justify-center py-20 gap-8">
-          <div className="text-center space-y-3">
-            <h1 className="text-5xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">AI Engine</h1>
-            <p className="text-gray-500 text-lg">Tell us about your career and let AI do the heavy lifting.</p>
+        <div className="flex flex-col items-center justify-center py-20 gap-12 animate-fadeIn">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2">
+              <FaPaperPlane className="text-primary text-xs" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Engine Active</span>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
+            <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">Describe your professional background in plain English, and our AI will architect a high-performance resume draft for you.</p>
           </div>
-          <div className="w-full max-w-3xl space-y-4">
-            <textarea 
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="textarea textarea-bordered w-full h-52 text-lg shadow-inner focus:border-primary transition-all p-6"
-              placeholder="e.g. I am a software engineer with 5 years of experience in React..."
-            />
-            <button onClick={handleGenerate} disabled={loading} className="btn btn-primary btn-lg w-full group shadow-lg">
-              {loading ? <span className="loading loading-spinner"></span> : <FaPaperPlane className="mr-2 group-hover:translate-x-1 transition-transform" />}
-              Generate AI Draft
-            </button>
+          
+          <div className="w-full max-w-2xl group">
+            <div className="relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary blur opacity-20 group-hover:opacity-40 transition-opacity rounded-3xl"></div>
+              <div className="relative bg-base-200 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+                <textarea 
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="textarea w-full h-64 bg-transparent border-none text-lg text-slate-200 focus:ring-0 p-8 leading-relaxed resize-none placeholder:text-slate-600"
+                  placeholder="e.g. I am a Senior Frontend Engineer with 8 years of experience building scalable React applications. I have led teams of 5 and specialized in high-performance UI architecture..."
+                />
+                <div className="p-4 bg-white/5 border-t border-white/5 flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-4">Min. 50 characters recommended</span>
+                  <button 
+                    onClick={handleGenerate} 
+                    disabled={loading || description.length < 10} 
+                    className="btn btn-primary px-8 rounded-2xl font-bold shadow-lg shadow-primary/20 group/btn"
+                  >
+                    {loading ? <span className="loading loading-spinner loading-sm"></span> : (
+                      <>
+                        Generate Draft 
+                        <FaMagic className="ml-2 group-hover/btn:rotate-12 transition-transform" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {showFormUI && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start animate-fadeIn">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            {atsResult && (
-              <div className="sticky top-0 z-20 bg-base-100/90 backdrop-blur-md p-4 rounded-xl border border-base-300 shadow-sm flex items-center justify-between">
-                <span className="text-sm font-bold opacity-60 uppercase tracking-widest">Live Optimization Score</span>
-                <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score >= 70 ? 'badge-success' : atsResult.score >= 40 ? 'badge-warning' : 'badge-error'}`}>
-                  {atsResult.score}% Match
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start animate-fadeIn relative">
+          {/* Floating Action Bar */}
+          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] flex items-center gap-2 p-2 bg-base-300/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl animate-fadeIn">
+            <button 
+              onClick={handleSubmit(onSubmit)} 
+              className="btn btn-primary px-8 rounded-xl font-black text-sm shadow-xl shadow-primary/20"
+            >
+              Finalize & Export
+            </button>
+            <div className="w-px h-8 bg-white/10 mx-1"></div>
+            <button onClick={resetGenerator} className="btn btn-ghost btn-square rounded-xl hover:bg-white/5">
+              <FaUndo className="text-slate-400" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-8">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-3xl font-black text-white tracking-tight">Editor</h2>
+              {atsResult && (
+                <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">ATS Match</span>
+                  <div className={`text-sm font-black ${atsResult.score >= 70 ? 'text-success' : atsResult.score >= 40 ? 'text-warning' : 'text-error'}`}>
+                    {atsResult.score}%
+                  </div>
                 </div>
-              </div>
-            )}
-            <FormSection title="Personal Information">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <input {...register("personalInformation.fullName")} placeholder="Full Name" className="input input-bordered w-full" />
-                <input {...register("personalInformation.email")} placeholder="Email" className="input input-bordered w-full" />
-                <input {...register("personalInformation.location")} placeholder="Location" className="input input-bordered w-full" />
+              )}
+            </div>
+
+            <FormSection title="Identity">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
+                  <input {...register("personalInformation.fullName")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="John Doe" />
+                </div>
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Job Title</label>
+                  <input {...register("personalInformation.title")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="Software Engineer" />
+                </div>
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Email</label>
+                  <input {...register("personalInformation.email")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="john@example.com" />
+                </div>
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Location</label>
+                  <input {...register("personalInformation.location")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="New York, NY" />
+                </div>
               </div>
             </FormSection>
             
             <FormSection title="Professional Summary">
-              <textarea {...register("summary")} className="textarea textarea-bordered w-full h-40 p-4 leading-relaxed" />
+              <textarea {...register("summary")} className="textarea w-full h-40 bg-base-100 border-white/5 focus:border-primary/50 text-sm leading-relaxed" placeholder="Brief overview of your career..." />
             </FormSection>
 
-            <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["title", "level"]} register={register} />
+            <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["category", "skills"]} register={register} />
             <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />
             <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />
             <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} />
-
-            <div className="flex justify-end gap-4 sticky bottom-6 bg-base-100/80 backdrop-blur p-4 rounded-2xl shadow-xl border border-base-200 z-10">
-              <button type="submit" className="btn btn-primary btn-lg px-20">Preview Final Resume</button>
-            </div>
           </form>
 
           {/* Live Preview Panel - Document Viewer Style */}
-          <div className="hidden lg:flex sticky top-10 h-[calc(100vh-100px)] items-start justify-center bg-base-200/50 rounded-3xl border border-base-300 overflow-hidden">
-            <div className="w-full max-w-[550px] h-full overflow-y-auto p-4 md:p-6 custom-scrollbar">
+          <div className="hidden lg:flex lg:col-span-5 sticky top-24 h-[calc(100vh-140px)] items-start justify-center bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-inner">
+            <div className="w-full h-full overflow-y-auto p-6 md:p-10 custom-scrollbar">
                <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />
             </div>
           </div>
@@ -151,78 +199,94 @@ const GenerateResume = () => {
       )}
 
       {showResumeUI && (
-        <div className="space-y-10 animate-fadeIn pb-20">
-          <div className="bg-base-200 p-8 rounded-3xl border border-base-300 shadow-sm">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold">ATS Optimizer</h3>
-              {atsResult && (
-                <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score >= 70 ? 'badge-success' : atsResult.score >= 40 ? 'badge-warning' : 'badge-error'}`}>
-                   Score: {atsResult.score}%
+        <div className="max-w-5xl mx-auto space-y-12 animate-fadeIn pb-20">
+          <div className="bg-base-200 p-10 rounded-[40px] border border-white/5 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full"></div>
+            
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative">
+              <div>
+                <h3 className="text-3xl font-black text-white mb-2 tracking-tight">ATS Optimization</h3>
+                <p className="text-slate-400">Precision analysis of your resume against industry standards.</p>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Matching Score</span>
+                <div className={`text-5xl font-black ${atsResult?.score >= 70 ? 'text-success' : atsResult?.score >= 40 ? 'text-warning' : 'text-error'}`}>
+                   {atsResult?.score || 0}%
                 </div>
-              )}
+              </div>
             </div>
+            
             <textarea 
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
               placeholder="Paste the target Job Description to see your real-time matching score..."
-              className="textarea textarea-bordered w-full h-32 focus:border-primary"
+              className="textarea textarea-bordered w-full h-40 bg-base-100 border-white/10 focus:border-primary/50 text-slate-300 p-6 rounded-2xl transition-all"
             />
-            {atsResult && (
-               <div className="mt-4 animate-fadeIn">
-                  <p className="text-sm font-semibold opacity-70 mb-2 uppercase tracking-wider">Missing Technical Keywords:</p>
+            
+            {atsResult && atsResult.missingKeywords.length > 0 && (
+               <div className="mt-8 animate-fadeIn">
+                  <p className="text-xs font-black text-slate-500 mb-4 uppercase tracking-[0.2em]">Priority Keywords to Add:</p>
                   <div className="flex flex-wrap gap-2">
-                    {atsResult.missingKeywords.slice(0, 10).map(kw => (
-                      <span key={kw} className="badge badge-outline border-base-300">{kw}</span>
+                    {atsResult.missingKeywords.map(kw => (
+                      <span key={kw} className="px-3 py-1.5 bg-white/5 border border-white/10 text-slate-300 text-[10px] font-bold rounded-lg uppercase tracking-wider">{kw}</span>
                     ))}
                   </div>
                </div>
             )}
           </div>
           
-          <Resume data={data} />
+          <div className="relative group">
+            <div className="absolute -inset-4 bg-primary/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <Resume data={data} />
+          </div>
           
-          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
-            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-outline btn-lg px-12">Return to Editor</button>
-            <button onClick={resetGenerator} className="btn btn-accent btn-lg px-12">Generate Another</button>
-            <button 
-              onClick={async () => {
-                try {
-                  await saveResumeToDB(data, atsResult?.score || 0);
-                  toast.success("Sync complete: Saved to cloud");
-                } catch (_) {
-                  toast.error("Database connection failure");
-                }
-              }} 
-              className="btn btn-success btn-lg px-12"
-            >
-              <FaSave className="mr-2" /> Save to Cloud
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 pt-10">
+            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-ghost text-slate-400 font-bold hover:text-white transition-all">
+              <FaUndo className="mr-2 text-xs" /> Edit Draft
             </button>
+            <div className="flex items-center gap-3 p-2 bg-base-200 rounded-2xl border border-white/5 shadow-xl">
+              <button 
+                onClick={async () => {
+                  try {
+                    await saveResumeToDB(data, atsResult?.score || 0);
+                    toast.success("Sync complete: Saved to cloud");
+                  } catch {
+                    toast.error("Database connection failure");
+                  }
+                }} 
+                className="btn btn-primary px-8 rounded-xl font-black shadow-lg shadow-primary/20"
+              >
+                <FaSave className="mr-2" /> Save Progress
+              </button>
+              <button onClick={resetGenerator} className="btn btn-ghost btn-square rounded-xl hover:bg-white/5">
+                <FaPaperPlane className="text-slate-500" />
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Floating System Health / Performance Metrics */}
-      <div className="fixed bottom-4 left-4 z-50">
-        <div className="dropdown dropdown-top dropdown-hover">
-          <div tabIndex={0} role="button" className="btn btn-circle btn-ghost bg-base-200 shadow-lg border border-base-300">
+      {/* Performance Monitor - Redesigned */}
+      <div className="fixed bottom-6 right-6 z-[120]">
+        <div className="dropdown dropdown-top dropdown-end">
+          <div tabIndex={0} role="button" className="btn btn-circle bg-base-300 border-white/10 shadow-2xl hover:scale-110 transition-transform">
             <FaChartBar className="text-primary" />
           </div>
-          <div tabIndex={0} className="dropdown-content z-[1] card card-compact w-64 p-4 shadow-xl bg-base-100 border border-base-300 mb-2">
-            <h3 className="font-bold text-sm border-b pb-2 mb-2">System Performance</h3>
-            <div className="space-y-2">
-               <div className="flex justify-between text-xs">
-                 <span>UI Fluidity:</span>
-                 <span className="font-mono text-success">{currentMetrics.smoothnessScore}</span>
+          <div tabIndex={0} className="dropdown-content z-[1] card card-compact w-72 p-6 shadow-2xl bg-base-300 border border-white/10 mb-4 rounded-3xl backdrop-blur-xl">
+            <h3 className="font-black text-xs text-white uppercase tracking-[0.2em] mb-4 border-b border-white/5 pb-2">System Health</h3>
+            <div className="space-y-4">
+               <div className="flex justify-between items-center">
+                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">UI Status</span>
+                 <span className="px-2 py-0.5 bg-success/10 text-success text-[10px] font-black rounded uppercase tracking-widest">{currentMetrics.smoothnessScore}</span>
                </div>
-               <div className="flex justify-between text-xs">
-                 <span>Avg. Input Latency:</span>
-                 <span className="font-mono">{currentMetrics.avgInputLatency}ms</span>
+               <div className="flex justify-between items-center">
+                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Latency</span>
+                 <span className="text-xs font-mono text-white">{currentMetrics.avgInputLatency}ms</span>
                </div>
-               <div className="flex justify-between text-xs">
-                 <span>Render Efficiency:</span>
-                 <span className="font-mono">{currentMetrics.avgRenderTime}ms</span>
+               <div className="flex justify-between items-center">
+                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Efficiency</span>
+                 <span className="text-xs font-mono text-white">{currentMetrics.avgRenderTime}ms</span>
                </div>
-               <p className="text-[10px] opacity-50 mt-2 italic">Metrics measured via PerformanceObserver API</p>
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@ exports.generateResumeData = async (userDescription) => {
         "gitHub": "string"
       },
       "summary": "string (professional summary)",
-      "skills": [{"title": "string", "level": "string"}],
+      "skills": [{"category": "string (e.g. Programming Languages)", "skills": "string (comma separated list, e.g. Java, JavaScript, SQL)"}],
       "experience": [{"jobTitle": "string", "company": "string", "duration": "string", "responsibility": "string"}],
       "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string"}],
       "projects": [{"title": "string", "description": "string", "technologiesUsed": "string"}]
@@ -37,7 +37,9 @@ exports.generateResumeData = async (userDescription) => {
     - location: "City, Country"
     - linkedin: "linkedin.com/in/yourprofile"
     - gitHub: "github.com/yourusername"
-    - company: "Company Name"
+    
+    FOR SKILLS:
+    Group technical skills into meaningful categories (e.g. Frameworks, Cloud, Databases). Each category should have a list of skills as a single comma-separated string.
 
     Do NOT hallucinate or invent fake identities (e.g., Alex Chen). Only use real data from the description or the placeholders above.
     
