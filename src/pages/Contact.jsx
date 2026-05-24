@@ -17,10 +17,11 @@ function Contact() {
 
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-            Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Touch.</span>
+            Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Connect.</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Have questions about InstaResume? Our team is here to help you accelerate your career journey.
+            Have feedback on InstaResume or want to collaborate on something interesting? 
+            I'm always open to discussing new ideas and technical challenges.
           </p>
         </div>
       </section>
@@ -32,40 +33,44 @@ function Contact() {
             {/* Contact Info */}
             <div className="lg:col-span-4 space-y-12">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-white tracking-tight">Contact Information</h3>
-                <p className="text-slate-400">Fill out the form and our team will get back to you within 24 hours.</p>
+                <h3 className="text-2xl font-bold text-white tracking-tight">Personal Links</h3>
+                <p className="text-slate-400">Feel free to reach out through any of these platforms or use the form.</p>
               </div>
 
               <div className="space-y-8">
-                <div className="flex items-center gap-4 group">
+                <a href="mailto:support@instaresume.app" className="flex items-center gap-4 group">
                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                     <FaEnvelope />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Email Us</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Email</p>
                     <p className="text-slate-200 font-bold">support@instaresume.app</p>
                   </div>
-                </div>
+                </a>
 
                 <div className="flex items-center gap-4 group">
                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-success group-hover:bg-success/20 transition-colors">
                     <FaMapMarkerAlt />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Location</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Based in</p>
                     <p className="text-slate-200 font-bold">Bangalore, India</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-6">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Connect with us</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Social Channels</p>
                 <div className="flex gap-4">
-                  {[FaTwitter, FaLinkedin, FaGithub].map((Icon, i) => (
-                    <a key={i} href="#" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
-                      <Icon />
-                    </a>
-                  ))}
+                  <a href="https://github.com/kushwith03" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                    <FaGithub />
+                  </a>
+                  <a href="https://www.linkedin.com/in/kushwith03/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                    <FaLinkedin />
+                  </a>
+                  <a href="https://twitter.com/kushwith03" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                    <FaTwitter />
+                  </a>
                 </div>
               </div>
             </div>
@@ -77,7 +82,7 @@ function Contact() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="form-control">
-                        <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
+                        <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Your Name</label>
                         <input type="text" placeholder="John Doe" className="input bg-white/5 border-white/5 focus:border-primary/50 text-slate-200" required />
                       </div>
                       <div className="form-control">
@@ -88,12 +93,12 @@ function Contact() {
                     
                     <div className="form-control">
                       <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Subject</label>
-                      <input type="text" placeholder="How can we help?" className="input bg-white/5 border-white/5 focus:border-primary/50 text-slate-200" required />
+                      <input type="text" placeholder="Feedback / Collaboration" className="input bg-white/5 border-white/5 focus:border-primary/50 text-slate-200" required />
                     </div>
 
                     <div className="form-control">
                       <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Message</label>
-                      <textarea placeholder="Your message here..." className="textarea h-40 bg-white/5 border-white/5 focus:border-primary/50 text-slate-200 resize-none" required></textarea>
+                      <textarea placeholder="Tell me more..." className="textarea h-40 bg-white/5 border-white/5 focus:border-primary/50 text-slate-200 resize-none" required></textarea>
                     </div>
 
                     <button type="submit" className="btn btn-primary w-full md:w-auto px-10 rounded-2xl font-black shadow-xl shadow-primary/20 group">
