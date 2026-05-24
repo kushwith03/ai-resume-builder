@@ -36,9 +36,14 @@ function Home() {
                             Launch Builder
                             <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <Link to="/about" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300 hover:bg-white/5 transition-all">
-                            Project Story
-                        </Link>
+                        <div className="flex flex-col gap-2">
+                            <Link to="/about" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300 hover:bg-white/5 transition-all">
+                                Project Story
+                            </Link>
+                            <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1.5">
+                                Explore Portfolio <FaExternalLinkAlt className="text-[8px]" />
+                            </a>
+                        </div>
                     </div>
                     
                     {/* Hero Image Mockup Area */}
@@ -46,14 +51,17 @@ function Home() {
                         <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-secondary/30 blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-700 rounded-[2rem]"></div>
                         <div className="relative bg-[#0b1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden aspect-[16/10] md:aspect-[21/10] flex flex-col">
                             {/* Mock Browser Header */}
-                            <div className="flex items-center gap-1.5 px-4 py-3 bg-white/5 border-b border-white/5">
+                            <div className="flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/5">
                                 <div className="flex gap-1.5">
                                     <div className="w-2.5 h-2.5 rounded-full bg-error/40"></div>
                                     <div className="w-2.5 h-2.5 rounded-full bg-warning/40"></div>
                                     <div className="w-2.5 h-2.5 rounded-full bg-success/40"></div>
                                 </div>
-                                <div className="mx-auto bg-white/5 px-3 py-1 rounded-md text-[10px] text-slate-500 font-mono tracking-tight border border-white/5">
-                                    instaresume.app/editor/draft-v1
+                                <div className="bg-white/5 px-3 py-1 rounded-md text-[10px] text-slate-500 font-mono tracking-tight border border-white/5">
+                                    instaresume.app/editor
+                                </div>
+                                <div className="hidden sm:block">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 border border-white/10 px-2 py-0.5 rounded">Portfolio Project Showcase</span>
                                 </div>
                             </div>
                             
