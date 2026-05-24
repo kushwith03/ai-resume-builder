@@ -41,12 +41,86 @@ function Home() {
                     </div>
                     
                     {/* Hero Image Mockup Area */}
-                    <div className="mt-20 relative max-w-5xl mx-auto">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-secondary/20 blur opacity-30 rounded-3xl"></div>
-                        <div className="relative bg-[#0b1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden aspect-[16/9] md:aspect-[21/9] flex items-center justify-center">
-                            <div className="flex flex-col items-center gap-4 text-slate-500 opacity-40">
-                                <FaMagic className="text-5xl" />
-                                <span className="font-bold tracking-widest uppercase text-xs">InstaResume Editor Preview</span>
+                    <div className="mt-20 relative max-w-6xl mx-auto group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-secondary/30 blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-700 rounded-[2rem]"></div>
+                        <div className="relative bg-[#0b1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden aspect-[16/10] md:aspect-[21/10] flex flex-col">
+                            {/* Mock Browser Header */}
+                            <div className="flex items-center gap-1.5 px-4 py-3 bg-white/5 border-b border-white/5">
+                                <div className="flex gap-1.5">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-error/40"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-warning/40"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-success/40"></div>
+                                </div>
+                                <div className="mx-auto bg-white/5 px-3 py-1 rounded-md text-[10px] text-slate-500 font-mono tracking-tight border border-white/5">
+                                    instaresume.app/editor/draft-v1
+                                </div>
+                            </div>
+                            
+                            {/* Mock UI Content */}
+                            <div className="flex-1 flex overflow-hidden">
+                                {/* Mock Sidebar */}
+                                <div className="w-48 border-r border-white/5 bg-white/[0.02] hidden md:flex flex-col p-4 gap-4">
+                                    {[1, 2, 3, 4].map(i => (
+                                        <div key={i} className={`h-8 rounded-lg ${i === 1 ? 'bg-primary/20 border border-primary/20' : 'bg-white/5 border border-white/5'} flex items-center px-3 gap-2`}>
+                                            <div className={`w-2 h-2 rounded-full ${i === 1 ? 'bg-primary' : 'bg-slate-700'}`}></div>
+                                            <div className={`h-1.5 rounded-full ${i === 1 ? 'bg-primary/40 w-16' : 'bg-slate-700 w-20'}`}></div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Mock Editor */}
+                                <div className="flex-1 p-6 flex flex-col gap-6 bg-white/[0.01]">
+                                    <div className="space-y-3">
+                                        <div className="h-2 w-24 bg-primary/40 rounded-full"></div>
+                                        <div className="h-10 w-full bg-white/5 border border-white/10 rounded-xl"></div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="h-2 w-32 bg-slate-700 rounded-full"></div>
+                                        <div className="h-32 w-full bg-white/5 border border-white/10 rounded-xl relative overflow-hidden p-4">
+                                            <div className="space-y-2">
+                                                <div className="h-1.5 w-full bg-slate-800 rounded-full animate-pulse"></div>
+                                                <div className="h-1.5 w-4/5 bg-slate-800 rounded-full animate-pulse delay-75"></div>
+                                                <div className="h-1.5 w-5/6 bg-slate-800 rounded-full animate-pulse delay-150"></div>
+                                                <div className="h-1.5 w-2/3 bg-slate-800 rounded-full animate-pulse delay-300"></div>
+                                            </div>
+                                            <div className="absolute bottom-4 right-4 h-8 w-24 bg-primary/20 border border-primary/30 rounded-lg flex items-center justify-center">
+                                                <FaMagic className="text-primary text-[10px] mr-2" />
+                                                <div className="h-1 w-10 bg-primary/40 rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-auto flex justify-between items-center">
+                                        <div className="h-2 w-20 bg-slate-700 rounded-full"></div>
+                                        <div className="h-8 w-24 bg-primary rounded-lg shadow-lg shadow-primary/20"></div>
+                                    </div>
+                                </div>
+
+                                {/* Mock Resume Preview */}
+                                <div className="flex-1 bg-white p-6 hidden sm:block overflow-hidden">
+                                    <div className="max-w-[180px] mx-auto space-y-4">
+                                        <div className="text-center space-y-1.5">
+                                            <div className="h-3 w-32 bg-slate-900 rounded-full mx-auto"></div>
+                                            <div className="h-1.5 w-24 bg-slate-400 rounded-full mx-auto"></div>
+                                        </div>
+                                        <div className="flex justify-center gap-2">
+                                            <div className="h-1 w-10 bg-slate-300 rounded-full"></div>
+                                            <div className="h-1 w-10 bg-slate-300 rounded-full"></div>
+                                            <div className="h-1 w-10 bg-slate-300 rounded-full"></div>
+                                        </div>
+                                        <div className="space-y-2 pt-4">
+                                            <div className="h-1.5 w-12 bg-slate-900 rounded-full"></div>
+                                            <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+                                            <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+                                            <div className="h-1 w-5/6 bg-slate-200 rounded-full"></div>
+                                        </div>
+                                        <div className="space-y-2 pt-4">
+                                            <div className="h-1.5 w-16 bg-slate-900 rounded-full"></div>
+                                            <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+                                            <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+                                            <div className="h-1 w-4/5 bg-slate-200 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
