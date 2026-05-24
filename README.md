@@ -1,101 +1,94 @@
-# InstaResume - Premium AI Resume Builder
+# InstaResume • AI-Powered ATS Resume Builder
 
-InstaResume is a high-performance, SaaS-style resume builder powered by Google Gemini AI. It transforms simple career descriptions into professional, ATS-optimized resumes with a real-time side-by-side editing experience and instant high-fidelity PDF export.
+InstaResume is a modern full-stack application designed to solve the modern resume challenge. It leverages Generative AI to transform plain-text career descriptions into high-performance, ATS-optimized resumes. This project explores the intersection of AI integration, complex state management, and professional document rendering.
 
-## 🔗 Live Demo
-- **Frontend:** [https://ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app)
-- **API Health Check:** [https://instaresume-api-8o52.onrender.com/api/health](https://instaresume-api-8o52.onrender.com/api/health)
+Built & developed by **R Khushwith Kumar** (Final Year CSE Student).
 
 ---
 
-## 🚀 Key Features
+## 🔗 Live Project & Links
 
-- **AI-Driven Architecture:** Leverages Gemini 1.5 Flash to generate structured, professional resume content from natural language.
-- **Real-Time A4 Preview:** A dedicated document viewer providing a high-fidelity, side-by-side live preview of your resume.
-- **ATS Optimization:** Intelligent keyword matching and scoring system to ensure your resume passes recruiter filters.
-- **Professional SaaS UI:** Modern, medium-dark "SaaS Dim" aesthetic built with Tailwind CSS and DaisyUI.
-- **Secure Cloud Sync:** JWT-authenticated user sessions with MongoDB Atlas for saving and retrieving resume drafts.
+- **Frontend:** [ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app)
+- **Backend API:** [instaresume-api-8o52.onrender.com](https://instaresume-api-8o52.onrender.com)
+- **Developer Portfolio:** [rkhushwith-portfolio.vercel.app](https://rkhushwith-portfolio.vercel.app/)
+
+---
+
+## ✨ Core Features
+
+- **AI Resume Architect:** Uses **Gemini AI v1.5** to generate professional impact-focused bullet points and summaries from raw user input.
+- **ATS Optimization:** Specifically engineered layouts and keyword matching logic to ensure high readability for Applicant Tracking Systems.
+- **Real-time Analytics:** Custom scoring algorithm providing instant feedback on resume quality and job alignment.
+- **Smart PDF Export:** Client-side high-fidelity PDF generation using `@react-pdf/renderer` for standardized professional output.
+- **Live Interactive Editor:** A side-by-side editing experience with real-time preview and instant UI updates.
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework:** React 18 (Vite)
-- **Styling:** Tailwind CSS + DaisyUI
-- **PDF Engine:** @react-pdf/renderer
-- **State Management:** React Hook Form
-- **Icons:** React Icons
+- **React + Vite** (High-performance UI)
+- **TailwindCSS** (Modern, dark futuristic aesthetic)
+- **DaisyUI** (Accessible component primitives)
+- **React Hook Form** (Clean form state management)
 
-### Backend
-- **Runtime:** Node.js + Express
-- **AI Integration:** Google Gemini AI API
-- **Database:** MongoDB Atlas (Mongoose)
-- **Security:** JWT Authentication + BcryptJS
-- **Middleware:** CORS, Cookie-Parser, Dotenv
+### Backend & AI
+- **Node.js + Express** (Scalable REST API)
+- **Google Gemini AI v1.5** (LLM for professional content generation)
+- **MongoDB + Mongoose** (Flexible document storage)
+- **JWT + Cookies** (Secure stateless authentication)
 
 ---
 
-## 📸 Screenshots & Demo
+## 🏗️ Architecture Overview
 
-*(Add high-resolution screenshots or a GIF here for portfolio showcase)*
-
----
-
-## 💻 Local Setup
-
-### 1. Prerequisites
-- Node.js (v18+)
-- MongoDB Atlas account
-- Google Gemini AI API Key
-
-### 2. Backend Installation
-```bash
-cd server
-npm install
-cp .env.example .env
-# Update .env with your MONGODB_URI and GEMINI_API_KEY
-npm start
-```
-
-### 3. Frontend Installation
-```bash
-# In the root directory
-npm install
-# Update .env with VITE_API_URL=http://localhost:8080
-npm run dev
-```
+The system follows a classic **client-server architecture** with a heavy focus on client-side rendering performance:
+1. **Ingestion:** User inputs career details via a multi-step interactive form.
+2. **Generation:** Backend sanitizes data and orchestrates prompts to Gemini AI for content synthesis.
+3. **Validation:** Resume data is matched against common ATS parsing rules and scored in real-time.
+4. **Rendering:** The frontend utilizes vector-based rendering to ensure PDFs are lightweight and parseable.
 
 ---
 
-## 🌐 Production Deployment
+## 🚀 Local Setup
 
-### Backend (Render)
-1. **New Web Service:** Connect your GitHub repo.
-2. **Root Directory:** `server`.
-3. **Build Command:** `npm install`.
-4. **Start Command:** `npm start`.
-5. **Environment Variables:**
-   - `MONGODB_URI`: Your production database string.
-   - `GEMINI_API_KEY`: Your API key.
-   - `JWT_SECRET`: A secure random string.
-   - `ALLOWED_ORIGIN`: `https://ai-resume-builder-sigma-jet.vercel.app`.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/kushwith03/ai-resume-builder.git
+   ```
 
-### Frontend (Vercel)
-1. **New Project:** Connect your GitHub repo.
-2. **Framework Preset:** `Vite`.
-3. **Output Directory:** `dist`.
-4. **Environment Variables:**
-   - `VITE_API_URL`: `https://instaresume-api-8o52.onrender.com`.
+2. **Frontend Setup:**
+   ```bash
+   npm install
+   npm run dev
+   ```
 
----
-
-## 🛡️ Engineering Standards
-- ✅ **Dynamic CORS:** Adaptive origin validation for production and local environments.
-- ✅ **SPA Routing:** `vercel.json` rewrite rules for seamless React Router refreshes.
-- ✅ **Performance:** Debounced rendering logic for smooth real-time preview updates.
-- ✅ **Security:** Zero-secrets committed; all sensitive data managed via environment variables.
+3. **Backend Setup:**
+   - Create a `.env` in the `server/` directory with: `PORT`, `MONGO_URI`, `JWT_SECRET`, and `GEMINI_API_KEY`.
+   ```bash
+   cd server
+   npm install
+   npm start
+   ```
 
 ---
 
-Built with ❤️ by [Kushwith_03](https://github.com/kushwith03)
+## 💡 What I Learned
+
+- **LLM Integration:** Successfully implemented prompt engineering patterns to ensure deterministic and structured JSON outputs from AI.
+- **Full-Stack Engineering:** Deepened my understanding of the MERN stack, specifically handling complex nested states in React and architecting secure backend routes.
+- **UX Design:** Focused on building a premium "SaaS-like" experience using custom CSS variables and modern UI libraries while maintaining performance.
+
+---
+
+## 👨‍💻 Developer
+
+**R Khushwith Kumar**  
+Final Year CSE Student | Full-Stack Developer  
+Specializing in MERN Stack & AI-Integrated Applications
+
+[GitHub](https://github.com/kushwith03) • [LinkedIn](https://www.linkedin.com/in/kushwith03/) • [Portfolio](https://rkhushwith-portfolio.vercel.app/)
+
+<p align="center">
+  Built with ❤️ by <a href="https://github.com/kushwith03">kushwith03</a>
+</p>
