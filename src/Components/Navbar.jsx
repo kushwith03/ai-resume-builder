@@ -40,7 +40,7 @@ function Navbar() {
             <ul className="flex items-center gap-1">
               {[
                 { label: "About", path: "/about" },
-                { label: "Services", path: "/services" },
+                { label: "Capabilities", path: "/services" },
                 { label: "Contact", path: "/contact" }
               ].map((link) => (
                 <li key={link.path}>
@@ -83,7 +83,7 @@ function Navbar() {
                 {[
                   { label: "Home", path: "/" },
                   { label: "About", path: "/about" },
-                  { label: "Services", path: "/services" },
+                  { label: "Capabilities", path: "/services" },
                   { label: "Contact", path: "/contact" }
                 ].map((link) => (
                   <li key={link.path}>
