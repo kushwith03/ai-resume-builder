@@ -23,20 +23,21 @@ function Home() {
                     </div>
                     
                     <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white mb-6 leading-tight">
-                        Your dream career <br /> starts with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">InstaResume.</span>
+                        Smart resumes <br /> powered by <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Gemini AI.</span>
                     </h1>
                     
                     <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
-                        The professional document architect that transforms your career story into high-performance, ATS-optimized resumes in seconds.
+                        A personal experiment in building the document architect of the future. 
+                        InstaResume uses AI to transform your career story into high-performance, ATS-optimized resumes.
                     </p>
                     
                     <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fadeIn">
                         <Link to="/generate-resume" className="btn btn-primary btn-lg px-10 rounded-full font-bold shadow-xl shadow-primary/20 group transition-all duration-300 hover:scale-105">
-                            Create My Resume
+                            Launch Builder
                             <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
                         <Link to="/about" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300 hover:bg-white/5 transition-all">
-                            Explore Features
+                            Project Story
                         </Link>
                     </div>
                     
