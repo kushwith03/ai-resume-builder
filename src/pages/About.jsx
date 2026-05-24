@@ -128,12 +128,25 @@ function About() {
                     Try the Project
                     <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <a href="https://github.com/kushwith03" target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300 hover:bg-white/5 transition-all">
-                    My Portfolio
+                <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300 hover:bg-white/5 transition-all">
+                    Explore My Portfolio
                 </a>
               </div>
             </div>
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 blur-[100px] rounded-full -ml-32 -mb-32"></div>
           </div>
+        </div>
+      </section>
+
+      {/* Footer Portfolio Link */}
+      <section className="py-12 border-t border-white/5">
+        <div className="container mx-auto px-6 text-center">
+            <p className="text-slate-500 text-sm mb-4">Want to see more of my work?</p>
+            <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+                Visit R Khushwith Kumar's Portfolio <FaExternalLinkAlt className="text-xs" />
+            </a>
         </div>
       </section>
     </div>
