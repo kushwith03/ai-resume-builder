@@ -52,19 +52,45 @@ const GenerateResume = () => {
   }, []);
 
   const handleGenerate = async () => {
-    if (!description.trim()) return toast.error("Prompt cannot be empty");
+    if (!description.trim()) return toast.error("Please provide a career description");
 
     performanceTracker.startMeasure();
     setLoading(true);
+    
+    // Simulate high-quality feedback during loading
+    const loadingToast = toast.loading("AI Engine is architecting your draft...");
+
     try {
       const response = await generateResume(description);
       reset(response.data);
       setShowFormUI(true);
       setShowPromptInput(false);
-      trackAnalytics("generate_resume");
-      toast.success("AI draft created successfully");
+      trackAnalytics("generate_resume_success");
+      toast.success("AI draft created successfully", { id: loadingToast });
     } catch (error) {
-      toast.error(error.response?.data?.error || "AI service unavailable");
+      console.error("AI Generation failed:", error);
+      const status = error.response?.status;
+      const errorMessage = error.response?.data?.error;
+
+      if (status === 429) {
+        toast.error("AI service is currently at capacity (Demo Quota reached). Please try again in a minute.", { id: loadingToast, duration: 6000 });
+      } else {
+        toast.error(errorMessage || "AI service temporarily unavailable. Please retry shortly.", { id: loadingToast });
+      }
+
+      // Portfolio Logic: If AI fails (quota), we still want to show the UI 
+      // but let the user know they can manually fill it for the demo.
+      trackAnalytics("generate_resume_quota_exhausted");
+      
+      // Optionally show a "Demo Mode" fallback after a delay
+      setTimeout(() => {
+        if (!showFormUI) {
+          toast("Tip: You can still use the builder manually to explore the editor!", {
+            icon: '💡',
+            duration: 5000
+          });
+        }
+      }, 2000);
     } finally {
       setLoading(false);
       performanceTracker.endMeasure("AI_Generation");
