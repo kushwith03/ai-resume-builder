@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaMagic, FaShieldAlt, FaChartLine, FaArrowRight } from "react-icons/fa";
+import { FaMagic, FaShieldAlt, FaChartLine, FaArrowRight, FaExternalLinkAlt } from "react-icons/fa";
 
 function Home() {
     return (
