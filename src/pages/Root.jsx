@@ -1,13 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router";
-import Navbar from "../components/Navbar";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+
 function Root() {
   return (
-    <div>
-      {/* navbar */}
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-
-      <Outlet />
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }

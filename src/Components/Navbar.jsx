@@ -14,7 +14,7 @@ function Navbar() {
     if (storedUser && storedUser.name) {
       user = storedUser;
     }
-  } catch (e) {}
+  } catch {}
 
   const handleLogout = () => {
     logout();

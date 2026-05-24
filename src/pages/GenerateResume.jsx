@@ -131,20 +131,6 @@ const GenerateResume = () => {
 
       {showFormUI && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start animate-fadeIn relative">
-          {/* Floating Action Bar */}
-          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] flex items-center gap-2 p-2 bg-base-300/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl animate-fadeIn">
-            <button 
-              onClick={handleSubmit(onSubmit)} 
-              className="btn btn-primary px-8 rounded-xl font-black text-sm shadow-xl shadow-primary/20"
-            >
-              Finalize & Export
-            </button>
-            <div className="w-px h-8 bg-white/10 mx-1"></div>
-            <button onClick={resetGenerator} className="btn btn-ghost btn-square rounded-xl hover:bg-white/5">
-              <FaUndo className="text-slate-400" />
-            </button>
-          </div>
-
           <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-8">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-3xl font-black text-white tracking-tight">Editor</h2>
@@ -190,7 +176,26 @@ const GenerateResume = () => {
           </form>
 
           {/* Live Preview Panel - Document Viewer Style */}
-          <div className="hidden lg:flex lg:col-span-5 sticky top-24 h-[calc(100vh-140px)] items-start justify-center bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-inner">
+          <div className="hidden lg:flex lg:col-span-5 sticky top-24 h-[calc(100vh-140px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-inner">
+            {/* Preview Toolbar */}
+            <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-success"></div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5">
+                  Reset
+                </button>
+                <button 
+                  onClick={handleSubmit(onSubmit)} 
+                  className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10"
+                >
+                  Export PDF
+                </button>
+              </div>
+            </div>
+            
             <div className="w-full h-full overflow-y-auto p-6 md:p-10 custom-scrollbar">
                <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />
             </div>
