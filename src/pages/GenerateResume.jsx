@@ -95,7 +95,7 @@ const GenerateResume = () => {
               <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Engine Active</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
-            <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">Describe your professional background in plain English, and our AI will architect a high-performance resume draft for you.</p>
+            <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">Describe your professional background in plain English, and this AI-powered engine will architect a high-performance resume draft for you.</p>
           </div>
 
           <div className="w-full max-w-2xl group">
