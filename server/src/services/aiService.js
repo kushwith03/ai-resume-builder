@@ -28,8 +28,20 @@ exports.generateResumeData = async (userDescription) => {
       "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string"}],
       "projects": [{"title": "string", "description": "string", "technologiesUsed": "string"}]
     }
+
+    STRICT GUIDELINES FOR MISSING INFORMATION:
+    If personal details are not explicitly provided in the user description, use these placeholders EXACTLY:
+    - fullName: "Your Name"
+    - email: "your.email@example.com"
+    - phoneNumber: "+1-555-000-0000"
+    - location: "City, Country"
+    - linkedin: "linkedin.com/in/yourprofile"
+    - gitHub: "github.com/yourusername"
+    - company: "Company Name"
+
+    Do NOT hallucinate or invent fake identities (e.g., Alex Chen). Only use real data from the description or the placeholders above.
     
-    Ensure the data is realistic and well-formatted. Do not include any markdown formatting or backticks in your response, return ONLY the raw JSON.
+    Ensure the data is professional and well-formatted. Return ONLY the raw JSON.
   `;
 
   try {
@@ -37,14 +49,12 @@ exports.generateResumeData = async (userDescription) => {
     const response = await result.response;
     let text = response.text();
 
-    // Strip markdown formatting if AI hallucinates code blocks
     if (text.includes('```')) {
       text = text.replace(/```json\n?/, '').replace(/```\n?/, '').replace(/\n?```/, '');
     }
 
     const data = JSON.parse(text.trim());
 
-    // Basic schema validation
     const requiredSections = ['personalInformation', 'summary', 'skills', 'experience', 'education', 'projects'];
     const missingSections = requiredSections.filter(section => !data[section]);
 
