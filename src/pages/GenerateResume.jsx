@@ -24,6 +24,7 @@ const GenerateResume = () => {
   });
 
   const formData = watch();
+  const debouncedFormData = useDebounce(formData, 800);
 
   const [showFormUI, setShowFormUI] = useState(false);
   const [showResumeUI, setShowResumeUI] = useState(false);
@@ -85,7 +86,7 @@ const GenerateResume = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-10 min-h-[90vh] pb-32">
+    <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-32 ${showFormUI ? 'max-w-[1400px]' : 'max-w-5xl'}`}>
       {showPromptInput && (
         <div className="flex flex-col items-center justify-center py-20 gap-8">
           <div className="text-center space-y-3">
@@ -108,36 +109,45 @@ const GenerateResume = () => {
       )}
 
       {showFormUI && (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 animate-fadeIn">
-          {atsResult && (
-            <div className="sticky top-0 z-20 bg-base-100/90 backdrop-blur-md p-4 rounded-xl border border-base-300 shadow-sm flex items-center justify-between">
-              <span className="text-sm font-bold opacity-60 uppercase tracking-widest">Live Optimization Score</span>
-              <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score >= 70 ? 'badge-success' : atsResult.score >= 40 ? 'badge-warning' : 'badge-error'}`}>
-                {atsResult.score}% Match
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start animate-fadeIn">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {atsResult && (
+              <div className="sticky top-0 z-20 bg-base-100/90 backdrop-blur-md p-4 rounded-xl border border-base-300 shadow-sm flex items-center justify-between">
+                <span className="text-sm font-bold opacity-60 uppercase tracking-widest">Live Optimization Score</span>
+                <div className={`badge badge-lg gap-2 p-4 font-bold ${atsResult.score >= 70 ? 'badge-success' : atsResult.score >= 40 ? 'badge-warning' : 'badge-error'}`}>
+                  {atsResult.score}% Match
+                </div>
               </div>
-            </div>
-          )}
-          <FormSection title="Personal Information">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <input {...register("personalInformation.fullName")} placeholder="Full Name" className="input input-bordered w-full" />
-              <input {...register("personalInformation.email")} placeholder="Email" className="input input-bordered w-full" />
-              <input {...register("personalInformation.location")} placeholder="Location" className="input input-bordered w-full" />
-            </div>
-          </FormSection>
-          
-          <FormSection title="Professional Summary">
-            <textarea {...register("summary")} className="textarea textarea-bordered w-full h-40 p-4 leading-relaxed" />
-          </FormSection>
+            )}
+            <FormSection title="Personal Information">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <input {...register("personalInformation.fullName")} placeholder="Full Name" className="input input-bordered w-full" />
+                <input {...register("personalInformation.email")} placeholder="Email" className="input input-bordered w-full" />
+                <input {...register("personalInformation.location")} placeholder="Location" className="input input-bordered w-full" />
+              </div>
+            </FormSection>
+            
+            <FormSection title="Professional Summary">
+              <textarea {...register("summary")} className="textarea textarea-bordered w-full h-40 p-4 leading-relaxed" />
+            </FormSection>
 
-          <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["title", "level"]} register={register} />
-          <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />
-          <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />
-          <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} />
+            <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["title", "level"]} register={register} />
+            <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />
+            <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />
+            <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} />
 
-          <div className="flex justify-end gap-4 sticky bottom-6 bg-base-100/80 backdrop-blur p-4 rounded-2xl shadow-xl border border-base-200 z-10">
-            <button type="submit" className="btn btn-primary btn-lg px-20">Preview Final Resume</button>
+            <div className="flex justify-end gap-4 sticky bottom-6 bg-base-100/80 backdrop-blur p-4 rounded-2xl shadow-xl border border-base-200 z-10">
+              <button type="submit" className="btn btn-primary btn-lg px-20">Preview Final Resume</button>
+            </div>
+          </form>
+
+          {/* Live Preview Panel - Document Viewer Style */}
+          <div className="hidden lg:flex sticky top-10 h-[calc(100vh-100px)] items-start justify-center bg-base-200/50 rounded-3xl border border-base-300 overflow-hidden">
+            <div className="w-full max-w-[550px] h-full overflow-y-auto p-4 md:p-6 custom-scrollbar">
+               <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />
+            </div>
           </div>
-        </form>
+        </div>
       )}
 
       {showResumeUI && (
@@ -179,7 +189,7 @@ const GenerateResume = () => {
                 try {
                   await saveResumeToDB(data, atsResult?.score || 0);
                   toast.success("Sync complete: Saved to cloud");
-                } catch (e) {
+                } catch (_) {
                   toast.error("Database connection failure");
                 }
               }} 
