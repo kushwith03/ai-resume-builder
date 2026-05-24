@@ -15,10 +15,10 @@ function Contact() {
 
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-            Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Connect.</span>
+            Let&apos;s <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Connect.</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            I'm always open to discussing technical challenges, collaboration opportunities, or feedback on this project.
+            I&apos;m always open to discussing technical challenges, collaboration opportunities, or feedback on this project.
           </p>
         </div>
       </section>

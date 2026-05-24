@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import "daisyui";
 import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFilePdf } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumePDF from "./ResumePDF";
 
-const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) => {
+const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -174,7 +174,7 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
               fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
               className="btn btn-primary btn-wide shadow-xl relative z-[70]"
             >
-              {({ blob, url, loading, error }) => {
+              {({ loading, error }) => {
                 if (error) {
                   console.error("PDF generation error:", error);
                   return (

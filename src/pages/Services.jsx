@@ -54,7 +54,7 @@ function Services() {
             Project <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Capabilities.</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Exploring the limits of AI-driven career tools. Here's a breakdown of the core technical features implemented in this project.
+            Exploring the limits of AI-driven career tools. Here&apos;s a breakdown of the core technical features implemented in this project.
           </p>
         </div>
       </section>

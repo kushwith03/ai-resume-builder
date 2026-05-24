@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { isAuthenticated, logout } from "../api/AuthService";
 import { FaMagic, FaUserCircle } from "react-icons/fa";
@@ -10,11 +9,16 @@ function Navbar() {
 
   let user = { name: "User" };
   try {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.name) {
-      user = storedUser;
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser && parsedUser.name) {
+        user = parsedUser;
+      }
     }
-  } catch {}
+  } catch (err) {
+    console.error("Failed to parse user data", err);
+  }
 
   const handleLogout = () => {
     logout();

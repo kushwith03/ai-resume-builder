@@ -103,10 +103,10 @@ function About() {
                     </div>
                     <div className="space-y-4 font-mono text-xs">
                         <p className="text-primary font-bold">const projectInfo = &#123;</p>
-                        <p className="pl-4 text-slate-400">name: "InstaResume",</p>
-                        <p className="pl-4 text-slate-400">developer: "R Khushwith Kumar",</p>
-                        <p className="pl-4 text-slate-400">status: "Active Portfolio Project",</p>
-                        <p className="pl-4 text-slate-400">tech: ["React", "AI", "Node", "MongoDB"]</p>
+                        <p className="pl-4 text-slate-400">name: &quot;InstaResume&quot;,</p>
+                        <p className="pl-4 text-slate-400">developer: &quot;R Khushwith Kumar&quot;,</p>
+                        <p className="pl-4 text-slate-400">status: &quot;Active Portfolio Project&quot;,</p>
+                        <p className="pl-4 text-slate-400">tech: [&quot;React&quot;, &quot;AI&quot;, &quot;Node&quot;, &quot;MongoDB&quot;]</p>
                         <p className="text-primary font-bold">&#125;;</p>
                     </div>
                 </div>
@@ -144,7 +144,7 @@ function About() {
         <div className="container mx-auto px-6 text-center">
             <p className="text-slate-500 text-sm mb-4">Want to see more of my work?</p>
             <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary font-bold hover:underline">
-                Visit R Khushwith Kumar's Portfolio <FaGlobe className="text-xs" />
+                Visit R Khushwith Kumar&apos;s Portfolio <FaGlobe className="text-xs" />
             </a>
         </div>
       </section>
