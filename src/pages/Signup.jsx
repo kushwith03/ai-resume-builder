@@ -16,7 +16,7 @@ const Signup = () => {
     setLoading(true);
     try {
       await register(name, email, password);
-      toast.success("Welcome to ResuAI!");
+      toast.success("Welcome to InstaResume!");
       navigate("/generate-resume");
     } catch (error) {
       toast.error(error.response?.data?.error || "Registration failed");
@@ -30,7 +30,7 @@ const Signup = () => {
       <div className="card w-full max-w-md bg-base-200 border border-white/5 shadow-2xl rounded-3xl overflow-hidden">
         <div className="card-body p-10">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-white tracking-tight mb-2">Join ResuAI</h2>
+            <h2 className="text-3xl font-black text-white tracking-tight mb-2">Join InstaResume</h2>
             <p className="text-slate-400 text-sm">Start building your high-performance resume today</p>
           </div>
           

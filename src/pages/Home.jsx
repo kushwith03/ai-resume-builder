@@ -23,20 +23,20 @@ function Home() {
                     </div>
                     
                     <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white mb-6 leading-tight">
-                        Land your dream job <br /> with an <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">AI-Powered</span> Resume.
+                        Your dream career <br /> starts with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">InstaResume.</span>
                     </h1>
                     
                     <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
-                        The ultimate AI-driven builder that optimizes your resume for ATS systems and highlights your true potential to recruiters.
+                        The professional document architect that transforms your career story into high-performance, ATS-optimized resumes in seconds.
                     </p>
                     
                     <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fadeIn">
-                        <Link to="/generate-resume" className="btn btn-primary btn-lg px-10 rounded-full font-bold shadow-xl shadow-primary/20 group">
-                            Start Building Now
+                        <Link to="/generate-resume" className="btn btn-primary btn-lg px-10 rounded-full font-bold shadow-xl shadow-primary/20 group transition-all duration-300 hover:scale-105">
+                            Create My Resume
                             <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <Link to="/about" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300">
-                            See How it Works
+                        <Link to="/about" className="btn btn-ghost btn-lg px-10 rounded-full font-bold text-slate-300 hover:bg-white/5 transition-all">
+                            Explore Features
                         </Link>
                     </div>
                     
@@ -46,7 +46,7 @@ function Home() {
                         <div className="relative bg-[#0b1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden aspect-[16/9] md:aspect-[21/9] flex items-center justify-center">
                             <div className="flex flex-col items-center gap-4 text-slate-500 opacity-40">
                                 <FaMagic className="text-5xl" />
-                                <span className="font-bold tracking-widest uppercase text-xs">Professional Editor Preview</span>
+                                <span className="font-bold tracking-widest uppercase text-xs">InstaResume Editor Preview</span>
                             </div>
                         </div>
                     </div>

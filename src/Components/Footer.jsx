@@ -8,7 +8,7 @@ const Footer = () => {
           Built with <span className="text-error mx-1">❤️</span> by <span className="text-slate-300 font-bold hover:text-primary transition-colors cursor-default">Kushwith_03</span>
         </p>
         <p className="text-[10px] text-slate-600 mt-2 uppercase tracking-[0.2em] font-black">
-          &copy; {new Date().getFullYear()} ResuAI Systems
+          &copy; {new Date().getFullYear()} InstaResume Systems
         </p>
       </div>
     </footer>

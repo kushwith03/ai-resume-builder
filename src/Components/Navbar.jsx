@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { isAuthenticated, logout } from "../api/AuthService";
-import { FaRocket, FaUserCircle } from "react-icons/fa";
+import { FaMagic, FaUserCircle } from "react-icons/fa";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -28,11 +28,11 @@ function Navbar() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="navbar h-16 min-h-0 p-0">
           <div className="navbar-start">
-            <Link to="/" className="flex items-center gap-2 group transition-all">
-              <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-                <FaRocket className="text-primary text-xl" />
+            <Link to="/" className="flex items-center gap-2.5 group transition-all">
+              <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                <FaMagic className="text-primary text-lg" />
               </div>
-              <span className="text-xl font-black tracking-tighter text-white">Resu<span className="text-primary">AI</span></span>
+              <span className="text-xl font-black tracking-tight text-white">Insta<span className="text-primary">Resume</span></span>
             </Link>
           </div>
           

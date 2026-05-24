@@ -1,6 +1,6 @@
-# ResuAI - Premium AI Resume Builder
+# InstaResume - Premium AI Resume Builder
 
-ResuAI is a high-performance, SaaS-style resume builder powered by Google Gemini AI. It transforms simple career descriptions into professional, ATS-optimized resumes with a real-time side-by-side editing experience and instant high-fidelity PDF export.
+InstaResume is a high-performance, SaaS-style resume builder powered by Google Gemini AI. It transforms simple career descriptions into professional, ATS-optimized resumes with a real-time side-by-side editing experience and instant high-fidelity PDF export.
 
 ## 🔗 Live Demo
 - **Frontend:** [https://ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app)
