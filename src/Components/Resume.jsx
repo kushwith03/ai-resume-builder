@@ -38,7 +38,7 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
           )}
           {data.personalInformation?.email && (
             <a href={`mailto:${data.personalInformation.email}`} className="flex items-center gap-1 hover:text-primary transition-colors text-wrap break-all">
-              <FaEnvelope className="text-primary flex-shrink-0" /> {data.personalInformation.email}        
+              <FaEnvelope className="text-primary flex-shrink-0" /> {data.personalInformation.email}
             </a>
           )}
           {data.personalInformation?.phoneNumber && (
@@ -166,13 +166,13 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
     <div className="flex flex-col items-center w-full px-4">
       {resumeContent}
       {!hideDownload && (
-        <div className="mt-8 mb-16 w-full flex justify-center">
+        <div className="mt-8 mb-16 w-full flex justify-center relative z-[60]">
           {isClient ? (
             <PDFDownloadLink
               key={downloadKey}
               document={<ResumePDF data={data} />}
               fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
-              className="btn btn-primary btn-wide shadow-xl"
+              className="btn btn-primary btn-wide shadow-xl relative z-[70]"
             >
               {({ blob, url, loading, error }) => {
                 if (error) {
@@ -193,7 +193,7 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
               }}
             </PDFDownloadLink>
           ) : (
-            <button className="btn btn-primary btn-wide opacity-50 cursor-not-allowed">
+            <button className="btn btn-primary btn-wide opacity-50 cursor-not-allowed">       
                <FaFilePdf className="animate-pulse" />
                Initializing...
             </button>
