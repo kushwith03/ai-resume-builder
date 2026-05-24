@@ -131,9 +131,9 @@ const GenerateResume = () => {
 
       {showFormUI && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start animate-fadeIn relative">
-          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-6 md:space-y-8">        
+          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-6 md:space-y-8">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>       
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
               {atsResult && (
                 <div className="flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-2xl">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">ATS Match</span>
@@ -173,7 +173,7 @@ const GenerateResume = () => {
             <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />      
             <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />        
             <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} />
-            
+
             {/* Mobile Save/Preview Buttons */}
             <div className="flex lg:hidden flex-col gap-4 pt-6">
               <button
@@ -222,9 +222,9 @@ const GenerateResume = () => {
       )}
 
       {showResumeUI && (
-        <div className="max-w-5xl mx-auto space-y-8 md:space-y-12 animate-fadeIn pb-20">
+        <div className="max-w-5xl mx-auto space-y-8 md:space-y-12 animate-fadeIn pb-20">      
           <div className="bg-base-200 p-6 md:p-10 rounded-3xl md:rounded-[40px] border border-white/5 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 md:mb-10 relative">
               <div>
@@ -243,7 +243,7 @@ const GenerateResume = () => {
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
               placeholder="Paste the target Job Description to see your real-time matching score..."
-              className="textarea textarea-bordered w-full h-32 md:h-40 bg-base-100 border-white/10 focus:border-primary/50 text-slate-300 p-4 md:p-6 rounded-2xl transition-all text-sm"
+              className="textarea textarea-bordered w-full h-32 md:h-40 bg-base-100 border-white/10 focus:border-primary/50 text-slate-300 p-4 md:p-6 rounded-2xl transition-all text-sm"   
             />
 
             {atsResult && atsResult.missingKeywords.length > 0 && (
@@ -259,12 +259,12 @@ const GenerateResume = () => {
           </div>
 
           <div className="relative group overflow-x-auto md:overflow-visible">
-            <div className="absolute -inset-4 bg-primary/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"></div>
+            <div className="absolute -inset-4 bg-primary/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity hidden md:block pointer-events-none"></div>
             <Resume data={data} />
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6 pt-6 md:pt-10"> 
-            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-ghost text-slate-400 font-bold hover:text-white transition-all order-2 sm:order-1">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6 pt-6 md:pt-10">
+            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-ghost text-slate-400 font-bold hover:text-white transition-all order-2 sm:order-1"> 
               <FaUndo className="mr-2 text-xs" /> Edit Draft
             </button>
             <div className="flex items-center gap-3 p-2 bg-base-200 rounded-2xl border border-white/5 shadow-xl w-full sm:w-auto order-1 sm:order-2">
@@ -289,9 +289,9 @@ const GenerateResume = () => {
         </div>
       )}
 
-      {/* Performance Monitor - Hidden on mobile to avoid UI overlap */}
-      <div className="fixed bottom-6 right-6 z-[120] hidden md:block">
-        <div className="dropdown dropdown-top dropdown-end">
+      {/* Performance Monitor - Redesigned for safety */}
+      <div className="fixed bottom-6 right-6 z-[120] hidden md:block pointer-events-none">
+        <div className="dropdown dropdown-top dropdown-end pointer-events-auto">
           <div tabIndex={0} role="button" className="btn btn-circle bg-base-300 border-white/10 shadow-2xl hover:scale-110 transition-transform">
             <FaChartBar className="text-primary" />
           </div>
