@@ -1,5 +1,5 @@
 import React from "react";
-import { FaEnvelope, FaMapMarkerAlt, FaLinkedin, FaGithub, FaExternalLinkAlt, FaCode, FaUserGraduate, FaTerminal, FaRocket } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaLinkedin, FaGithub, FaGlobe, FaCode, FaUserGraduate, FaTerminal, FaRocket } from "react-icons/fa";
 
 function Contact() {
   const techStack = [
@@ -58,7 +58,7 @@ function Contact() {
 
                 <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-warning group-hover:bg-warning/20 transition-colors">
-                    <FaExternalLinkAlt />
+                    <FaGlobe />
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Portfolio</p>

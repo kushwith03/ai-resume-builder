@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaMagic, FaShieldAlt, FaChartLine, FaArrowRight, FaExternalLinkAlt } from "react-icons/fa";
+import { FaMagic, FaShieldAlt, FaChartLine, FaArrowRight, FaGlobe } from "react-icons/fa";
 
 function Home() {
     return (
@@ -41,7 +41,7 @@ function Home() {
                                 Project Story
                             </Link>
                             <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1.5">
-                                Explore Portfolio <FaExternalLinkAlt className="text-[8px]" />
+                                Explore Portfolio <FaGlobe className="text-[8px]" />
                             </a>
                         </div>
                     </div>

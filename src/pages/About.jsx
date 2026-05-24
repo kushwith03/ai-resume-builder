@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaCode, FaBrain, FaRocket, FaCheckCircle, FaArrowRight, FaGithub, FaTerminal, FaExternalLinkAlt } from "react-icons/fa";
+import { FaCode, FaBrain, FaRocket, FaCheckCircle, FaArrowRight, FaGithub, FaTerminal, FaGlobe } from "react-icons/fa";
 
 function About() {
   const techStack = [
@@ -145,7 +145,7 @@ function About() {
         <div className="container mx-auto px-6 text-center">
             <p className="text-slate-500 text-sm mb-4">Want to see more of my work?</p>
             <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary font-bold hover:underline">
-                Visit R Khushwith Kumar's Portfolio <FaExternalLinkAlt className="text-xs" />
+                Visit R Khushwith Kumar's Portfolio <FaGlobe className="text-xs" />
             </a>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaMagic, FaLinkedin, FaGithub, FaHeart, FaExternalLinkAlt } from "react-icons/fa";
+import { FaMagic, FaLinkedin, FaGithub, FaHeart, FaGlobe } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -27,7 +27,7 @@ const Footer = () => {
                 <FaLinkedin />
               </a>
               <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary/20 hover:text-primary transition-all" title="View Portfolio">
-                <FaExternalLinkAlt className="text-xs" />
+                <FaGlobe className="text-xs" />
               </a>
             </div>
           </div>
@@ -48,7 +48,7 @@ const Footer = () => {
                 <li>
                   <a href="https://rkhushwith-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 text-slate-500 hover:text-primary transition-colors text-sm">
                     View Portfolio
-                    <FaExternalLinkAlt className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <FaGlobe className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
                 <li><a href="mailto:kushwith03@gmail.com" className="text-slate-500 hover:text-primary transition-colors text-sm">Get in Touch</a></li>
