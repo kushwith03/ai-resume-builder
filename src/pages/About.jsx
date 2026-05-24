@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaCode, FaBrain, FaRocket, FaCheckCircle, FaArrowRight, FaGithub, FaTerminal } from "react-icons/fa";
+import { FaCode, FaBrain, FaRocket, FaCheckCircle, FaArrowRight, FaGithub, FaTerminal, FaExternalLinkAlt } from "react-icons/fa";
 
 function About() {
   const techStack = [
