@@ -1,9 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
-// Register a professional font if needed, or use defaults
-// Font.register({ family: 'Inter', src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2' });
-
+// Register fonts if necessary. Standard fonts like Helvetica work out-of-the-box.
 const styles = StyleSheet.create({
   page: {
     padding: 40,
@@ -42,12 +40,12 @@ const styles = StyleSheet.create({
   },
   itemHeader: {
     flexDirection: 'row',
-    justifyContent: 'between',
+    justifyContent: 'space-between',
     fontWeight: 'bold',
   },
   itemSubHeader: {
     flexDirection: 'row',
-    justifyContent: 'between',
+    justifyContent: 'space-between',
     fontStyle: 'italic',
     color: '#4b5563',
     marginBottom: 4,
@@ -72,98 +70,102 @@ const styles = StyleSheet.create({
   }
 });
 
-const ResumePDF = ({ data }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.name}>{data.personalInformation?.fullName}</Text>
-        <View style={styles.contact}>
-          <Text>{data.personalInformation?.email}</Text>
-          <Text>{data.personalInformation?.location}</Text>
-          <Text>{data.personalInformation?.phoneNumber}</Text>
+const ResumePDF = ({ data }) => {
+  if (!data) return null;
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.name}>{data.personalInformation?.fullName || 'Your Name'}</Text>
+          <View style={styles.contact}>
+            {data.personalInformation?.email && <Text>{data.personalInformation.email}</Text>}
+            {data.personalInformation?.location && <Text>{data.personalInformation.location}</Text>}
+            {data.personalInformation?.phoneNumber && <Text>{data.personalInformation.phoneNumber}</Text>}
+          </View>
         </View>
-      </View>
 
-      {/* Summary */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Professional Summary</Text>
-        <Text style={styles.summary}>{data.summary}</Text>
-      </View>
-
-      {/* Experience */}
-      {data.experience?.length > 0 && (
+        {/* Summary */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Work Experience</Text>
-          {data.experience.map((exp, i) => (
-            <View key={i} style={{ marginBottom: 10 }}>
-              <View style={styles.itemHeader}>
-                <Text style={{ fontWeight: 'bold' }}>{exp.jobTitle}</Text>
-                <Text>{exp.duration}</Text>
-              </View>
-              <View style={styles.itemSubHeader}>
-                <Text>{exp.company}</Text>
-                <Text>{exp.location}</Text>
-              </View>
-              <Text style={styles.bulletPoint}>{exp.responsibility}</Text>
-            </View>
-          ))}
+          <Text style={styles.sectionTitle}>Professional Summary</Text>
+          <Text style={styles.summary}>{data.summary || ''}</Text>
         </View>
-      )}
 
-      {/* Education */}
-      {data.education?.length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Education</Text>
-          {data.education.map((edu, i) => (
-            <View key={i} style={{ marginBottom: 5 }}>
-              <View style={styles.itemHeader}>
-                <Text style={{ fontWeight: 'bold' }}>{edu.degree}</Text>
-                <Text>{edu.graduationYear}</Text>
+        {/* Experience */}
+        {data.experience?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
+            {data.experience.map((exp, i) => (
+              <View key={i} style={{ marginBottom: 10 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={{ fontWeight: 'bold' }}>{exp?.jobTitle || ''}</Text>
+                  <Text>{exp?.duration || ''}</Text>
+                </View>
+                <View style={styles.itemSubHeader}>
+                  <Text>{exp?.company || ''}</Text>
+                  <Text>{exp?.location || ''}</Text>
+                </View>
+                <Text style={styles.bulletPoint}>{exp?.responsibility || ''}</Text>
               </View>
-              <View style={styles.itemSubHeader}>
-                <Text>{edu.university}</Text>
-                <Text>{edu.location}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-      )}
+            ))}
+          </View>
+        )}
 
-      {/* Skills */}
-      {data.skills?.length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills & Competencies</Text>
-          {data.skills.map((skillGroup, i) => (
-            <View key={i} style={{ flexDirection: 'row', marginBottom: 5 }}>
-              <Text style={{ fontWeight: 'bold', width: 100 }}>{skillGroup.category || skillGroup.title}:</Text>
-              <View style={styles.skills}>
-                {(skillGroup.skills || skillGroup.level || "").split(",").map((skill, si) => (
-                  skill.trim() && (
-                    <Text key={si} style={styles.skillBadge}>{skill.trim()}</Text>
-                  )
-                ))}
+        {/* Education */}
+        {data.education?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Education</Text>
+            {data.education.map((edu, i) => (
+              <View key={i} style={{ marginBottom: 5 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={{ fontWeight: 'bold' }}>{edu?.degree || ''}</Text>
+                  <Text>{edu?.graduationYear || ''}</Text>
+                </View>
+                <View style={styles.itemSubHeader}>
+                  <Text>{edu?.university || ''}</Text>
+                  <Text>{edu?.location || ''}</Text>
+                </View>
               </View>
-            </View>
-          ))}
-        </View>
-      )}
+            ))}
+          </View>
+        )}
 
-      {/* Projects */}
-      {data.projects?.length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Projects</Text>
-          {data.projects.map((proj, i) => (
-            <View key={i} style={{ marginBottom: 8 }}>
-              <Text style={{ fontWeight: 'bold' }}>{proj.title}</Text>
-              <Text>{proj.description}</Text>
-              <Text style={{ fontSize: 9, color: '#6b7280' }}>Tech: {proj.technologiesUsed}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-    </Page>
-  </Document>
-);
+        {/* Skills */}
+        {data.skills?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Skills & Competencies</Text>
+            {data.skills.map((skillGroup, i) => (
+              <View key={i} style={{ flexDirection: 'row', marginBottom: 5 }}>
+                <Text style={{ fontWeight: 'bold', width: 100 }}>{skillGroup?.category || skillGroup?.title || 'Skills'}:</Text>
+                <View style={styles.skills}>
+                  {(skillGroup?.skills || skillGroup?.level || "").split(",").map((skill, si) => (
+                    skill.trim() && (
+                      <Text key={si} style={styles.skillBadge}>{skill.trim()}</Text>
+                    )
+                  ))}
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Projects */}
+        {data.projects?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Projects</Text>
+            {data.projects.map((proj, i) => (
+              <View key={i} style={{ marginBottom: 8 }}>
+                <Text style={{ fontWeight: 'bold' }}>{proj?.title || ''}</Text>
+                <Text>{proj?.description || ''}</Text>
+                {proj?.technologiesUsed && <Text style={{ fontSize: 9, color: '#6b7280' }}>Tech: {proj.technologiesUsed}</Text>}
+              </View>
+            ))}
+          </View>
+        )}
+      </Page>
+    </Document>
+  );
+};
 
 export default ResumePDF;

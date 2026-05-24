@@ -7,7 +7,7 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const authenticated = isAuthenticated();
-  
+
   let user = { name: "User" };
   try {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -32,10 +32,10 @@ function Navbar() {
               <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                 <FaMagic className="text-primary text-lg" />
               </div>
-              <span className="text-xl font-black tracking-tight text-white">Insta<span className="text-primary">Resume</span></span>
+              <span className="text-lg md:text-xl font-black tracking-tight text-white">Insta<span className="text-primary">Resume</span></span>
             </Link>
           </div>
-          
+
           <div className="navbar-center hidden lg:flex">
             <ul className="flex items-center gap-1">
               {[
@@ -44,11 +44,11 @@ function Navbar() {
                 { label: "Contact", path: "/contact" }
               ].map((link) => (
                 <li key={link.path}>
-                  <Link 
-                    to={link.path} 
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      isActive(link.path) 
-                        ? "text-white bg-white/5" 
+                  <Link
+                    to={link.path}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${    
+                      isActive(link.path)
+                        ? "text-white bg-white/5"
                         : "text-slate-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
@@ -58,11 +58,11 @@ function Navbar() {
               ))}
               {authenticated && (
                 <li>
-                  <Link 
-                    to="/generate-resume" 
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      isActive("/generate-resume") 
-                        ? "text-white bg-white/5" 
+                  <Link
+                    to="/generate-resume"
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${    
+                      isActive("/generate-resume")
+                        ? "text-white bg-white/5"
                         : "text-slate-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
@@ -72,25 +72,25 @@ function Navbar() {
               )}
             </ul>
           </div>
-          
-          <div className="navbar-end gap-3">
+
+          <div className="navbar-end gap-2 md:gap-3">
             {authenticated ? (
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
-                  <FaUserCircle className="text-slate-400 text-lg" />
-                  <span className="text-xs font-bold text-slate-300 pr-1">{user.name}</span>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex items-center gap-2 px-2 md:px-3 py-1.5 bg-white/5 rounded-full border border-white/5 max-w-[120px] md:max-w-none">
+                  <FaUserCircle className="text-slate-400 text-lg flex-shrink-0" />
+                  <span className="text-[10px] md:text-xs font-bold text-slate-300 pr-1 truncate">{user.name}</span>  
                 </div>
-                <button 
-                  onClick={handleLogout} 
-                  className="btn btn-ghost btn-sm text-xs font-bold text-slate-400 hover:text-error hover:bg-error/10 transition-all px-4"
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-ghost btn-sm text-[10px] md:text-xs font-bold text-slate-400 hover:text-error hover:bg-error/10 transition-all px-2 md:px-4"
                 >
                   Logout
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Link to="/login" className="btn btn-ghost btn-sm text-sm font-medium text-slate-300">Login</Link>
-                <Link to="/signup" className="btn btn-primary btn-sm px-5 rounded-full text-sm font-bold shadow-lg shadow-primary/20">Sign Up</Link>
+                <Link to="/login" className="btn btn-ghost btn-sm text-xs md:text-sm font-medium text-slate-300 px-2">Login</Link>
+                <Link to="/signup" className="btn btn-primary btn-sm px-4 md:px-5 rounded-full text-xs md:text-sm font-bold shadow-lg shadow-primary/20">Sign Up</Link>
               </div>
             )}
           </div>

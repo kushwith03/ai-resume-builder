@@ -14,25 +14,25 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
 
   const resumeContent = (
     <div
-      className={`bg-white text-gray-800 shadow-2xl border border-gray-100 transition-all ${
-        previewMode 
-          ? "w-full aspect-[1/1.414] p-[9%] h-fit" 
-          : "w-full max-w-[210mm] min-h-[297mm] mx-auto p-8 md:p-[20mm]"
+      className={`bg-white text-gray-800 shadow-2xl border border-gray-100 transition-all ${  
+        previewMode
+          ? "w-full aspect-[1/1.414] p-[9%] h-fit"
+          : "w-full max-w-[210mm] md:min-h-[297mm] min-h-0 mx-auto p-6 md:p-[20mm] mb-4 md:mb-0"
       }`}
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       {/* Header */}
       <div className={`text-center ${previewMode ? 'space-y-1' : 'space-y-3'}`}>
-        <h1 className={`${previewMode ? 'text-2xl' : 'text-4xl md:text-5xl'} font-black text-gray-900 tracking-tight`}>
-          {data.personalInformation?.fullName}
+        <h1 className={`${previewMode ? 'text-2xl' : 'text-3xl md:text-5xl'} font-black text-gray-900 tracking-tight`}>
+          {data.personalInformation?.fullName || "Your Name"}
         </h1>
-        <div className={`flex justify-center flex-wrap gap-x-4 gap-y-1 ${previewMode ? 'text-[10px]' : 'text-sm'} font-medium text-gray-600`}>
+        <div className={`flex justify-center flex-wrap gap-x-4 gap-y-1 ${previewMode ? 'text-[10px]' : 'text-xs md:text-sm'} font-medium text-gray-600`}>
           {data.personalInformation?.location && (
             <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-primary" /> {data.personalInformation.location}</span>
           )}
           {data.personalInformation?.email && (
-            <a href={`mailto:${data.personalInformation.email}`} className="flex items-center gap-1 hover:text-primary transition-colors">
-              <FaEnvelope className="text-primary" /> {data.personalInformation.email}
+            <a href={`mailto:${data.personalInformation.email}`} className="flex items-center gap-1 hover:text-primary transition-colors text-wrap break-all">
+              <FaEnvelope className="text-primary flex-shrink-0" /> {data.personalInformation.email}        
             </a>
           )}
           {data.personalInformation?.phoneNumber && (
@@ -41,12 +41,12 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
         </div>
         <div className={`flex justify-center gap-4 ${previewMode ? 'text-[9px]' : 'text-xs'} mt-1`}>
            {data.personalInformation?.linkedin && (
-              <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 font-bold hover:underline">
+              <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 font-bold hover:underline"> 
                 <FaLinkedin /> LinkedIn
               </a>
            )}
            {data.personalInformation?.gitHub && (
-              <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-gray-900 font-bold hover:underline">
+              <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-gray-900 font-bold hover:underline">   
                 <FaGithub /> GitHub
               </a>
            )}
@@ -57,24 +57,24 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
 
       {/* Summary */}
       <section className={`${previewMode ? 'space-y-1' : 'space-y-2'}`}>
-        <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Professional Summary</h2>
+        <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Professional Summary</h2>       
         <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} leading-relaxed text-gray-700`}>{data.summary}</p>
       </section>
 
       {/* Skills */}
       {data.skills?.length > 0 && (
         <section className={`${previewMode ? 'space-y-2 mt-4' : 'space-y-4 mt-8'}`}>
-          <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Core Competencies</h2>
+          <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Core Competencies</h2>        
           <div className={`flex flex-col ${previewMode ? 'gap-2' : 'gap-3'}`}>
             {data.skills.map((skillGroup, index) => (
               <div key={index} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
                 <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold text-gray-800 sm:min-w-[140px]`}>
-                  {skillGroup.category || skillGroup.title}:
+                  {skillGroup.category || skillGroup.title || "Skills"}:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {(skillGroup.skills || skillGroup.level || "").split(",").map((skill, sIndex) => (
                     skill.trim() && (
-                      <span key={sIndex} className={`px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-md ${previewMode ? 'text-[9px]' : 'text-xs'} font-medium`}>
+                      <span key={sIndex} className={`px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-md ${previewMode ? 'text-[9px]' : 'text-xs'} font-medium`}>        
                         {skill.trim()}
                       </span>
                     )
@@ -93,14 +93,14 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
           {data.experience.map((exp, index) => (
             <div key={index} className="space-y-0.5">
               <div className="flex justify-between items-baseline">
-                <h3 className={`${previewMode ? 'text-[11px]' : 'text-md'} font-bold text-gray-900`}>{exp.jobTitle}</h3>
+                <h3 className={`${previewMode ? 'text-[11px]' : 'text-sm md:text-md'} font-bold text-gray-900`}>{exp.jobTitle}</h3>
                 <span className={`${previewMode ? 'text-[9px]' : 'text-xs'} font-bold text-gray-500`}>{exp.duration}</span>
               </div>
               <div className={`flex justify-between items-baseline ${previewMode ? 'text-[9px]' : 'text-xs'} text-gray-600 italic`}>
                 <span>{exp.company}</span>
                 <span>{exp.location}</span>
               </div>
-              <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} text-gray-700 mt-0.5 whitespace-pre-line`}>{exp.responsibility}</p>
+              <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} text-gray-700 mt-1 whitespace-pre-line`}>{exp.responsibility}</p>
             </div>
           ))}
         </section>
@@ -113,7 +113,7 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
           {data.education.map((edu, index) => (
             <div key={index} className="space-y-0.5">
               <div className="flex justify-between items-baseline">
-                <h3 className={`${previewMode ? 'text-[11px]' : 'text-md'} font-bold text-gray-900`}>{edu.degree}</h3>
+                <h3 className={`${previewMode ? 'text-[11px]' : 'text-sm md:text-md'} font-bold text-gray-900`}>{edu.degree}</h3>
                 <span className={`${previewMode ? 'text-[9px]' : 'text-xs'} font-bold text-gray-500`}>{edu.graduationYear}</span>
               </div>
               <div className={`flex justify-between items-baseline ${previewMode ? 'text-[9px]' : 'text-xs'} text-gray-600 italic`}>
@@ -131,7 +131,7 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
           <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Key Projects</h2>
           {data.projects.map((proj, index) => (
             <div key={index} className="space-y-0.5">
-              <h3 className={`${previewMode ? 'text-[11px]' : 'text-md'} font-bold text-gray-900`}>{proj.title}</h3>
+              <h3 className={`${previewMode ? 'text-[11px]' : 'text-sm md:text-md'} font-bold text-gray-900`}>{proj.title}</h3>
               <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} text-gray-700`}>{proj.description}</p>
               {proj.technologiesUsed && (
                 <p className={`${previewMode ? 'text-[9px]' : 'text-xs'} font-medium text-gray-500 italic`}>
@@ -148,21 +148,32 @@ const Resume = React.memo(({ data, hideDownload = false, previewMode = false }) 
   if (previewMode) return resumeContent;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full px-4">
       {resumeContent}
       {!hideDownload && (
-        <div className="mt-8 mb-12">
+        <div className="mt-8 mb-16 w-full flex justify-center">
           <PDFDownloadLink
             document={<ResumePDF data={data} />}
             fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
             className="btn btn-primary btn-wide shadow-xl"
           >
-            {({ loading }) => (
-              <>
-                <FaFilePdf className="mr-2" />
-                {loading ? "Preparing PDF..." : "Download ATS-Friendly PDF"}
-              </>
-            )}
+            {({ blob, url, loading, error }) => {
+              if (error) {
+                console.error("PDF generation error:", error);
+                return (
+                  <>
+                    <FaFilePdf className="mr-2" />
+                    Error Generating PDF
+                  </>
+                );
+              }
+              return (
+                <>
+                  <FaFilePdf className="mr-2" />
+                  {loading ? "Preparing PDF..." : "Download ATS-Friendly PDF"}
+                </>
+              );
+            }}
           </PDFDownloadLink>
         </div>
       )}

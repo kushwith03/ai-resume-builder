@@ -53,7 +53,7 @@ const GenerateResume = () => {
 
   const handleGenerate = async () => {
     if (!description.trim()) return toast.error("Prompt cannot be empty");
-    
+
     performanceTracker.startMeasure();
     setLoading(true);
     try {
@@ -86,38 +86,38 @@ const GenerateResume = () => {
   };
 
   return (
-    <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1400px]' : 'max-w-4xl'}`}>
+    <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1400px]' : 'max-w-4xl'}`}>
       {showPromptInput && (
-        <div className="flex flex-col items-center justify-center py-20 gap-12 animate-fadeIn">
+        <div className="flex flex-col items-center justify-center py-10 md:py-20 gap-8 md:gap-12 animate-fadeIn">
           <div className="text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2">
               <FaPaperPlane className="text-primary text-xs" />
               <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Engine Active</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">Describe your professional background in plain English, and our AI will architect a high-performance resume draft for you.</p>
+            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
+            <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">Describe your professional background in plain English, and our AI will architect a high-performance resume draft for you.</p>
           </div>
-          
+
           <div className="w-full max-w-2xl group">
             <div className="relative">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary blur opacity-20 group-hover:opacity-40 transition-opacity rounded-3xl"></div>
               <div className="relative bg-base-200 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
-                <textarea 
+                <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="textarea w-full h-64 bg-transparent border-none text-lg text-slate-200 focus:ring-0 p-8 leading-relaxed resize-none placeholder:text-slate-600"
+                  className="textarea w-full h-48 md:h-64 bg-transparent border-none text-base md:text-lg text-slate-200 focus:ring-0 p-6 md:p-8 leading-relaxed resize-none placeholder:text-slate-600"
                   placeholder="e.g. I am a Senior Frontend Engineer with 8 years of experience building scalable React applications. I have led teams of 5 and specialized in high-performance UI architecture..."
                 />
-                <div className="p-4 bg-white/5 border-t border-white/5 flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-4">Min. 50 characters recommended</span>
-                  <button 
-                    onClick={handleGenerate} 
-                    disabled={loading || description.length < 10} 
-                    className="btn btn-primary px-8 rounded-2xl font-bold shadow-lg shadow-primary/20 group/btn"
+                <div className="p-4 bg-white/5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest md:ml-4">Min. 50 characters recommended</span>
+                  <button
+                    onClick={handleGenerate}
+                    disabled={loading || description.length < 10}
+                    className="btn btn-primary w-full md:w-auto px-8 rounded-2xl font-black shadow-lg shadow-primary/20 group/btn"
                   >
                     {loading ? <span className="loading loading-spinner loading-sm"></span> : (
                       <>
-                        Generate Draft 
+                        Generate Draft
                         <FaMagic className="ml-2 group-hover/btn:rotate-12 transition-transform" />
                       </>
                     )}
@@ -130,12 +130,12 @@ const GenerateResume = () => {
       )}
 
       {showFormUI && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start animate-fadeIn relative">
-          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start animate-fadeIn relative">
+          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-6 md:space-y-8">        
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-3xl font-black text-white tracking-tight">Editor</h2>
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>       
               {atsResult && (
-                <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl">
+                <div className="flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-2xl">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">ATS Match</span>
                   <div className={`text-sm font-black ${atsResult.score >= 70 ? 'text-success' : atsResult.score >= 40 ? 'text-warning' : 'text-error'}`}>
                     {atsResult.score}%
@@ -145,7 +145,7 @@ const GenerateResume = () => {
             </div>
 
             <FormSection title="Identity">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="form-control">
                   <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
                   <input {...register("personalInformation.fullName")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="John Doe" />
@@ -164,15 +164,33 @@ const GenerateResume = () => {
                 </div>
               </div>
             </FormSection>
-            
+
             <FormSection title="Professional Summary">
-              <textarea {...register("summary")} className="textarea w-full h-40 bg-base-100 border-white/5 focus:border-primary/50 text-sm leading-relaxed" placeholder="Brief overview of your career..." />
+              <textarea {...register("summary")} className="textarea w-full h-32 md:h-40 bg-base-100 border-white/5 focus:border-primary/50 text-sm leading-relaxed" placeholder="Brief overview of your career..." />
             </FormSection>
 
             <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["category", "skills"]} register={register} />
-            <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />
-            <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />
+            <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} />      
+            <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} />        
             <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} />
+            
+            {/* Mobile Save/Preview Buttons */}
+            <div className="flex lg:hidden flex-col gap-4 pt-6">
+              <button
+                type="button"
+                onClick={handleSubmit(onSubmit)}
+                className="btn btn-primary w-full rounded-2xl font-black shadow-lg shadow-primary/20"
+              >
+                Preview & Export
+              </button>
+              <button
+                type="button"
+                onClick={resetGenerator}
+                className="btn btn-ghost w-full text-slate-500 font-bold"
+              >
+                Reset
+              </button>
+            </div>
           </form>
 
           {/* Live Preview Panel - Document Viewer Style */}
@@ -187,47 +205,47 @@ const GenerateResume = () => {
                 <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">
                   Reset
                 </button>
-                <button 
-                  onClick={handleSubmit(onSubmit)} 
+                <button
+                  onClick={handleSubmit(onSubmit)}
                   className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10 uppercase tracking-widest"
                 >
                   Generate Resume
                 </button>
               </div>
             </div>
-            
-            <div className="w-full h-full overflow-y-auto p-6 md:p-10 custom-scrollbar">
-               <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />
+
+            <div className="w-full h-full overflow-y-auto p-6 md:p-10 custom-scrollbar">      
+               <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />     
             </div>
           </div>
         </div>
       )}
 
       {showResumeUI && (
-        <div className="max-w-5xl mx-auto space-y-12 animate-fadeIn pb-20">
-          <div className="bg-base-200 p-10 rounded-[40px] border border-white/5 shadow-2xl relative overflow-hidden">
+        <div className="max-w-5xl mx-auto space-y-8 md:space-y-12 animate-fadeIn pb-20">
+          <div className="bg-base-200 p-6 md:p-10 rounded-3xl md:rounded-[40px] border border-white/5 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full"></div>
-            
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative">
+
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 md:mb-10 relative">
               <div>
-                <h3 className="text-3xl font-black text-white mb-2 tracking-tight">ATS Optimization</h3>
-                <p className="text-slate-400">Precision analysis of your resume against industry standards.</p>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">ATS Optimization</h3>
+                <p className="text-slate-400 text-sm md:text-base">Precision analysis of your resume against industry standards.</p>
               </div>
               <div className="flex flex-col items-end gap-1">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Matching Score</span>
-                <div className={`text-5xl font-black ${atsResult?.score >= 70 ? 'text-success' : atsResult?.score >= 40 ? 'text-warning' : 'text-error'}`}>
+                <div className={`text-4xl md:text-5xl font-black ${atsResult?.score >= 70 ? 'text-success' : atsResult?.score >= 40 ? 'text-warning' : 'text-error'}`}>
                    {atsResult?.score || 0}%
                 </div>
               </div>
             </div>
-            
-            <textarea 
+
+            <textarea
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
               placeholder="Paste the target Job Description to see your real-time matching score..."
-              className="textarea textarea-bordered w-full h-40 bg-base-100 border-white/10 focus:border-primary/50 text-slate-300 p-6 rounded-2xl transition-all"
+              className="textarea textarea-bordered w-full h-32 md:h-40 bg-base-100 border-white/10 focus:border-primary/50 text-slate-300 p-4 md:p-6 rounded-2xl transition-all text-sm"
             />
-            
+
             {atsResult && atsResult.missingKeywords.length > 0 && (
                <div className="mt-8 animate-fadeIn">
                   <p className="text-xs font-black text-slate-500 mb-4 uppercase tracking-[0.2em]">Priority Keywords to Add:</p>
@@ -239,18 +257,18 @@ const GenerateResume = () => {
                </div>
             )}
           </div>
-          
-          <div className="relative group">
-            <div className="absolute -inset-4 bg-primary/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+          <div className="relative group overflow-x-auto md:overflow-visible">
+            <div className="absolute -inset-4 bg-primary/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"></div>
             <Resume data={data} />
           </div>
-          
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 pt-10">
-            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-ghost text-slate-400 font-bold hover:text-white transition-all">
+
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6 pt-6 md:pt-10"> 
+            <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-ghost text-slate-400 font-bold hover:text-white transition-all order-2 sm:order-1">
               <FaUndo className="mr-2 text-xs" /> Edit Draft
             </button>
-            <div className="flex items-center gap-3 p-2 bg-base-200 rounded-2xl border border-white/5 shadow-xl">
-              <button 
+            <div className="flex items-center gap-3 p-2 bg-base-200 rounded-2xl border border-white/5 shadow-xl w-full sm:w-auto order-1 sm:order-2">
+              <button
                 onClick={async () => {
                   try {
                     await saveResumeToDB(data, atsResult?.score || 0);
@@ -258,8 +276,8 @@ const GenerateResume = () => {
                   } catch {
                     toast.error("Database connection failure");
                   }
-                }} 
-                className="btn btn-primary px-8 rounded-xl font-black shadow-lg shadow-primary/20"
+                }}
+                className="btn btn-primary flex-1 sm:flex-none px-8 rounded-xl font-black shadow-lg shadow-primary/20"
               >
                 <FaSave className="mr-2" /> Save Progress
               </button>
@@ -271,8 +289,8 @@ const GenerateResume = () => {
         </div>
       )}
 
-      {/* Performance Monitor - Redesigned */}
-      <div className="fixed bottom-6 right-6 z-[120]">
+      {/* Performance Monitor - Hidden on mobile to avoid UI overlap */}
+      <div className="fixed bottom-6 right-6 z-[120] hidden md:block">
         <div className="dropdown dropdown-top dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-circle bg-base-300 border-white/10 shadow-2xl hover:scale-110 transition-transform">
             <FaChartBar className="text-primary" />
