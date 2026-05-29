@@ -17,8 +17,8 @@ Built & developed by **R Khushwith Kumar** (Final Year CSE Student).
 ## ✨ Core Features
 
 - **AI Resume Architect:** Uses **Gemini AI v1.5** to generate professional impact-focused bullet points and summaries from raw user input.
-- **ATS Optimization:** Specifically engineered layouts and keyword matching logic to ensure high readability for Applicant Tracking Systems.
-- **Real-time Analytics:** Custom scoring algorithm providing instant feedback on resume quality and job alignment.
+- **Keyword Optimization:** Specifically engineered layouts and keyword matching logic to ensure high readability for Applicant Tracking Systems.
+- **Real-time Scoring:** Custom scoring algorithm providing instant feedback on resume quality and job alignment.
 - **Smart PDF Export:** Client-side high-fidelity PDF generation using `@react-pdf/renderer` for standardized professional output.
 - **Live Interactive Editor:** A side-by-side editing experience with real-time preview and instant UI updates.
 
