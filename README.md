@@ -6,7 +6,7 @@ A high-performance full-stack application designed to transform career descripti
 
 InstaResume solves the modern hiring challenge by bridging the gap between raw experience and recruiter-friendly documentation. It features a sophisticated AI-orchestrated pipeline for professional content synthesis and real-time PDF generation.
 
-- **Frontend:** [ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app)
+- **Frontend:** [ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app/home)
 - **Backend API:** [instaresume-api-8o52.onrender.com](https://instaresume-api-8o52.onrender.com)
 
 ## Key Engineering Features
@@ -54,4 +54,4 @@ InstaResume solves the modern hiring challenge by bridging the gap between raw e
 
 **R Khushwith Kumar**  
 Full Stack Software Engineer  
-[Portfolio](https://rkhushwith-portfolio.vercel.app) • [GitHub](https://github.com/kushwith03) • [LinkedIn](https://linkedin.com/in/kushwith03)
+[Portfolio](https://rkhushwith-portfolio.vercel.app) • [GitHub](https://github.com/kushwith03) • [LinkedIn](https://www.linkedin.com/in/kushwith03/)
