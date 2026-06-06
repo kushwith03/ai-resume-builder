@@ -1,94 +1,57 @@
-# InstaResume • AI-Powered ATS Resume Builder
+# InstaResume — AI-Powered Resume Generator
 
-InstaResume is a modern full-stack application designed to solve the modern resume challenge. It leverages Generative AI to transform plain-text career descriptions into high-performance, ATS-optimized resumes. This project explores the intersection of AI integration, complex state management, and professional document rendering.
+A high-performance full-stack application designed to transform career descriptions into professional, ATS-optimized resumes using Generative AI.
 
-Built & developed by **R Khushwith Kumar** (Final Year CSE Student).
+## Overview
 
----
-
-## 🔗 Live Project & Links
+InstaResume solves the modern hiring challenge by bridging the gap between raw experience and recruiter-friendly documentation. It features a sophisticated AI-orchestrated pipeline for professional content synthesis and real-time PDF generation.
 
 - **Frontend:** [ai-resume-builder-sigma-jet.vercel.app](https://ai-resume-builder-sigma-jet.vercel.app)
 - **Backend API:** [instaresume-api-8o52.onrender.com](https://instaresume-api-8o52.onrender.com)
-- **Developer Portfolio:** [rkhushwith-portfolio.vercel.app](https://rkhushwith-portfolio.vercel.app/)
 
----
+## Key Engineering Features
 
-## ✨ Core Features
+- **AI Content Architect:** Integrated **Google Gemini AI v1.5** for automated, impact-focused bullet point and summary generation.
+- **Dynamic State Engine:** Built with **React Hook Form** and debounced state updates for a smooth, high-fidelity live preview rendering.
+- **Vector-Based PDF Export:** Engineered client-side PDF generation using **@react-pdf/renderer**, ensuring lightweight and standard-compliant professional output.
+- **Full-Stack Security:** Implemented secure JWT-based authentication and MongoDB persistence for encrypted user data management.
 
-- **AI Resume Architect:** Uses **Gemini AI v1.5** to generate professional impact-focused bullet points and summaries from raw user input.
-- **Keyword Optimization:** Specifically engineered layouts and keyword matching logic to ensure high readability for Applicant Tracking Systems.
-- **Real-time Scoring:** Custom scoring algorithm providing instant feedback on resume quality and job alignment.
-- **Smart PDF Export:** Client-side high-fidelity PDF generation using `@react-pdf/renderer` for standardized professional output.
-- **Live Interactive Editor:** A side-by-side editing experience with real-time preview and instant UI updates.
+## Tech Stack
 
----
+- **Frontend:** React, Vite, Tailwind CSS, Framer Motion
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (Mongoose)
+- **AI Integration:** Google Generative AI (Gemini SDK)
+- **Deployment:** Vercel (UI) & Render (API)
 
-## 🛠️ Tech Stack
+## Setup & Installation
 
-### Frontend
-- **React + Vite** (High-performance UI)
-- **TailwindCSS** (Modern, dark futuristic aesthetic)
-- **DaisyUI** (Accessible component primitives)
-- **React Hook Form** (Clean form state management)
-
-### Backend & AI
-- **Node.js + Express** (Scalable REST API)
-- **Google Gemini AI v1.5** (LLM for professional content generation)
-- **MongoDB + Mongoose** (Flexible document storage)
-- **JWT + Cookies** (Secure stateless authentication)
-
----
-
-## 🏗️ Architecture Overview
-
-The system follows a classic **client-server architecture** with a heavy focus on client-side rendering performance:
-1. **Ingestion:** User inputs career details via a multi-step interactive form.
-2. **Generation:** Backend sanitizes data and orchestrates prompts to Gemini AI for content synthesis.
-3. **Validation:** Resume data is matched against common ATS parsing rules and scored in real-time.
-4. **Rendering:** The frontend utilizes vector-based rendering to ensure PDFs are lightweight and parseable.
-
----
-
-## 🚀 Local Setup
-
-1. **Clone the repository:**
+1. **Clone and Install:**
    ```bash
    git clone https://github.com/kushwith03/ai-resume-builder.git
+   cd ai-resume-builder
+   npm install
    ```
 
-2. **Frontend Setup:**
+2. **Backend Setup:**
+   Create a `.env` file in the `server/` directory:
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_secure_secret
+   API_KEY=your_google_gemini_api_key
+   ```
+
+3. **Run Application:**
    ```bash
-   npm install
+   # In root (Frontend)
    npm run dev
-   ```
-
-3. **Backend Setup:**
-   - Create a `.env` in the `server/` directory with: `PORT`, `MONGO_URI`, `JWT_SECRET`, and `GEMINI_API_KEY`.
-   ```bash
-   cd server
-   npm install
+   
+   # In server/ (Backend)
    npm start
    ```
 
----
-
-## 💡 What I Learned
-
-- **LLM Integration:** Successfully implemented prompt engineering patterns to ensure deterministic and structured JSON outputs from AI.
-- **Full-Stack Engineering:** Deepened my understanding of the MERN stack, specifically handling complex nested states in React and architecting secure backend routes.
-- **UX Design:** Focused on building a highly polished, interactive experience using custom CSS variables and modern UI libraries while maintaining performance.
-
----
-
-## 👨‍💻 Developer
+## Author
 
 **R Khushwith Kumar**  
-Final Year CSE Student | Full-Stack Developer  
-Specializing in MERN Stack & AI-Integrated Applications
-
-[GitHub](https://github.com/kushwith03) • [LinkedIn](https://www.linkedin.com/in/kushwith03/) • [Portfolio](https://rkhushwith-portfolio.vercel.app/)
-
-<p align="center">
-  Built with ❤️ by <a href="https://github.com/kushwith03">kushwith03</a>
-</p>
+Full Stack Software Engineer  
+[Portfolio](https://rkhushwith-portfolio.vercel.app) • [GitHub](https://github.com/kushwith03) • [LinkedIn](https://linkedin.com/in/kushwith03)
