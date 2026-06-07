@@ -308,7 +308,10 @@ const ResumePDF = ({ data }) => {
                   <Text>{renderText(pos?.duration)}</Text>
                 </View>
                 <Text style={styles.italic}>{renderText(pos?.organization)}</Text>
-                <Text style={styles.text}>{renderText(pos?.description)}</Text>
+                <View style={styles.bulletRow}>
+                  <Text style={styles.bullet}>•</Text>
+                  <Text style={styles.bulletText}>{renderText(pos?.description)}</Text>
+                </View>
               </View>
             ))}
           </View>

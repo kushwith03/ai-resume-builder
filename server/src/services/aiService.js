@@ -18,34 +18,25 @@ exports.generateResumeData = async (userDescription) => {
       "fullName": "string",
       "email": "string",
       "phoneNumber": "string",
-      "location": "string",
-      "linkedin": "string",
-      "gitHub": "string",
-      "portfolio": "string"
+      "location": "string"
     },
+    "socialLinks": [{"label": "string (e.g. LinkedIn, GitHub, Portfolio)", "url": "string"}],
     "summary": "string (professional summary)",
-    "skills": [{"category": "string (e.g. Programming Languages)", "skills": "string (comma separated list, e.g. Java, JavaScript, SQL)"}],
-    "experience": [{"jobTitle": "string", "company": "string", "duration": "string", "responsibility": "string"}],
+    "skills": [{"category": "string (e.g. Programming Languages)", "skills": "string (comma separated list)"}],
+    "experience": [{"jobTitle": "string", "company": "string", "duration": "string", "responsibility": "string (multiple lines if needed)"}],
     "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string"}],
-    "projects": [{"title": "string", "description": "string", "technologiesUsed": "string"}]
+    "projects": [{"title": "string", "description": "string", "technologiesUsed": "string"}],
+    "certifications": [{"title": "string", "issuer": "string", "date": "string"}],
+    "achievements": [{"award": "string", "organization": "string", "date": "string"}],
+    "positionsOfResponsibility": [{"title": "string", "organization": "string", "duration": "string", "description": "string"}]
   }
 
-  STRICT GUIDELINES FOR MISSING INFORMATION:
-  If personal details are not explicitly provided in the user description, use these placeholders EXACTLY:
-  - fullName: "Your Name"
-  - email: "your.email@example.com"
-  - phoneNumber: "+1-555-000-0000"
-  - location: "City, Country"
-  - linkedin: "linkedin.com/in/yourprofile"
-  - gitHub: "github.com/yourusername"
-  - portfolio: "yourportfolio.com"
-    
-    FOR SKILLS:
-    Group technical skills into meaningful categories (e.g. Frameworks, Cloud, Databases). Each category should have a list of skills as a single comma-separated string.
-
-    Do NOT hallucinate or invent fake identities (e.g., Alex Chen). Only use real data from the description or the placeholders above.
-    
-    Ensure the data is professional and well-formatted. Return ONLY the raw JSON.
+  STRICT GUIDELINES:
+  1. Personal details placeholders (if missing): fullName: "Your Name", email: "your.email@example.com", phoneNumber: "+1-555-000-0000", location: "City, Country".
+  2. SOCIAL LINKS: Extract LinkedIn, GitHub, or Portfolio URLs if present.
+  3. EXPERIENCE/PROJECTS: Use multiple lines for responsibilities and descriptions to ensure depth.
+  4. MISSING SECTIONS: If the description doesn't mention projects, certifications, or achievements, return empty arrays [] for those specific fields. Do NOT invent fake data for these sections.
+  5. Only return raw JSON. No markdown formatting.
   `;
 
   try {
@@ -59,15 +50,18 @@ exports.generateResumeData = async (userDescription) => {
 
     const data = JSON.parse(text.trim());
 
-    const requiredSections = ['personalInformation', 'summary', 'skills', 'experience', 'education', 'projects'];
+    const requiredSections = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
     const missingSections = requiredSections.filter(section => !data[section]);
 
     if (missingSections.length > 0) {
       throw new Error(`AI generated an incomplete resume. Missing: ${missingSections.join(', ')}`);
     }
 
-    return data;
-  } catch (error) {
+    // Ensure all optional sections are at least empty arrays
+    const optionalSections = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility', 'socialLinks'];
+    optionalSections.forEach(section => {
+      if (!data[section]) data[section] = [];
+    });
     // Handle Gemini API Quota / Rate Limit errors
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
       const quotaError = new Error('AI generation is temporarily busy due to high demand (free-tier quota reached). Please try again in a minute.');
