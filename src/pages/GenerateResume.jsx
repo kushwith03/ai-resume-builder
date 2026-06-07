@@ -30,7 +30,7 @@ const GenerateResume = () => {
     positionsOfResponsibility: [],
   });
 
-  const { register, handleSubmit, control, reset, watch } = useForm({
+  const { register, handleSubmit, control, reset, watch, formState: { errors } } = useForm({
     defaultValues: data,
   });
 
@@ -194,41 +194,66 @@ const GenerateResume = () => {
             <FormSection title="Identity">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                 <div className="form-control md:col-span-2">
-                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name *</label>
-                  <input {...register("personalInformation.fullName")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="John Doe" />
+                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
+                  <input 
+                    {...register("personalInformation.fullName", { required: "Full Name is required" })} 
+                    className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${errors.personalInformation?.fullName ? 'border-error focus:border-error ring-1 ring-error/10' : 'border-white/5 focus:border-primary/50'}`} 
+                    placeholder="John Doe" 
+                  />
+                  {errors.personalInformation?.fullName && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{errors.personalInformation.fullName.message}</span>}
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Job Title *</label>
-                  <input {...register("personalInformation.title")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="Software Engineer" />
+                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.title ? 'text-error' : 'text-slate-500'}`}>Job Title *</label>
+                  <input 
+                    {...register("personalInformation.title", { required: "Job Title is required" })} 
+                    className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${errors.personalInformation?.title ? 'border-error focus:border-error ring-1 ring-error/10' : 'border-white/5 focus:border-primary/50'}`} 
+                    placeholder="Software Engineer" 
+                  />
+                  {errors.personalInformation?.title && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{errors.personalInformation.title.message}</span>}
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Email *</label>
-                  <input {...register("personalInformation.email")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="john@example.com" />
+                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.email ? 'text-error' : 'text-slate-500'}`}>Email *</label>
+                  <input 
+                    {...register("personalInformation.email", { required: "Email is required" })} 
+                    className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${errors.personalInformation?.email ? 'border-error focus:border-error ring-1 ring-error/10' : 'border-white/5 focus:border-primary/50'}`} 
+                    placeholder="john@example.com" 
+                  />
+                  {errors.personalInformation?.email && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{errors.personalInformation.email.message}</span>}
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Location *</label>
-                  <input {...register("personalInformation.location")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="New York, NY" />
+                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.location ? 'text-error' : 'text-slate-500'}`}>Location *</label>
+                  <input 
+                    {...register("personalInformation.location", { required: "Location is required" })} 
+                    className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${errors.personalInformation?.location ? 'border-error focus:border-error ring-1 ring-error/10' : 'border-white/5 focus:border-primary/50'}`} 
+                    placeholder="New York, NY" 
+                  />
+                  {errors.personalInformation?.location && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{errors.personalInformation.location.message}</span>}
                 </div>
                 <div className="form-control">
                   <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
-                  <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="+1 234 567 890" />
+                  <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 border-white/5 focus:border-primary/50 bg-base-100 text-sm" placeholder="+1 234 567 890" />
                 </div>
               </div>
             </FormSection>
 
-            <RenderFieldArray fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
 
             <FormSection title="Professional Summary">
-              <textarea {...register("summary")} className="textarea textarea-bordered w-full h-24 md:h-32 bg-base-100 border-white/5 focus:border-primary/50 text-sm leading-relaxed" placeholder="Brief overview of your career..." />
+              <textarea 
+                {...register("summary", { required: "Professional Summary is required" })} 
+                className={`textarea textarea-bordered w-full h-24 md:h-32 bg-base-100 text-sm leading-relaxed transition-all ${errors.summary ? 'border-error focus:border-error ring-1 ring-error/10' : 'border-white/5 focus:border-primary/50'}`} 
+                placeholder="Brief overview of your career..." 
+              />
+              {errors.summary && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{errors.summary.message}</span>}
             </FormSection>
 
-            <RenderFieldArray fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} />
-            <RenderFieldArray fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} />      
-            <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} />        
-            <RenderFieldArray fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} />
-            <RenderFieldArray fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} />
-            <RenderFieldArray fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} />
-            <RenderFieldArray fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} />      
+            <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} errors={errors} />        
+            <RenderFieldArray fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} errors={errors} />
 
             <div className="flex lg:hidden flex-col gap-4 pt-6">
               <button

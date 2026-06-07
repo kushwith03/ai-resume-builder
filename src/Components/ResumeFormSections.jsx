@@ -60,7 +60,7 @@ const FormSection = React.memo(({ title, children, defaultExpanded = true }) => 
   );
 });
 
-export const RenderFieldArray = React.memo(({ fields, label, name, keys, register, watch }) => {
+export const RenderFieldArray = React.memo(({ fields, label, name, keys, register, watch, errors }) => {
   const allValues = watch(name) || [];
   const lastIndexRef = React.useRef(-1);
 
@@ -147,25 +147,28 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
                 {keys.map(key => {
                   const isTextArea = ["responsibility", "description", "summary"].includes(key);    
                   const isFullWidth = ["responsibility", "description", "summary", "technologiesUsed", "skills", "url"].includes(key);
+                  const isRequired = labelMap[key]?.includes('*');
+                  const error = errors?.[name]?.[index]?.[key];
 
                   return (
                     <div key={key} className={`form-control ${isFullWidth ? 'md:col-span-2' : ''}`}>
-                      <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">
+                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error font-black' : 'text-slate-500'}`}>
                         {labelMap[key] || key}
                       </label>
                       {isTextArea ? (
                         <textarea
-                          {...register(`${name}.${index}.${key}`)}
-                          className="textarea textarea-bordered h-24 bg-base-100 border-white/5 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all text-sm leading-relaxed placeholder:text-slate-600 text-slate-300"
+                          {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })}
+                          className={`textarea textarea-bordered h-24 bg-base-100 text-sm leading-relaxed transition-all ${error ? 'border-error focus:border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`}
                           placeholder={`Enter details for ${key}...`}
                         />
                       ) : (
                         <input
-                          {...register(`${name}.${index}.${key}`)}
-                          className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all text-sm placeholder:text-slate-600 text-slate-300"
+                          {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })}
+                          className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${error ? 'border-error focus:border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`}
                           placeholder={`e.g. ${labelMap[key]?.replace(' *', '') || key}`}
                         />
                       )}
+                      {error && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{error.message}</span>}
                     </div>
                   );
                 })}
