@@ -58,7 +58,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">
-            Portfolio Project &copy; {new Date().getFullYear()} R Khushwith Kumar
+            InstaResume Project &copy; {new Date().getFullYear()} &middot; R Khushwith Kumar
           </p>
           <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium">
             <span>Built with</span>
