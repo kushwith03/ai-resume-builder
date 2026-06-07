@@ -239,9 +239,9 @@ const GenerateResume = () => {
       )}
 
       {showFormUI && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fadeIn relative">
-          {/* Section Navigation Dock - Desktop Floating Rail */}
-          <div className="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[100]">
+        <>
+          {/* Section Navigation Dock - Desktop Floating Rail (Outside animated div to fix visibility/clipping) */}
+          <div className="hidden lg:flex fixed left-[max(1rem,calc(50vw-740px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
             {SECTIONS.map((section) => (
               <button
                 key={section.id}
@@ -256,97 +256,101 @@ const GenerateResume = () => {
             ))}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
-            {/* Mobile Sticky Navigation Dock */}
-            <div className="lg:hidden sticky top-0 z-[80] -mx-4 px-4 py-3 bg-base-300/80 backdrop-blur-lg border-b border-white/5 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2">
-              {SECTIONS.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => scrollToSection(section.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all border ${activeSection === section.id ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-transparent text-slate-500'}`}
-                >
-                  <span className="text-xs">{section.icon}</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest">{section.label}</span>
-                </button>
-              ))}
-            </div>
+          <div className="relative animate-fadeIn">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+              <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
+                {/* Mobile Sticky Navigation Dock (top-16 to avoid Navbar) */}
+                <div className="lg:hidden sticky top-16 z-[80] -mx-4 px-4 py-3 bg-base-300/80 backdrop-blur-lg border-b border-white/5 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2">
+                  {SECTIONS.map((section) => (
+                    <button
+                      key={section.id}
+                      type="button"
+                      onClick={() => scrollToSection(section.id)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all border ${activeSection === section.id ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-transparent text-slate-500'}`}
+                    >
+                      <span className="text-xs">{section.icon}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest">{section.label}</span>
+                    </button>
+                  ))}
+                </div>
 
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
-              {atsResult && (
-                <div className="flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-2xl">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">ATS Match</span>
-                  <div className={`text-sm font-black ${atsResult.score >= 70 ? 'text-success' : atsResult.score >= 40 ? 'text-warning' : 'text-error'}`}>
-                    {atsResult.score}%
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
+                  {atsResult && (
+                    <div className="flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-2xl">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">ATS Match</span>
+                      <div className={`text-sm font-black ${atsResult.score >= 70 ? 'text-success' : atsResult.score >= 40 ? 'text-warning' : 'text-error'}`}>
+                        {atsResult.score}%
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <FormSection id="identity" title="Identity">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                    <div className="form-control md:col-span-2">
+                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
+                      <input {...register("personalInformation.fullName", { required: "Full Name is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.fullName ? 'border-error' : 'border-white/5'}`} placeholder="John Doe" />
+                    </div>
+                    <div className="form-control">
+                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.title ? 'text-error' : 'text-slate-500'}`}>Job Title *</label>
+                      <input {...register("personalInformation.title", { required: "Job Title is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.title ? 'border-error' : 'border-white/5'}`} placeholder="Software Engineer" />
+                    </div>
+                    <div className="form-control">
+                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.email ? 'text-error' : 'text-slate-500'}`}>Email *</label>
+                      <input {...register("personalInformation.email", { required: "Email is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.email ? 'border-error' : 'border-white/5'}`} placeholder="john@example.com" />
+                    </div>
+                    <div className="form-control">
+                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.location ? 'text-error' : 'text-slate-500'}`}>Location *</label>
+                      <input {...register("personalInformation.location", { required: "Location is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.location ? 'border-error' : 'border-white/5'}`} placeholder="New York, NY" />
+                    </div>
+                    <div className="form-control">
+                      <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
+                      <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 border-white/5 bg-base-100 text-sm" placeholder="+1 234 567 890" />
+                    </div>
+                  </div>
+                </FormSection>
+
+                <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
+
+                <FormSection id="summary" title="Professional Summary">
+                  <textarea {...register("summary", { required: "Professional Summary is required" })} className={`textarea textarea-bordered w-full h-24 bg-base-100 text-sm leading-relaxed ${errors.summary ? 'border-error' : 'border-white/5'}`} placeholder="Brief overview of your career..." />
+                </FormSection>
+
+                <RenderFieldArray id="skills" fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
+                <RenderFieldArray id="experience" fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} />      
+                <RenderFieldArray id="education" fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} errors={errors} />        
+                <RenderFieldArray id="projects" fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} errors={errors} />
+                <RenderFieldArray id="certifications" fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} errors={errors} />
+                <RenderFieldArray id="achievements" fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} errors={errors} />
+                <RenderFieldArray id="positionsOfResponsibility" fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} errors={errors} />
+
+                <div className="flex lg:hidden flex-col gap-4 pt-6 pb-12">
+                  <button type="button" onClick={handleSubmit(onSubmit)} className="btn btn-primary w-full rounded-2xl font-black shadow-lg shadow-primary/20">Preview & Export</button>
+                  <button type="button" onClick={resetGenerator} className="btn btn-ghost w-full text-slate-500 font-bold">Reset</button>
+                </div>
+              </form>
+
+              {/* Live Preview Panel */}
+              <div className="hidden lg:flex lg:col-span-5 sticky top-20 h-[calc(100vh-100px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl transition-all">
+                <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between backdrop-blur-md">
+                  <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span></div>
+                  <div className="flex items-center gap-2">
+                    <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">Reset</button>
+                    <div className="flex items-center bg-primary/10 rounded-lg p-0.5 border border-primary/20">
+                      <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-xs h-7 px-4 rounded-md font-black text-[10px] uppercase tracking-widest">View Result</button>
+                      <div className="w-px h-4 bg-primary/20 mx-1"></div>
+                      <button onClick={async () => { await handleSubmit((validData) => { setData(validData); setShowFormUI(false); setShowResumeUI(true); })(); }} className="btn btn-ghost btn-xs h-7 px-3 rounded-md font-bold text-[10px] text-primary uppercase tracking-widest">Download</button>
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
-
-            <FormSection id="identity" title="Identity">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                <div className="form-control md:col-span-2">
-                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
-                  <input {...register("personalInformation.fullName", { required: "Full Name is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.fullName ? 'border-error' : 'border-white/5'}`} placeholder="John Doe" />
-                </div>
-                <div className="form-control">
-                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.title ? 'text-error' : 'text-slate-500'}`}>Job Title *</label>
-                  <input {...register("personalInformation.title", { required: "Job Title is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.title ? 'border-error' : 'border-white/5'}`} placeholder="Software Engineer" />
-                </div>
-                <div className="form-control">
-                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.email ? 'text-error' : 'text-slate-500'}`}>Email *</label>
-                  <input {...register("personalInformation.email", { required: "Email is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.email ? 'border-error' : 'border-white/5'}`} placeholder="john@example.com" />
-                </div>
-                <div className="form-control">
-                  <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.location ? 'text-error' : 'text-slate-500'}`}>Location *</label>
-                  <input {...register("personalInformation.location", { required: "Location is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.location ? 'border-error' : 'border-white/5'}`} placeholder="New York, NY" />
-                </div>
-                <div className="form-control">
-                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
-                  <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 border-white/5 bg-base-100 text-sm" placeholder="+1 234 567 890" />
+                <div className="w-full h-full overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-900/50 backdrop-blur-sm flex justify-center">      
+                   <div className="w-full max-w-[210mm] bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
                 </div>
               </div>
-            </FormSection>
-
-            <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
-
-            <FormSection id="summary" title="Professional Summary">
-              <textarea {...register("summary", { required: "Professional Summary is required" })} className={`textarea textarea-bordered w-full h-24 bg-base-100 text-sm leading-relaxed ${errors.summary ? 'border-error' : 'border-white/5'}`} placeholder="Brief overview of your career..." />
-            </FormSection>
-
-            <RenderFieldArray id="skills" fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
-            <RenderFieldArray id="experience" fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} />      
-            <RenderFieldArray id="education" fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} errors={errors} />        
-            <RenderFieldArray id="projects" fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} errors={errors} />
-            <RenderFieldArray id="certifications" fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} errors={errors} />
-            <RenderFieldArray id="achievements" fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} errors={errors} />
-            <RenderFieldArray id="positionsOfResponsibility" fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} errors={errors} />
-
-            <div className="flex lg:hidden flex-col gap-4 pt-6 pb-12">
-              <button type="button" onClick={handleSubmit(onSubmit)} className="btn btn-primary w-full rounded-2xl font-black shadow-lg shadow-primary/20">Preview & Export</button>
-              <button type="button" onClick={resetGenerator} className="btn btn-ghost w-full text-slate-500 font-bold">Reset</button>
-            </div>
-          </form>
-
-          {/* Live Preview Panel */}
-          <div className="hidden lg:flex lg:col-span-5 sticky top-20 h-[calc(100vh-100px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl transition-all">
-            <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between backdrop-blur-md">
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span></div>
-              <div className="flex items-center gap-2">
-                <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">Reset</button>
-                <div className="flex items-center bg-primary/10 rounded-lg p-0.5 border border-primary/20">
-                  <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-xs h-7 px-4 rounded-md font-black text-[10px] uppercase tracking-widest">View Result</button>
-                  <div className="w-px h-4 bg-primary/20 mx-1"></div>
-                  <button onClick={async () => { await handleSubmit((validData) => { setData(validData); setShowFormUI(false); setShowResumeUI(true); })(); }} className="btn btn-ghost btn-xs h-7 px-3 rounded-md font-bold text-[10px] text-primary uppercase tracking-widest">Download</button>
-                </div>
-              </div>
-            </div>
-            <div className="w-full h-full overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-900/50 backdrop-blur-sm flex justify-center">      
-               <div className="w-full max-w-[210mm] bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {showResumeUI && (

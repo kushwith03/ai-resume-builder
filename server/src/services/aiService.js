@@ -62,6 +62,9 @@ exports.generateResumeData = async (userDescription) => {
     optionalSections.forEach(section => {
       if (!data[section]) data[section] = [];
     });
+
+    return data;
+  } catch (error) {
     // Handle Gemini API Quota / Rate Limit errors
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
       const quotaError = new Error('AI generation is temporarily busy due to high demand (free-tier quota reached). Please try again in a minute.');
