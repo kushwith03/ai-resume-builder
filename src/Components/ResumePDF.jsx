@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     color: '#4b5563',
     marginBottom: 10,
     fontSize: 9,
+    width: '100%',
   },
   section: {
     marginBottom: 15,
@@ -100,7 +101,7 @@ const ResumePDF = ({ data }) => {
               personalInformation?.email,
               personalInformation?.location,
               personalInformation?.phoneNumber
-            ].filter(Boolean).map(item => safeText(item)).join("  •  ")}
+            ].filter(Boolean).map(item => safeText(item)).join("   |   ")}
           </Text>
         </View>
 
