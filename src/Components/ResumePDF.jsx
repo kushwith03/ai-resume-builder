@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 22,
     fontFamily: "Times-Bold",
-    marginBottom: 4,
+    marginBottom: 10,
     textTransform: "uppercase",
   },
   contact: {
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     width: "100%",
     fontSize: 9,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   social: {
     flexDirection: "row",
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     width: "100%",
     fontSize: 9,
+    marginTop: 2,
   },
   contactItem: {
     paddingHorizontal: 4,

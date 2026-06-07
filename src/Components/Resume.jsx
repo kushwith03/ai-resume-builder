@@ -28,8 +28,8 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
       style={{ fontFamily: "'Times New Roman', Times, serif", lineHeight: "1.2" }}
     >
       {/* Header - Optimized Two-Line Layout */}
-      <div className="text-center mb-4">
-        <h1 className="text-2xl font-bold uppercase tracking-tight mb-1 text-black">
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold uppercase tracking-tight mb-2 text-black">
           {data.personalInformation?.fullName || "Your Name"}
         </h1>
         
