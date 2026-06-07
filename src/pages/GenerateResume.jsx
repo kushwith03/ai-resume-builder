@@ -177,62 +177,68 @@ const GenerateResume = () => {
       <GenerationLoader isLoading={loading} />
       
       {showPromptInput && (
-        <div className="flex flex-col items-center justify-center py-10 md:py-16 gap-8 animate-fadeIn">
+        <div className="flex flex-col items-center justify-center py-10 md:py-16 gap-8 animate-fadeIn max-w-2xl mx-auto">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2">
-              <FaPaperPlane className="text-primary text-xs" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Engine Active</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
-            <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed text-center">
-              Our AI engine transforms your experience into a high-performance resume draft. 
-              <span className="block mt-2 text-primary/80 font-medium">The more detail you provide, the better the results.</span>
-            </p>
+            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">Create Your <span className="text-primary">Resume</span></h1>
           </div>
 
-          <div className="w-full max-w-2xl group">
-            <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary blur opacity-20 group-hover:opacity-40 transition-opacity rounded-3xl"></div>
-              <div className="relative bg-base-200 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="textarea w-full h-48 md:h-64 bg-transparent border-none text-base text-slate-200 focus:ring-0 p-6 md:p-8 leading-relaxed resize-none placeholder:text-slate-600"
-                  placeholder="e.g. I am a Senior Frontend Engineer with 8 years of experience building scalable React applications..."
-                />
-                
-                <div className="absolute top-4 right-6 flex items-center gap-3">
-                  {description.length > 0 && (
-                    <div className="flex items-center gap-2 px-2 py-1 bg-white/5 rounded-lg border border-white/5 backdrop-blur-md">
-                      <div className={`w-1.5 h-1.5 rounded-full ${description.length < 50 ? 'bg-error animate-pulse' : description.length < 200 ? 'bg-warning' : 'bg-success'}`}></div>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
-                        {description.length < 50 ? 'Weak' : description.length < 200 ? 'Good' : 'Excellent'}
-                      </span>
-                    </div>
-                  )}
-                  <span className={`text-[10px] font-mono ${description.length < 50 ? 'text-slate-500' : 'text-primary'}`}>
-                    {description.length} chars
-                  </span>
-                </div>
-
-                <div className="p-4 bg-white/5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                  <div className="flex flex-col gap-1 md:ml-4">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Recommended: 200+ characters</span>
-                  </div>
-                  <button
-                    onClick={handleGenerate}
-                    disabled={loading || description.length < 10}
-                    className="btn btn-primary w-full md:w-auto px-8 rounded-2xl font-black shadow-lg shadow-primary/20 group/btn"
-                  >
-                    {loading ? <span className="loading loading-spinner loading-sm"></span> : (
-                      <>
-                        Generate Draft
-                        <FaMagic className="ml-2 group-hover/btn:rotate-12 transition-transform" />
-                      </>
-                    )}
-                  </button>
-                </div>
+          <div className="w-full space-y-4">
+            <div className="relative bg-base-200 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="textarea w-full h-48 md:h-64 bg-transparent border-none text-sm text-slate-200 focus:ring-0 p-6 leading-relaxed resize-none placeholder:text-slate-600"
+                placeholder={`Describe yourself, paste resume content, or paste AI-generated profile information.\n\nExamples:\n• Final year CSE student skilled in Java and React...\n• Existing resume text...\n• ChatGPT / Gemini / Claude output...`}
+              />
+              
+              <div className="absolute top-4 right-6 flex items-center gap-3">
+                <span className={`text-[10px] font-mono ${description.length < 50 ? 'text-slate-500' : 'text-primary'}`}>
+                  {description.length} characters
+                </span>
               </div>
+
+              <div className="p-4 bg-white/5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p className="text-[10px] text-slate-500 font-medium md:ml-2">
+                  Describe yourself, paste resume content, or paste AI-generated profile information.
+                </p>
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading || description.length < 10}
+                  className="btn btn-primary w-full md:w-auto px-8 rounded-xl font-black shadow-lg shadow-primary/20"
+                >
+                  {loading ? <span className="loading loading-spinner loading-sm"></span> : "Generate Resume"}
+                </button>
+              </div>
+            </div>
+
+            {/* Helper Section */}
+            <div className="p-5 bg-base-200/50 border border-dashed border-white/10 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="space-y-1 text-center md:text-left">
+                <p className="text-xs font-bold text-white">Already have information elsewhere?</p>
+                <p className="text-[10px] text-slate-500">Use ChatGPT, Gemini, or Claude to organize it first.</p>
+              </div>
+              <button 
+                type="button"
+                onClick={() => {
+                  const prompt = `Create a structured professional profile using all information you know about me or that I provide.\n\nInclude:\n* Personal Information\n* Education\n* Experience\n* Projects\n* Skills\n* Certifications\n* Achievements\n* Positions of Responsibility\n* Professional Links\n\nRequirements:\n* Use concise professional language\n* Convert work into impact-driven bullet points\n* Group technical skills logically\n* Remove conversational filler\n* Do not include greetings or explanations\n\nReturn only structured profile content.\n\nMy information:`;
+                  navigator.clipboard.writeText(prompt);
+                  toast.success("AI Prompt copied to clipboard");
+                }}
+                className="btn btn-ghost btn-sm text-[10px] font-black uppercase tracking-widest border border-white/5 bg-white/5 hover:bg-white/10 rounded-lg h-9"
+              >
+                Copy AI Prompt
+              </button>
+            </div>
+
+            {/* Examples Quick List */}
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
+              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">You can paste:</span>
+              {['Resume Text', 'Career Description', 'AI-generated Profile', 'Old Content'].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-slate-700"></div>
+                  <span className="text-[10px] text-slate-500 font-medium">{item}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
