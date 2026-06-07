@@ -142,7 +142,10 @@ const GenerateResume = () => {
               <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Engine Active</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
-            <p className="text-slate-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed text-center">Describe your professional background in plain English, and this AI-powered engine will architect a high-performance resume draft for you.</p>
+            <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed text-center">
+              Our AI engine transforms your experience into a high-performance resume draft. 
+              <span className="block mt-2 text-primary/80 font-medium">The more detail you provide, the better the results.</span>
+            </p>
           </div>
 
           <div className="w-full max-w-2xl group">
@@ -152,11 +155,32 @@ const GenerateResume = () => {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="textarea w-full h-40 md:h-56 bg-transparent border-none text-base text-slate-200 focus:ring-0 p-6 md:p-8 leading-relaxed resize-none placeholder:text-slate-600"
-                  placeholder="e.g. I am a Senior Frontend Engineer with 8 years of experience building scalable React applications. I have led teams of 5 and specialized in high-performance UI architecture..."
+                  className="textarea w-full h-48 md:h-64 bg-transparent border-none text-base text-slate-200 focus:ring-0 p-6 md:p-8 leading-relaxed resize-none placeholder:text-slate-600"
+                  placeholder="e.g. I am a Senior Frontend Engineer with 8 years of experience building scalable React applications. I have led teams of 5 and specialized in high-performance UI architecture. My core stack includes TypeScript, Next.js, and GraphQL. I recently delivered a 30% performance boost for a global e-commerce platform..."
                 />
+                
+                {/* Character Counter & Quality Indicator */}
+                <div className="absolute top-4 right-6 flex items-center gap-3">
+                  {description.length > 0 && (
+                    <div className="flex items-center gap-2 px-2 py-1 bg-white/5 rounded-lg border border-white/5 backdrop-blur-md">
+                      <div className={`w-1.5 h-1.5 rounded-full ${description.length < 50 ? 'bg-error animate-pulse' : description.length < 200 ? 'bg-warning' : 'bg-success'}`}></div>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                        {description.length < 50 ? 'Weak' : description.length < 200 ? 'Good' : 'Excellent'}
+                      </span>
+                    </div>
+                  )}
+                  <span className={`text-[10px] font-mono ${description.length < 50 ? 'text-slate-500' : 'text-primary'}`}>
+                    {description.length} chars
+                  </span>
+                </div>
+
                 <div className="p-4 bg-white/5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest md:ml-4">Min. 50 characters recommended</span>
+                  <div className="flex flex-col gap-1 md:ml-4">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Recommended: 200+ characters</span>
+                    {description.length < 50 && description.length > 0 && (
+                      <span className="text-[9px] text-error/80 font-medium italic">Add more details for a more accurate draft</span>
+                    )}
+                  </div>
                   <button
                     onClick={handleGenerate}
                     disabled={loading || description.length < 10}
@@ -287,12 +311,27 @@ const GenerateResume = () => {
                 <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">
                   Reset
                 </button>
-                <button
-                  onClick={handleSubmit(onSubmit)}
-                  className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10 uppercase tracking-widest"
-                >
-                  Preview & Export
-                </button>
+                <div className="flex items-center bg-primary/10 rounded-lg p-0.5 border border-primary/20">
+                  <button
+                    onClick={handleSubmit(onSubmit)}
+                    className="btn btn-primary btn-xs h-7 px-4 rounded-md font-black text-[10px] shadow-lg shadow-primary/10 uppercase tracking-widest"
+                  >
+                    View Result
+                  </button>
+                  <div className="w-px h-4 bg-primary/20 mx-1"></div>
+                  <button
+                    onClick={async () => {
+                      const isValid = await handleSubmit((validData) => {
+                        setData(validData);
+                        setShowFormUI(false);
+                        setShowResumeUI(true);
+                      })();
+                    }}
+                    className="btn btn-ghost btn-xs h-7 px-3 rounded-md font-bold text-[10px] text-primary hover:bg-primary/10 uppercase tracking-widest"
+                  >
+                    Download
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -403,6 +442,58 @@ const GenerateResume = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Fullscreen Preview Overlay */}
+      {showFormUI && (
+        <>
+          {/* FAB - Visible only on mobile */}
+          <button
+            onClick={() => setShowMobilePreview(true)}
+            className="lg:hidden fixed bottom-6 right-6 z-[90] btn btn-circle btn-primary shadow-2xl shadow-primary/40 animate-bounce-subtle"
+            title="Preview Resume"
+          >
+            <FaMagic className="text-xl" />
+          </button>
+
+          {/* Fullscreen Overlay */}
+          {showMobilePreview && (
+            <div className="fixed inset-0 z-[200] bg-base-300 flex flex-col animate-fadeIn">
+              <div className="h-16 px-4 bg-base-200 border-b border-white/5 flex items-center justify-between sticky top-0 z-[210]">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Live Preview</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const isValid = handleSubmit((validData) => {
+                        setData(validData);
+                        setShowFormUI(false);
+                        setShowResumeUI(true);
+                        setShowMobilePreview(false);
+                      })();
+                    }}
+                    className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] uppercase tracking-widest"
+                  >
+                    Export
+                  </button>
+                  <button
+                    onClick={() => setShowMobilePreview(false)}
+                    className="btn btn-ghost btn-circle btn-sm text-white hover:bg-white/10"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4 bg-slate-900/50">
+                <div className="w-full max-w-[210mm] mx-auto bg-white shadow-2xl">
+                  <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
