@@ -4,60 +4,60 @@ const styles = StyleSheet.create({
   page: {
     padding: 40,
     fontSize: 10,
-    fontFamily: 'Helvetica',
+    fontFamily: "Helvetica",
     lineHeight: 1.5,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   name: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   contact: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    color: '#4b5563',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    color: "#4b5563",
     marginBottom: 10,
     fontSize: 9,
-    width: '100%',
+    width: "100%",
   },
   contactItem: {
     paddingHorizontal: 8,
   },
   contactSeparator: {
-    color: '#9ca3af',
+    color: "#9ca3af",
   },
   section: {
     marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: 'bold',
-    color: '#2563eb',
+    fontWeight: "bold",
+    color: "#2563eb",
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: "#e5e7eb",
     marginBottom: 8,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   itemHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   itemSubHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    fontStyle: 'italic',
-    color: '#4b5563',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    fontStyle: "italic",
+    color: "#4b5563",
     marginBottom: 4,
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   bulletPoint: {
     marginLeft: 10,
@@ -67,30 +67,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   skills: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   skillBadge: {
     paddingHorizontal: 6,
     paddingVertical: 2,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: "#f3f4f6",
     borderRadius: 3,
     marginRight: 6,
     marginBottom: 4,
-  }
+  },
 });
 
 const ResumePDF = ({ data }) => {
   if (!data) return null;
 
   // Destructure with safe defaults
-  const { 
-    personalInformation = {}, 
-    summary = "", 
-    experience = [], 
-    education = [], 
-    skills = [], 
-    projects = [] 
+  const {
+    personalInformation = {},
+    summary = "",
+    experience = [],
+    education = [],
+    skills = [],
+    projects = [],
   } = data;
 
   // Helper to safely render text
@@ -100,23 +100,40 @@ const ResumePDF = ({ data }) => {
   };
 
   return (
-    <Document title={`${safeText(personalInformation?.fullName) || 'Resume'} - ATS Optimized`}>
+    <Document
+      title={`${safeText(personalInformation?.fullName) || "Resume"} - ATS Optimized`}
+    >
       <Page size="A4" style={styles.page}>
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.name}>{safeText(personalInformation?.fullName) || 'Your Name'}</Text>
-          <View style={styles.contact}>
-            {[
-              personalInformation?.email,
-              personalInformation?.location,
-              personalInformation?.phoneNumber
-            ].filter(Boolean).map((item, index, array) => (
-              <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.contactItem}>{safeText(item)}</Text>
-                {index < array.length - 1 && <Text style={styles.contactSeparator}>|</Text>}
-              </View>
-            ))}
-          </View>
+        <View style={styles.contact}>
+          {personalInformation?.email && (
+            <Text style={styles.contactItem}>
+              {safeText(personalInformation.email)}
+            </Text>
+          )}
+
+          {personalInformation?.email &&
+            (personalInformation?.location ||
+              personalInformation?.phoneNumber) && (
+              <Text style={styles.contactSeparator}>|</Text>
+            )}
+
+          {personalInformation?.location && (
+            <Text style={styles.contactItem}>
+              {safeText(personalInformation.location)}
+            </Text>
+          )}
+
+          {personalInformation?.location &&
+            personalInformation?.phoneNumber && (
+              <Text style={styles.contactSeparator}>|</Text>
+            )}
+
+          {personalInformation?.phoneNumber && (
+            <Text style={styles.contactItem}>
+              {safeText(personalInformation.phoneNumber)}
+            </Text>
+          )}
         </View>
 
         {/* Summary */}
@@ -139,7 +156,9 @@ const ResumePDF = ({ data }) => {
                   <Text>{safeText(exp?.company)}</Text>
                   <Text>{safeText(exp?.location)}</Text>
                 </View>
-                <Text style={styles.bulletPoint}>{safeText(exp?.responsibility)}</Text>
+                <Text style={styles.bulletPoint}>
+                  {safeText(exp?.responsibility)}
+                </Text>
               </View>
             ))}
           </View>
@@ -169,14 +188,24 @@ const ResumePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Skills & Competencies</Text>
             {skills.map((skillGroup, i) => (
-              <View key={i} style={{ flexDirection: 'row', marginBottom: 5 }}>
-                <Text style={[styles.bold, { width: 100 }]}>{safeText(skillGroup?.category || skillGroup?.title || 'Skills')}:</Text>
+              <View key={i} style={{ flexDirection: "row", marginBottom: 5 }}>
+                <Text style={[styles.bold, { width: 100 }]}>
+                  {safeText(
+                    skillGroup?.category || skillGroup?.title || "Skills",
+                  )}
+                  :
+                </Text>
                 <View style={styles.skills}>
-                  {safeText(skillGroup?.skills || skillGroup?.level || "").split(",").map((skill, si) => (
-                    skill.trim() && (
-                      <Text key={si} style={styles.skillBadge}>{safeText(skill.trim())}</Text>
-                    )
-                  ))}
+                  {safeText(skillGroup?.skills || skillGroup?.level || "")
+                    .split(",")
+                    .map(
+                      (skill, si) =>
+                        skill.trim() && (
+                          <Text key={si} style={styles.skillBadge}>
+                            {safeText(skill.trim())}
+                          </Text>
+                        ),
+                    )}
                 </View>
               </View>
             ))}
@@ -192,7 +221,7 @@ const ResumePDF = ({ data }) => {
                 <Text style={styles.bold}>{safeText(proj?.title)}</Text>
                 <Text>{safeText(proj?.description)}</Text>
                 {proj?.technologiesUsed && (
-                  <Text style={{ fontSize: 9, color: '#6b7280', marginTop: 2 }}>
+                  <Text style={{ fontSize: 9, color: "#6b7280", marginTop: 2 }}>
                     Tech: {safeText(proj.technologiesUsed)}
                   </Text>
                 )}
