@@ -8,10 +8,19 @@ import { performanceTracker } from "../utils/performanceTracker";
 import { calculateATSScore } from "../services/atsService";
 import { useDebounce } from "../hooks/useDebounce";
 import FormSection, { RenderFieldArray } from "../Components/ResumeFormSections";
+import GenerationLoader from "../Components/GenerationLoader";
 
 const GenerateResume = () => {
   const [data, setData] = useState({
-    personalInformation: { fullName: "" },
+    personalInformation: { 
+      fullName: "", 
+      title: "", 
+      email: "", 
+      location: "", 
+      linkedin: "", 
+      gitHub: "", 
+      portfolio: "" 
+    },
     summary: "",
     skills: [],
     experience: [],
@@ -57,32 +66,26 @@ const GenerateResume = () => {
     performanceTracker.startMeasure();
     setLoading(true);
     
-    // Simulate high-quality feedback during loading
-    const loadingToast = toast.loading("AI Engine is architecting your draft...");
-
     try {
       const response = await generateResume(description);
       reset(response.data);
       setShowFormUI(true);
       setShowPromptInput(false);
       trackAnalytics("generate_resume_success");
-      toast.success("AI draft created successfully", { id: loadingToast });
+      toast.success("AI draft created successfully");
     } catch (error) {
       console.error("AI Generation failed:", error);
       const status = error.response?.status;
       const errorMessage = error.response?.data?.error;
 
       if (status === 429) {
-        toast.error("AI service is currently at capacity (Demo Quota reached). Please try again in a minute.", { id: loadingToast, duration: 6000 });
+        toast.error("AI service is currently at capacity. Please try again in a minute.", { duration: 6000 });
       } else {
-        toast.error(errorMessage || "AI service temporarily unavailable. Please retry shortly.", { id: loadingToast });
+        toast.error(errorMessage || "AI service temporarily unavailable. Please retry shortly.");
       }
 
-      // Portfolio Logic: If AI fails (quota), we still want to show the UI 
-      // but let the user know they can manually fill it for the demo.
       trackAnalytics("generate_resume_quota_exhausted");
       
-      // Optionally show a "Demo Mode" fallback after a delay
       setTimeout(() => {
         if (!showFormUI) {
           toast("Tip: You can still use the builder manually to explore the editor!", {
@@ -113,6 +116,7 @@ const GenerateResume = () => {
 
   return (
     <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1400px]' : 'max-w-4xl'}`}>
+      <GenerationLoader isLoading={loading} />
       {showPromptInput && (
         <div className="flex flex-col items-center justify-center py-10 md:py-20 gap-8 md:gap-12 animate-fadeIn">
           <div className="text-center space-y-4">
@@ -187,6 +191,18 @@ const GenerateResume = () => {
                 <div className="form-control">
                   <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Location</label>
                   <input {...register("personalInformation.location")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="New York, NY" />
+                </div>
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">LinkedIn URL</label>
+                  <input {...register("personalInformation.linkedin")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="linkedin.com/in/username" />
+                </div>
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">GitHub URL</label>
+                  <input {...register("personalInformation.gitHub")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="github.com/username" />
+                </div>
+                <div className="form-control">
+                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Portfolio Website</label>
+                  <input {...register("personalInformation.portfolio")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="portfolio.com" />
                 </div>
               </div>
             </FormSection>
