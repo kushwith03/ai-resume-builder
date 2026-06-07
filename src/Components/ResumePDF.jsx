@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 26,
     fontFamily: "Helvetica-Bold",
-    marginBottom: 6,
+    marginBottom: 12,
     textTransform: "uppercase",
     color: "#111827",
     textAlign: "center",
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexWrap: "wrap",
     width: "100%",
+    marginTop: 4,
   },
   contactItem: {
     fontSize: 9,
