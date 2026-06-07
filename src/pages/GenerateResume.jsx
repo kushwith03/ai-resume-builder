@@ -126,8 +126,39 @@ const GenerateResume = () => {
     trackAnalytics("form_submit_preview");
   }, []);
 
+  const [hasDraft, setHasDraft] = useState(false);
+
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('resume_draft');
+    if (savedDraft) {
+      setHasDraft(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showFormUI && debouncedFormData && Object.keys(debouncedFormData).length > 0) {
+      localStorage.setItem('resume_draft', JSON.stringify(debouncedFormData));
+    }
+  }, [debouncedFormData, showFormUI]);
+
+  const handleRestoreDraft = () => {
+    try {
+      const savedDraft = JSON.parse(localStorage.getItem('resume_draft'));
+      if (savedDraft) {
+        setData(savedDraft);
+        reset(savedDraft);
+        setShowPromptInput(false);
+        setShowFormUI(true);
+        toast.success("Draft restored");
+      }
+    } catch (e) {
+      toast.error("Failed to restore draft");
+      localStorage.removeItem('resume_draft');
+    }
+  };
+
   const handleGenerate = async () => {
-    if (!description.trim()) return toast.error("Please provide a career description");
+    if (description.length < 30) return toast.error("Please provide at least 30 characters for the AI to work with");
 
     performanceTracker.startMeasure();
     setLoading(true);
@@ -183,6 +214,19 @@ const GenerateResume = () => {
           </div>
 
           <div className="w-full space-y-4">
+            {hasDraft && (
+              <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 animate-fadeIn">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                  <span className="text-sm font-medium text-white">You have an unsaved resume draft.</span>
+                </div>
+                <div className="flex gap-2 w-full md:w-auto">
+                  <button onClick={() => { localStorage.removeItem('resume_draft'); setHasDraft(false); }} className="btn btn-ghost btn-sm text-slate-400 hover:text-white flex-1 md:flex-none">Discard</button>
+                  <button onClick={handleRestoreDraft} className="btn btn-primary btn-sm flex-1 md:flex-none">Restore Draft</button>
+                </div>
+              </div>
+            )}
+
             <div className="relative bg-base-200 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
               <textarea
                 value={description}
@@ -203,7 +247,7 @@ const GenerateResume = () => {
                 </p>
                 <button
                   onClick={handleGenerate}
-                  disabled={loading || description.length < 10}
+                  disabled={loading || description.length < 30}
                   className="btn btn-primary w-full md:w-auto px-8 rounded-xl font-black shadow-lg shadow-primary/20"
                 >
                   {loading ? <span className="loading loading-spinner loading-sm"></span> : "Generate Resume"}
