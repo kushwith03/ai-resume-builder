@@ -1,23 +1,28 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
 
+// Explicitly define styles for maximum compatibility across PDF engines
 const styles = StyleSheet.create({
   page: {
     padding: 40,
     fontSize: 10,
     fontFamily: "Helvetica",
     lineHeight: 1.4,
+    color: "#374151",
   },
   header: {
-    alignItems: "center",
     marginBottom: 20,
     width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 8,
+    fontSize: 26,
+    fontFamily: "Helvetica-Bold",
+    marginBottom: 6,
     textTransform: "uppercase",
     color: "#111827",
+    textAlign: "center",
   },
   contact: {
     flexDirection: "row",
@@ -29,7 +34,7 @@ const styles = StyleSheet.create({
   contactItem: {
     fontSize: 9,
     color: "#4b5563",
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
   },
   contactSeparator: {
     fontSize: 9,
@@ -40,12 +45,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#2563eb",
     borderBottomWidth: 1,
     borderBottomColor: "#bfdbfe",
     marginBottom: 10,
-    paddingBottom: 2,
+    paddingBottom: 3,
     textTransform: "uppercase",
   },
   itemHeader: {
@@ -56,22 +61,16 @@ const styles = StyleSheet.create({
   itemSubHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    fontStyle: "italic",
+    fontFamily: "Helvetica-Oblique",
     color: "#4b5563",
     marginBottom: 4,
     fontSize: 9,
   },
   bold: {
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#1f2937",
   },
-  responsibility: {
-    fontSize: 10,
-    color: "#374151",
-    lineHeight: 1.5,
-    marginTop: 2,
-  },
-  summary: {
+  text: {
     fontSize: 10,
     color: "#374151",
     lineHeight: 1.5,
@@ -83,11 +82,11 @@ const styles = StyleSheet.create({
   },
   skillGroup: {
     flexDirection: "row",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   skillLabel: {
     width: 120,
-    fontWeight: "bold",
+    fontFamily: "Helvetica-Bold",
     color: "#1f2937",
     fontSize: 10,
   },
@@ -105,14 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     color: "#4b5563",
   },
-  projectItem: {
-    marginBottom: 12,
-  },
   projectTech: {
     fontSize: 9,
     color: "#6b7280",
-    marginTop: 3,
-    fontStyle: "italic",
+    marginTop: 2,
+    fontFamily: "Helvetica-Oblique",
   }
 });
 
@@ -128,38 +124,46 @@ const ResumePDF = ({ data }) => {
     projects = [],
   } = data;
 
-  const safeText = (text) => (text === undefined || text === null ? "" : String(text));
+  // Extremely robust text handling
+  const renderText = (text, fallback = "") => {
+    if (!text || String(text).trim() === "") return fallback;
+    return String(text);
+  };
+
+  const fullName = renderText(personalInformation?.fullName, "Your Name");
 
   return (
-    <Document title={`${safeText(personalInformation?.fullName) || "Resume"} - Professional Output`}>
+    <Document title={`${fullName} - Professional Resume`}>
       <Page size="A4" style={styles.page}>
         {/* Header Section */}
         <View style={styles.header}>
-          <Text style={styles.name}>{safeText(personalInformation?.fullName) || "Your Name"}</Text>
+          <Text style={styles.name}>{fullName}</Text>
           <View style={styles.contact}>
             {personalInformation?.email && (
-              <Text style={styles.contactItem}>{safeText(personalInformation.email)}</Text>
+              <Text style={styles.contactItem}>{renderText(personalInformation.email)}</Text>
             )}
             {personalInformation?.email && (personalInformation?.location || personalInformation?.phoneNumber) && (
               <Text style={styles.contactSeparator}>|</Text>
             )}
             {personalInformation?.location && (
-              <Text style={styles.contactItem}>{safeText(personalInformation.location)}</Text>
+              <Text style={styles.contactItem}>{renderText(personalInformation.location)}</Text>
             )}
             {personalInformation?.location && personalInformation?.phoneNumber && (
               <Text style={styles.contactSeparator}>|</Text>
             )}
             {personalInformation?.phoneNumber && (
-              <Text style={styles.contactItem}>{safeText(personalInformation.phoneNumber)}</Text>
+              <Text style={styles.contactItem}>{renderText(personalInformation.phoneNumber)}</Text>
             )}
           </View>
         </View>
 
         {/* Summary Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Professional Summary</Text>
-          <Text style={styles.summary}>{safeText(summary)}</Text>
-        </View>
+        {summary && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Professional Summary</Text>
+            <Text style={styles.text}>{renderText(summary)}</Text>
+          </View>
+        )}
 
         {/* Experience Section */}
         {experience?.length > 0 && (
@@ -168,14 +172,14 @@ const ResumePDF = ({ data }) => {
             {experience.map((exp, i) => (
               <View key={i} style={{ marginBottom: 12 }}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.bold}>{safeText(exp?.jobTitle)}</Text>
-                  <Text style={{ fontSize: 9, color: "#6b7280" }}>{safeText(exp?.duration)}</Text>
+                  <Text style={styles.bold}>{renderText(exp?.jobTitle)}</Text>
+                  <Text style={{ fontSize: 9, color: "#6b7280" }}>{renderText(exp?.duration)}</Text>
                 </View>
                 <View style={styles.itemSubHeader}>
-                  <Text>{safeText(exp?.company)}</Text>
-                  <Text>{safeText(exp?.location)}</Text>
+                  <Text>{renderText(exp?.company)}</Text>
+                  <Text>{renderText(exp?.location)}</Text>
                 </View>
-                <Text style={styles.responsibility}>{safeText(exp?.responsibility)}</Text>
+                <Text style={styles.text}>{renderText(exp?.responsibility)}</Text>
               </View>
             ))}
           </View>
@@ -188,12 +192,12 @@ const ResumePDF = ({ data }) => {
             {education.map((edu, i) => (
               <View key={i} style={{ marginBottom: 8 }}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.bold}>{safeText(edu?.degree)}</Text>
-                  <Text style={{ fontSize: 9, color: "#6b7280" }}>{safeText(edu?.graduationYear)}</Text>
+                  <Text style={styles.bold}>{renderText(edu?.degree)}</Text>
+                  <Text style={{ fontSize: 9, color: "#6b7280" }}>{renderText(edu?.graduationYear)}</Text>
                 </View>
                 <View style={styles.itemSubHeader}>
-                  <Text>{safeText(edu?.university)}</Text>
-                  <Text>{safeText(edu?.location)}</Text>
+                  <Text>{renderText(edu?.university)}</Text>
+                  <Text>{renderText(edu?.location)}</Text>
                 </View>
               </View>
             ))}
@@ -207,14 +211,14 @@ const ResumePDF = ({ data }) => {
             {skills.map((group, i) => (
               <View key={i} style={styles.skillGroup}>
                 <Text style={styles.skillLabel}>
-                  {safeText(group?.category || group?.title || "Skills")}:
+                  {renderText(group?.category || group?.title, "Skills")}:
                 </Text>
                 <View style={styles.skills}>
-                  {safeText(group?.skills || group?.level || "")
+                  {renderText(group?.skills || group?.level, "")
                     .split(",")
                     .map((skill, si) => skill.trim() && (
                       <View key={si} style={styles.skillBadgeContainer}>
-                        <Text style={styles.skillText}>{safeText(skill.trim())}</Text>
+                        <Text style={styles.skillText}>{renderText(skill.trim())}</Text>
                       </View>
                     ))}
                 </View>
@@ -228,11 +232,11 @@ const ResumePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Key Projects</Text>
             {projects.map((proj, i) => (
-              <View key={i} style={styles.projectItem}>
-                <Text style={styles.bold}>{safeText(proj?.title)}</Text>
-                <Text style={styles.summary}>{safeText(proj?.description)}</Text>
+              <View key={i} style={{ marginBottom: 10 }}>
+                <Text style={styles.bold}>{renderText(proj?.title)}</Text>
+                <Text style={styles.text}>{renderText(proj?.description)}</Text>
                 {proj?.technologiesUsed && (
-                  <Text style={styles.projectTech}>Technologies: {safeText(proj.technologiesUsed)}</Text>
+                  <Text style={styles.projectTech}>Technologies: {renderText(proj.technologiesUsed)}</Text>
                 )}
               </View>
             ))}
