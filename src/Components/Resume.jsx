@@ -155,13 +155,16 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
       {data.certifications?.length > 0 && (
         <section className="mt-4">
           <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Certifications</h2>
-          <ul className="list-disc list-outside ml-4 text-[10px] leading-tight">
+          <div className="space-y-0.5">
             {data.certifications.map((cert, index) => (
-              <li key={index} className="mb-0.5">
-                <span className="font-bold">{cert.title}</span>, {cert.issuer} ({cert.date})
-              </li>
+              <div key={index} className="flex gap-2 text-[10px]">
+                <span>•</span>
+                <span>
+                  <span className="font-bold">{cert.title}</span>, {cert.issuer} ({cert.date})
+                </span>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
       )}
 
@@ -169,13 +172,16 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
       {data.achievements?.length > 0 && (
         <section className="mt-4">
           <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Awards & Achievements</h2>
-          <ul className="list-disc list-outside ml-4 text-[10px] leading-tight">
+          <div className="space-y-0.5">
             {data.achievements.map((award, index) => (
-              <li key={index} className="mb-0.5">
-                <span className="font-bold">{award.award}</span>, {award.organization} ({award.date})
-              </li>
+              <div key={index} className="flex gap-2 text-[10px]">
+                <span>•</span>
+                <span>
+                  <span className="font-bold">{award.award}</span>, {award.organization} ({award.date})
+                </span>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
       )}
 
@@ -190,7 +196,10 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
                 <span className="text-[9px]">{pos.duration}</span>
               </div>
               <div className="text-[9px] italic mb-0.5">{pos.organization}</div>
-              <p className="text-[10px] leading-tight">{pos.description}</p>
+              <div className="flex gap-2 text-[10px]">
+                <span>•</span>
+                <p className="text-[10px] leading-tight flex-1 text-justify">{pos.description}</p>
+              </div>
             </div>
           ))}
         </section>

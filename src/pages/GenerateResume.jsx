@@ -59,9 +59,18 @@ const GenerateResume = () => {
   };
 
   const onSubmit = useCallback((formData) => {
+    // Basic validation for essential fields
+    const { fullName, email, title } = formData.personalInformation || {};
+    if (!fullName || !email || !title) {
+      return toast.error("Please fill in required fields: Name, Email, and Job Title", {
+        icon: "⚠️",
+      });
+    }
+
     setData(formData);
     setShowFormUI(false);
     setShowResumeUI(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setCurrentMetrics(performanceTracker.getAverageMetrics());
     trackAnalytics("form_submit_preview");
   }, []);
@@ -253,11 +262,17 @@ const GenerateResume = () => {
                 <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">
                   Reset
                 </button>
+                <button
+                  onClick={handleSubmit(onSubmit)}
+                  className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10 uppercase tracking-widest"
+                >
+                  Preview & Export
+                </button>
               </div>
             </div>
 
-            <div className="w-full h-full overflow-y-auto p-4 custom-scrollbar bg-slate-900/50 backdrop-blur-sm">      
-               <div className="max-w-[210mm] mx-auto bg-white shadow-2xl origin-top transition-transform">
+            <div className="w-full h-full overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-900/50 backdrop-blur-sm flex justify-center">      
+               <div className="w-full max-w-[210mm] bg-white shadow-2xl origin-top transition-transform h-fit mb-10">
                  <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />     
                </div>
             </div>
