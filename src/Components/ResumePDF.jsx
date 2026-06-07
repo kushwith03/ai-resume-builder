@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   header: {
-    textAlign: 'center',
+    alignItems: 'center',
     marginBottom: 20,
   },
   name: {
@@ -18,11 +18,20 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   contact: {
-    textAlign: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
     color: '#4b5563',
     marginBottom: 10,
     fontSize: 9,
     width: '100%',
+  },
+  contactItem: {
+    paddingHorizontal: 8,
+  },
+  contactSeparator: {
+    color: '#9ca3af',
   },
   section: {
     marginBottom: 15,
@@ -96,13 +105,18 @@ const ResumePDF = ({ data }) => {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>{safeText(personalInformation?.fullName) || 'Your Name'}</Text>
-          <Text style={styles.contact}>
+          <View style={styles.contact}>
             {[
               personalInformation?.email,
               personalInformation?.location,
               personalInformation?.phoneNumber
-            ].filter(Boolean).map(item => safeText(item)).join("   |   ")}
-          </Text>
+            ].filter(Boolean).map((item, index, array) => (
+              <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.contactItem}>{safeText(item)}</Text>
+                {index < array.length - 1 && <Text style={styles.contactSeparator}>|</Text>}
+              </View>
+            ))}
+          </View>
         </View>
 
         {/* Summary */}
