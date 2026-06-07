@@ -1,6 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import "daisyui";
-import { FaGithub, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFilePdf } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaGlobe, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFilePdf } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumePDF from "./ResumePDF";
 
@@ -20,130 +20,139 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
 
   const resumeContent = (
     <div
-      className={`bg-white text-gray-800 shadow-2xl border border-gray-100 transition-all ${  
+      className={`bg-white text-gray-900 transition-all ${  
         previewMode
-          ? "w-full aspect-[1/1.414] p-[9%] h-fit"
-          : "w-full max-w-[210mm] md:min-h-[297mm] min-h-0 mx-auto p-6 md:p-[20mm] mb-4 md:mb-0"
+          ? "w-full aspect-[1/1.414] p-[5%] h-fit"
+          : "w-full max-w-[210mm] md:min-h-[297mm] min-h-0 mx-auto p-6 md:p-[15mm] mb-4 md:mb-0 border border-gray-200 shadow-sm"
       }`}
-      style={{ fontFamily: "'Inter', sans-serif" }}
+      style={{ fontFamily: "'Times New Roman', Times, serif", lineHeight: "1.2" }}
     >
-      {/* Header */}
-      <div className={`text-center ${previewMode ? 'space-y-1' : 'space-y-3'}`}>
-        <h1 className={`${previewMode ? 'text-2xl' : 'text-3xl md:text-5xl'} font-black text-gray-900 tracking-tight`}>
+      {/* Header - Inspired by resume.tex */}
+      <div className="text-center">
+        <h1 className={`${previewMode ? 'text-xl' : 'text-3xl'} font-bold uppercase tracking-tight mb-1`}>
           {data.personalInformation?.fullName || "Your Name"}
         </h1>
-        <div className={`flex justify-center flex-wrap gap-x-4 gap-y-1 ${previewMode ? 'text-[10px]' : 'text-xs md:text-sm'} font-medium text-gray-600`}>
-          {data.personalInformation?.location && (
-            <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-primary" /> {data.personalInformation.location}</span>
+        <div className={`flex flex-wrap justify-center items-center gap-x-2 gap-y-0.5 ${previewMode ? 'text-[9px]' : 'text-sm'} text-gray-700`}>
+          {data.personalInformation?.phoneNumber && (
+             <span>{data.personalInformation.phoneNumber}</span>
           )}
+          {data.personalInformation?.phoneNumber && (data.personalInformation?.email || data.personalInformation?.location) && <span className="opacity-50">|</span>}
+          
           {data.personalInformation?.email && (
-            <a href={`mailto:${data.personalInformation.email}`} className="flex items-center gap-1 hover:text-primary transition-colors text-wrap break-all">
-              <FaEnvelope className="text-primary flex-shrink-0" /> {data.personalInformation.email}
+            <a href={`mailto:${data.personalInformation.email}`} className="hover:underline underline-offset-2">
+              {data.personalInformation.email}
             </a>
           )}
-          {data.personalInformation?.phoneNumber && (
-            <span className="flex items-center gap-1"><FaPhone className="text-primary" /> {data.personalInformation.phoneNumber}</span>
+          {data.personalInformation?.email && (data.personalInformation?.location || data.personalInformation?.linkedin) && <span className="opacity-50">|</span>}
+
+          {data.personalInformation?.location && (
+            <span>{data.personalInformation.location}</span>
           )}
-        </div>
-        <div className={`flex justify-center gap-4 ${previewMode ? 'text-[9px]' : 'text-xs'} mt-1`}>
-           {data.personalInformation?.linkedin && (
-              <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 font-bold hover:underline"> 
-                <FaLinkedin /> LinkedIn
-              </a>
-           )}
-           {data.personalInformation?.gitHub && (
-              <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-gray-900 font-bold hover:underline">   
-                <FaGithub /> GitHub
-              </a>
-           )}
+          {data.personalInformation?.location && (data.personalInformation?.linkedin || data.personalInformation?.gitHub) && <span className="opacity-50">|</span>}
+          
+          {data.personalInformation?.linkedin && (
+             <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
+               linkedin.com/in/{data.personalInformation.linkedin.split('/').pop()}
+             </a>
+          )}
+          {data.personalInformation?.linkedin && (data.personalInformation?.gitHub || data.personalInformation?.portfolio) && <span className="opacity-50">|</span>}
+
+          {data.personalInformation?.gitHub && (
+             <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
+               github.com/{data.personalInformation.gitHub.split('/').pop()}
+             </a>
+          )}
+          {data.personalInformation?.gitHub && data.personalInformation?.portfolio && <span className="opacity-50">|</span>}
+
+          {data.personalInformation?.portfolio && (
+             <a href={formatUrl(data.personalInformation.portfolio)} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
+               {data.personalInformation.portfolio.replace(/^https?:\/\//, '')}
+             </a>
+          )}
         </div>
       </div>
 
-      <div className={`h-px bg-gray-200 ${previewMode ? 'my-4' : 'my-6'}`}></div>
+      {/* Summary Section */}
+      {data.summary && (
+        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
+          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Summary</h2>       
+          <p className={`${previewMode ? 'text-[9px]' : 'text-xs'} text-justify leading-normal`}>{data.summary}</p>
+        </section>
+      )}
 
-      {/* Summary */}
-      <section className={`${previewMode ? 'space-y-1' : 'space-y-2'}`}>
-        <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Professional Summary</h2>       
-        <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} leading-relaxed text-gray-700`}>{data.summary}</p>
-      </section>
+      {/* Education Section */}
+      {data.education?.length > 0 && (
+        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
+          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Education</h2>
+          {data.education.map((edu, index) => (
+            <div key={index} className={`${previewMode ? 'mb-1' : 'mb-2'}`}>
+              <div className="flex justify-between items-baseline">
+                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold`}>{edu.university}</span>
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{edu.location}</span>
+              </div>
+              <div className="flex justify-between items-baseline italic">
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{edu.degree}</span>
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{edu.graduationYear}</span>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
 
-      {/* Skills */}
+      {/* Skills Section */}
       {data.skills?.length > 0 && (
-        <section className={`${previewMode ? 'space-y-2 mt-4' : 'space-y-4 mt-8'}`}>
-          <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Core Competencies</h2>        
-          <div className={`flex flex-col ${previewMode ? 'gap-2' : 'gap-3'}`}>
+        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
+          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Technical Skills</h2>        
+          <div className="space-y-0.5">
             {data.skills.map((skillGroup, index) => (
-              <div key={index} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
-                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold text-gray-800 sm:min-w-[140px]`}>
-                  {skillGroup.category || skillGroup.title || "Skills"}:
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {(skillGroup.skills || skillGroup.level || "").split(",").map((skill, sIndex) => (
-                    skill.trim() && (
-                      <span key={sIndex} className={`px-2 py-0.5 bg-gray-50 text-gray-600 border border-gray-200 rounded-md ${previewMode ? 'text-[9px]' : 'text-xs'} font-medium`}>        
-                        {skill.trim()}
-                      </span>
-                    )
-                  ))}
-                </div>
+              <div key={index} className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>
+                <span className="font-bold">{skillGroup.category || skillGroup.title || "Skills"}: </span>
+                <span>{skillGroup.skills || skillGroup.level || ""}</span>
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* Experience */}
+      {/* Experience Section */}
       {data.experience?.length > 0 && (
-        <section className={`${previewMode ? 'space-y-2 mt-3' : 'space-y-4 mt-6'}`}>
-          <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Work Experience</h2>
+        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
+          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Experience</h2>
           {data.experience.map((exp, index) => (
-            <div key={index} className="space-y-0.5">
+            <div key={index} className={`${previewMode ? 'mb-2' : 'mb-3'}`}>
               <div className="flex justify-between items-baseline">
-                <h3 className={`${previewMode ? 'text-[11px]' : 'text-sm md:text-md'} font-bold text-gray-900`}>{exp.jobTitle}</h3>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'} font-bold text-gray-500`}>{exp.duration}</span>
+                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold`}>{exp.jobTitle}</span>
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{exp.duration}</span>
               </div>
-              <div className={`flex justify-between items-baseline ${previewMode ? 'text-[9px]' : 'text-xs'} text-gray-600 italic`}>
-                <span>{exp.company}</span>
-                <span>{exp.location}</span>
+              <div className="flex justify-between items-baseline italic mb-0.5">
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{exp.company}</span>
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{exp.location}</span>
               </div>
-              <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} text-gray-700 mt-1 whitespace-pre-line`}>{exp.responsibility}</p>
+              <ul className={`list-disc list-inside ${previewMode ? 'text-[9px]' : 'text-xs'} leading-tight`}>
+                {exp.responsibility.split('\n').map((line, i) => (
+                  line.trim() && <li key={i} className="pl-1 -indent-4 ml-4 mb-0.5">{line.trim().replace(/^[-•]\s*/, '')}</li>
+                ))}
+              </ul>
             </div>
           ))}
         </section>
       )}
 
-      {/* Education */}
-      {data.education?.length > 0 && (
-        <section className={`${previewMode ? 'space-y-2 mt-3' : 'space-y-4 mt-6'}`}>
-          <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Education</h2>
-          {data.education.map((edu, index) => (
-            <div key={index} className="space-y-0.5">
-              <div className="flex justify-between items-baseline">
-                <h3 className={`${previewMode ? 'text-[11px]' : 'text-sm md:text-md'} font-bold text-gray-900`}>{edu.degree}</h3>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'} font-bold text-gray-500`}>{edu.graduationYear}</span>
-              </div>
-              <div className={`flex justify-between items-baseline ${previewMode ? 'text-[9px]' : 'text-xs'} text-gray-600 italic`}>
-                <span>{edu.university}</span>
-                <span>{edu.location}</span>
-              </div>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Projects */}
+      {/* Projects Section */}
       {data.projects?.length > 0 && (
-        <section className={`${previewMode ? 'space-y-2 mt-3' : 'space-y-4 mt-6'}`}>
-          <h2 className={`${previewMode ? 'text-xs' : 'text-lg'} font-bold text-primary uppercase tracking-widest border-b-2 border-primary/20 inline-block`}>Key Projects</h2>
+        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
+          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Projects</h2>
           {data.projects.map((proj, index) => (
-            <div key={index} className="space-y-0.5">
-              <h3 className={`${previewMode ? 'text-[11px]' : 'text-sm md:text-md'} font-bold text-gray-900`}>{proj.title}</h3>
-              <p className={`${previewMode ? 'text-[10px]' : 'text-sm'} text-gray-700`}>{proj.description}</p>
-              {proj.technologiesUsed && (
-                <p className={`${previewMode ? 'text-[9px]' : 'text-xs'} font-medium text-gray-500 italic`}>
-                  Tech: {proj.technologiesUsed}
-                </p>
-              )}
+            <div key={index} className={`${previewMode ? 'mb-2' : 'mb-3'}`}>
+              <div className="flex justify-between items-baseline">
+                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold`}>{proj.title}</span>
+                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'} italic`}>{proj.technologiesUsed}</span>
+              </div>
+              <ul className={`list-disc list-inside ${previewMode ? 'text-[9px]' : 'text-xs'} leading-tight mt-0.5`}>
+                {proj.description.split('\n').map((line, i) => (
+                  line.trim() && <li key={i} className="pl-1 -indent-4 ml-4 mb-0.5">{line.trim().replace(/^[-•]\s*/, '')}</li>
+                ))}
+              </ul>
             </div>
           ))}
         </section>
@@ -153,15 +162,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
 
   if (previewMode) return resumeContent;
 
-  const downloadKey = isClient ? JSON.stringify({
-    name: data.personalInformation?.fullName,
-    skillCount: data.skills?.length,
-    expCount: data.experience?.length,
-    eduCount: data.education?.length,
-    projCount: data.projects?.length,
-    summaryLen: data.summary?.length
-  }) : "loading";
-
   return (
     <div className="flex flex-col items-center w-full px-4">
       {resumeContent}
@@ -169,28 +169,17 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         <div className="mt-8 mb-16 w-full flex justify-center relative z-[60]">
           {isClient ? (
             <PDFDownloadLink
-              key={downloadKey}
+              key={JSON.stringify(data)}
               document={<ResumePDF data={data} />}
               fileName={`${data.personalInformation?.fullName || 'Resume'}.pdf`}
               className="btn btn-primary btn-wide shadow-xl relative z-[70]"
             >
-              {({ loading, error }) => {
-                if (error) {
-                  console.error("PDF generation error:", error);
-                  return (
-                    <div className="flex items-center gap-2 text-error font-bold">
-                      <FaFilePdf />
-                      <span>Export Failed</span>
-                    </div>
-                  );
-                }
-                return (
-                  <>
-                    <FaFilePdf className={loading ? "animate-pulse" : ""} />
-                    {loading ? "Generating PDF..." : "Download ATS-Friendly PDF"}
-                  </>
-                );
-              }}
+              {({ loading, error }) => (
+                <>
+                  <FaFilePdf className={loading ? "animate-pulse" : ""} />
+                  {loading ? "Generating PDF..." : "Download Professional PDF"}
+                </>
+              )}
             </PDFDownloadLink>
           ) : (
             <button className="btn btn-primary btn-wide opacity-50 cursor-not-allowed">       

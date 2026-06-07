@@ -10,33 +10,35 @@ exports.generateResumeData = async (userDescription) => {
   const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
   const prompt = `
-    You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
-    
-    The JSON structure MUST follow this exactly:
-    {
-      "personalInformation": {
-        "fullName": "string",
-        "email": "string",
-        "phoneNumber": "string",
-        "location": "string",
-        "linkedin": "string",
-        "gitHub": "string"
-      },
-      "summary": "string (professional summary)",
-      "skills": [{"category": "string (e.g. Programming Languages)", "skills": "string (comma separated list, e.g. Java, JavaScript, SQL)"}],
-      "experience": [{"jobTitle": "string", "company": "string", "duration": "string", "responsibility": "string"}],
-      "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string"}],
-      "projects": [{"title": "string", "description": "string", "technologiesUsed": "string"}]
-    }
+  You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
 
-    STRICT GUIDELINES FOR MISSING INFORMATION:
-    If personal details are not explicitly provided in the user description, use these placeholders EXACTLY:
-    - fullName: "Your Name"
-    - email: "your.email@example.com"
-    - phoneNumber: "+1-555-000-0000"
-    - location: "City, Country"
-    - linkedin: "linkedin.com/in/yourprofile"
-    - gitHub: "github.com/yourusername"
+  The JSON structure MUST follow this exactly:
+  {
+    "personalInformation": {
+      "fullName": "string",
+      "email": "string",
+      "phoneNumber": "string",
+      "location": "string",
+      "linkedin": "string",
+      "gitHub": "string",
+      "portfolio": "string"
+    },
+    "summary": "string (professional summary)",
+    "skills": [{"category": "string (e.g. Programming Languages)", "skills": "string (comma separated list, e.g. Java, JavaScript, SQL)"}],
+    "experience": [{"jobTitle": "string", "company": "string", "duration": "string", "responsibility": "string"}],
+    "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string"}],
+    "projects": [{"title": "string", "description": "string", "technologiesUsed": "string"}]
+  }
+
+  STRICT GUIDELINES FOR MISSING INFORMATION:
+  If personal details are not explicitly provided in the user description, use these placeholders EXACTLY:
+  - fullName: "Your Name"
+  - email: "your.email@example.com"
+  - phoneNumber: "+1-555-000-0000"
+  - location: "City, Country"
+  - linkedin: "linkedin.com/in/yourprofile"
+  - gitHub: "github.com/yourusername"
+  - portfolio: "yourportfolio.com"
     
     FOR SKILLS:
     Group technical skills into meaningful categories (e.g. Frameworks, Cloud, Databases). Each category should have a list of skills as a single comma-separated string.

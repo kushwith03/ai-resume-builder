@@ -1,28 +1,23 @@
 import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
 
-// Explicitly define styles for maximum compatibility across PDF engines
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: "0.5in",
     fontSize: 10,
-    fontFamily: "Helvetica",
-    lineHeight: 1.4,
-    color: "#374151",
+    fontFamily: "Times-Roman",
+    lineHeight: 1.2,
+    color: "#000",
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 10,
     width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    textAlign: "center",
   },
   name: {
-    fontSize: 26,
-    fontFamily: "Helvetica-Bold",
-    marginBottom: 12,
+    fontSize: 20,
+    fontFamily: "Times-Bold",
+    marginBottom: 4,
     textTransform: "uppercase",
-    color: "#111827",
-    textAlign: "center",
   },
   contact: {
     flexDirection: "row",
@@ -30,86 +25,69 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexWrap: "wrap",
     width: "100%",
-    marginTop: 4,
+    fontSize: 9,
   },
   contactItem: {
-    fontSize: 9,
-    color: "#4b5563",
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
   },
   contactSeparator: {
-    fontSize: 9,
-    color: "#9ca3af",
+    color: "#666",
   },
   section: {
-    marginBottom: 16,
+    marginTop: 8,
+    marginBottom: 4,
   },
   sectionTitle: {
-    fontSize: 12,
-    fontFamily: "Helvetica-Bold",
-    color: "#2563eb",
-    borderBottomWidth: 1,
-    borderBottomColor: "#bfdbfe",
-    marginBottom: 10,
-    paddingBottom: 3,
+    fontSize: 10,
+    fontFamily: "Times-Bold",
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#000",
+    marginBottom: 4,
+    paddingBottom: 1,
     textTransform: "uppercase",
   },
   itemHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 2,
+    marginBottom: 1,
   },
   itemSubHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    fontFamily: "Helvetica-Oblique",
-    color: "#4b5563",
-    marginBottom: 4,
-    fontSize: 9,
+    fontFamily: "Times-Italic",
+    marginBottom: 2,
   },
   bold: {
-    fontFamily: "Helvetica-Bold",
-    color: "#1f2937",
+    fontFamily: "Times-Bold",
+  },
+  italic: {
+    fontFamily: "Times-Italic",
   },
   text: {
     fontSize: 10,
-    color: "#374151",
-    lineHeight: 1.5,
+    lineHeight: 1.2,
+    textAlign: "justify",
   },
-  skills: {
+  bulletRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    flex: 1,
+    marginBottom: 1,
+    paddingLeft: 10,
   },
-  skillGroup: {
-    flexDirection: "row",
-    marginBottom: 6,
-  },
-  skillLabel: {
-    width: 120,
-    fontFamily: "Helvetica-Bold",
-    color: "#1f2937",
+  bullet: {
+    width: 10,
     fontSize: 10,
   },
-  skillBadgeContainer: {
-    backgroundColor: "#f3f4f6",
-    borderRadius: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    marginRight: 6,
-    marginBottom: 4,
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
+  bulletText: {
+    flex: 1,
+    fontSize: 10,
   },
-  skillText: {
-    fontSize: 8.5,
-    color: "#4b5563",
+  skillRow: {
+    flexDirection: "row",
+    marginBottom: 2,
   },
-  projectTech: {
-    fontSize: 9,
-    color: "#6b7280",
-    marginTop: 2,
-    fontFamily: "Helvetica-Oblique",
+  skillLabel: {
+    fontFamily: "Times-Bold",
+    marginRight: 4,
   }
 });
 
@@ -125,10 +103,14 @@ const ResumePDF = ({ data }) => {
     projects = [],
   } = data;
 
-  // Extremely robust text handling
   const renderText = (text, fallback = "") => {
     if (!text || String(text).trim() === "") return fallback;
     return String(text);
+  };
+
+  const formatUrl = (url) => {
+    if (!url) return "";
+    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
   };
 
   const fullName = renderText(personalInformation?.fullName, "Your Name");
@@ -140,20 +122,43 @@ const ResumePDF = ({ data }) => {
         <View style={styles.header}>
           <Text style={styles.name}>{fullName}</Text>
           <View style={styles.contact}>
+            {personalInformation?.phoneNumber && (
+              <Text style={styles.contactItem}>{renderText(personalInformation.phoneNumber)}</Text>
+            )}
+            {personalInformation?.phoneNumber && (personalInformation?.email || personalInformation?.location) && (
+              <Text style={styles.contactSeparator}>|</Text>
+            )}
+            
             {personalInformation?.email && (
               <Text style={styles.contactItem}>{renderText(personalInformation.email)}</Text>
             )}
-            {personalInformation?.email && (personalInformation?.location || personalInformation?.phoneNumber) && (
+            {personalInformation?.email && (personalInformation?.location || personalInformation?.linkedin) && (
               <Text style={styles.contactSeparator}>|</Text>
             )}
+
             {personalInformation?.location && (
               <Text style={styles.contactItem}>{renderText(personalInformation.location)}</Text>
             )}
-            {personalInformation?.location && personalInformation?.phoneNumber && (
+            {personalInformation?.location && (personalInformation?.linkedin || personalInformation?.gitHub) && (
               <Text style={styles.contactSeparator}>|</Text>
             )}
-            {personalInformation?.phoneNumber && (
-              <Text style={styles.contactItem}>{renderText(personalInformation.phoneNumber)}</Text>
+
+            {personalInformation?.linkedin && (
+              <Text style={styles.contactItem}>linkedin.com/in/{personalInformation.linkedin.split('/').pop()}</Text>
+            )}
+            {personalInformation?.linkedin && (personalInformation?.gitHub || personalInformation?.portfolio) && (
+              <Text style={styles.contactSeparator}>|</Text>
+            )}
+
+            {personalInformation?.gitHub && (
+              <Text style={styles.contactItem}>github.com/{personalInformation.gitHub.split('/').pop()}</Text>
+            )}
+            {personalInformation?.gitHub && personalInformation?.portfolio && (
+              <Text style={styles.contactSeparator}>|</Text>
+            )}
+
+            {personalInformation?.portfolio && (
+              <Text style={styles.contactItem}>{formatUrl(personalInformation.portfolio)}</Text>
             )}
           </View>
         </View>
@@ -161,28 +166,8 @@ const ResumePDF = ({ data }) => {
         {/* Summary Section */}
         {summary && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Professional Summary</Text>
+            <Text style={styles.sectionTitle}>Summary</Text>
             <Text style={styles.text}>{renderText(summary)}</Text>
-          </View>
-        )}
-
-        {/* Experience Section */}
-        {experience?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
-            {experience.map((exp, i) => (
-              <View key={i} style={{ marginBottom: 12 }}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.bold}>{renderText(exp?.jobTitle)}</Text>
-                  <Text style={{ fontSize: 9, color: "#6b7280" }}>{renderText(exp?.duration)}</Text>
-                </View>
-                <View style={styles.itemSubHeader}>
-                  <Text>{renderText(exp?.company)}</Text>
-                  <Text>{renderText(exp?.location)}</Text>
-                </View>
-                <Text style={styles.text}>{renderText(exp?.responsibility)}</Text>
-              </View>
-            ))}
           </View>
         )}
 
@@ -191,14 +176,14 @@ const ResumePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
-              <View key={i} style={{ marginBottom: 8 }}>
+              <View key={i} style={{ marginBottom: 4 }}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.bold}>{renderText(edu?.degree)}</Text>
-                  <Text style={{ fontSize: 9, color: "#6b7280" }}>{renderText(edu?.graduationYear)}</Text>
+                  <Text style={styles.bold}>{renderText(edu?.university)}</Text>
+                  <Text>{renderText(edu?.location)}</Text>
                 </View>
                 <View style={styles.itemSubHeader}>
-                  <Text>{renderText(edu?.university)}</Text>
-                  <Text>{renderText(edu?.location)}</Text>
+                  <Text>{renderText(edu?.degree)}</Text>
+                  <Text>{renderText(edu?.graduationYear)}</Text>
                 </View>
               </View>
             ))}
@@ -208,20 +193,39 @@ const ResumePDF = ({ data }) => {
         {/* Skills Section */}
         {skills?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Skills & Competencies</Text>
+            <Text style={styles.sectionTitle}>Technical Skills</Text>
             {skills.map((group, i) => (
-              <View key={i} style={styles.skillGroup}>
-                <Text style={styles.skillLabel}>
-                  {renderText(group?.category || group?.title, "Skills")}:
-                </Text>
-                <View style={styles.skills}>
-                  {renderText(group?.skills || group?.level, "")
-                    .split(",")
-                    .map((skill, si) => skill.trim() && (
-                      <View key={si} style={styles.skillBadgeContainer}>
-                        <Text style={styles.skillText}>{renderText(skill.trim())}</Text>
+              <View key={i} style={styles.skillRow}>
+                <Text style={styles.skillLabel}>{renderText(group?.category || group?.title, "Skills")}:</Text>
+                <Text style={styles.text}>{renderText(group?.skills || group?.level, "")}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Experience Section */}
+        {experience?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Experience</Text>
+            {experience.map((exp, i) => (
+              <View key={i} style={{ marginBottom: 6 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.bold}>{renderText(exp?.jobTitle)}</Text>
+                  <Text>{renderText(exp?.duration)}</Text>
+                </View>
+                <View style={styles.itemSubHeader}>
+                  <Text>{renderText(exp?.company)}</Text>
+                  <Text>{renderText(exp?.location)}</Text>
+                </View>
+                <View>
+                  {renderText(exp?.responsibility).split('\n').map((line, li) => (
+                    line.trim() && (
+                      <View key={li} style={styles.bulletRow}>
+                        <Text style={styles.bullet}>•</Text>
+                        <Text style={styles.bulletText}>{line.trim().replace(/^[-•]\s*/, '')}</Text>
                       </View>
-                    ))}
+                    )
+                  ))}
                 </View>
               </View>
             ))}
@@ -231,14 +235,23 @@ const ResumePDF = ({ data }) => {
         {/* Projects Section */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Projects</Text>
+            <Text style={styles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
-              <View key={i} style={{ marginBottom: 10 }}>
-                <Text style={styles.bold}>{renderText(proj?.title)}</Text>
-                <Text style={styles.text}>{renderText(proj?.description)}</Text>
-                {proj?.technologiesUsed && (
-                  <Text style={styles.projectTech}>Technologies: {renderText(proj.technologiesUsed)}</Text>
-                )}
+              <View key={i} style={{ marginBottom: 6 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.bold}>{renderText(proj?.title)}</Text>
+                  <Text style={styles.italic}>{renderText(proj?.technologiesUsed)}</Text>
+                </View>
+                <View>
+                  {renderText(proj?.description).split('\n').map((line, li) => (
+                    line.trim() && (
+                      <View key={li} style={styles.bulletRow}>
+                        <Text style={styles.bullet}>•</Text>
+                        <Text style={styles.bulletText}>{line.trim().replace(/^[-•]\s*/, '')}</Text>
+                      </View>
+                    )
+                  ))}
+                </View>
               </View>
             ))}
           </View>
