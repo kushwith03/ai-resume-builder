@@ -1,5 +1,6 @@
-import React from 'react';
-import { FaPlusCircle, FaTrash, FaCopy, FaArrowUp, FaArrowDown, FaGripVertical } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaPlusCircle, FaTrash, FaCopy, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import ConfirmModal from './ConfirmModal';
 
 const labelMap = {
   fullName: "Full Name *",
@@ -29,11 +30,11 @@ const labelMap = {
   organization: "Organization",
 };
 
-const FormSection = React.memo(({ title, children, defaultExpanded = true }) => {
+const FormSection = React.memo(({ title, children, defaultExpanded = true, id }) => {
   const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
 
   return (
-    <div className={`form-control w-full mb-4 md:mb-6 p-4 md:p-6 bg-base-200/50 rounded-2xl md:rounded-3xl border border-white/5 shadow-lg transition-all hover:border-white/10 ${!isExpanded ? 'pb-4 md:pb-6' : ''}`}>
+    <div id={id} className={`form-control w-full mb-3 md:mb-4 p-4 md:p-5 bg-base-200/50 rounded-2xl md:rounded-3xl border border-white/5 shadow-lg transition-all hover:border-white/10 ${!isExpanded ? 'pb-4 md:pb-5' : ''} scroll-mt-24 target:ring-2 target:ring-primary/40 target:border-primary/40 transition-shadow duration-500`}>
       <div 
         className="flex items-center justify-between cursor-pointer group/header"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -60,9 +61,10 @@ const FormSection = React.memo(({ title, children, defaultExpanded = true }) => 
   );
 });
 
-export const RenderFieldArray = React.memo(({ fields, label, name, keys, register, watch, errors }) => {
+export const RenderFieldArray = React.memo(({ fields, label, name, keys, register, watch, errors, id }) => {
   const allValues = watch(name) || [];
   const lastIndexRef = React.useRef(-1);
+  const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, index: null });
 
   React.useEffect(() => {
     if (fields.fields.length > lastIndexRef.current && lastIndexRef.current !== -1) {
@@ -77,10 +79,16 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
   const handleRemove = (index) => {
     const entry = allValues[index];
     const hasContent = Object.values(entry || {}).some(val => val && String(val).trim().length > 0);
-    
-    if (!hasContent || window.confirm(`Are you sure you want to remove this ${label.toLowerCase()} entry?`)) {
+    if (!hasContent) {
       fields.remove(index);
+    } else {
+      setConfirmDelete({ isOpen: true, index });
     }
+  };
+
+  const confirmRemove = () => {
+    if (confirmDelete.index !== null) fields.remove(confirmDelete.index);
+    setConfirmDelete({ isOpen: false, index: null });
   };
 
   const handleDuplicate = (index) => {
@@ -91,7 +99,16 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
   };
 
   return (
-    <FormSection title={label}>
+    <>
+      <ConfirmModal 
+        isOpen={confirmDelete.isOpen}
+        title={`Remove ${label.replace(/s$/, '')}`}
+        message={`Are you sure? This action cannot be undone.`}
+        onConfirm={confirmRemove}
+        onCancel={() => setConfirmDelete({ isOpen: false, index: null })}
+        confirmText="Remove"
+      />
+      <FormSection id={id} title={label}>
       {fields.fields.length === 0 ? (
         <div className="py-6 text-center border border-dashed border-white/10 rounded-2xl bg-base-100/20">
           <p className="text-slate-500 text-xs italic">No {label.toLowerCase()} added yet.</p>
@@ -100,75 +117,30 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
         <div className="space-y-3">
           {fields.fields.map((field, index) => (
             <div key={field.id} className="p-4 md:p-5 bg-base-100/40 rounded-xl relative group border border-white/5 transition-all hover:border-primary/10">
-              {/* Action Bar - Improved UI */}
               <div className="flex justify-end gap-1.5 mb-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200">
                 <div className="flex items-center gap-1 bg-base-300/90 backdrop-blur px-2 py-1 rounded-lg border border-white/10 shadow-xl">
-                  <div className="flex gap-0.5">
-                    <button
-                      type="button"
-                      onClick={() => fields.move(index, index - 1)}
-                      disabled={index === 0}
-                      className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:bg-primary/20 hover:text-primary disabled:opacity-20"
-                      title="Move Up"
-                    >
-                      <FaArrowUp className="text-[10px]" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fields.move(index, index + 1)}
-                      disabled={index === fields.fields.length - 1}
-                      className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:bg-primary/20 hover:text-primary disabled:opacity-20"
-                      title="Move Down"
-                    >
-                      <FaArrowDown className="text-[10px]" />
-                    </button>
-                  </div>
+                  <button type="button" onClick={() => fields.move(index, index - 1)} disabled={index === 0} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded disabled:opacity-20"><FaArrowUp className="text-[10px]" /></button>
+                  <button type="button" onClick={() => fields.move(index, index + 1)} disabled={index === fields.fields.length - 1} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded disabled:opacity-20"><FaArrowDown className="text-[10px]" /></button>
                   <div className="w-px h-3 bg-white/10 mx-1"></div>
-                  <button
-                    type="button"
-                    onClick={() => handleDuplicate(index)}
-                    className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:bg-success/20 hover:text-success"
-                    title="Duplicate Entry"
-                  >
-                    <FaCopy className="text-[10px]" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemove(index)}
-                    className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:bg-error/20 hover:text-error"
-                    title="Remove Entry"
-                  >
-                    <FaTrash className="text-[10px]" />
-                  </button>
+                  <button type="button" onClick={() => handleDuplicate(index)} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:text-success"><FaCopy className="text-[10px]" /></button>
+                  <button type="button" onClick={() => handleRemove(index)} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:text-error"><FaTrash className="text-[10px]" /></button>
                 </div>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {keys.map(key => {
                   const isTextArea = ["responsibility", "description", "summary"].includes(key);    
                   const isFullWidth = ["responsibility", "description", "summary", "technologiesUsed", "skills", "url"].includes(key);
                   const isRequired = labelMap[key]?.includes('*');
                   const error = errors?.[name]?.[index]?.[key];
-
                   return (
                     <div key={key} className={`form-control ${isFullWidth ? 'md:col-span-2' : ''}`}>
-                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error font-black' : 'text-slate-500'}`}>
-                        {labelMap[key] || key}
-                      </label>
+                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error' : 'text-slate-500'}`}>{labelMap[key] || key}</label>
                       {isTextArea ? (
-                        <textarea
-                          {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })}
-                          className={`textarea textarea-bordered h-24 bg-base-100 text-sm leading-relaxed transition-all ${error ? 'border-error focus:border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`}
-                          placeholder={`Enter details for ${key}...`}
-                        />
+                        <textarea {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`textarea textarea-bordered h-24 min-h-[100px] bg-base-100 text-sm leading-relaxed transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`Enter details for ${key}...`} />
                       ) : (
-                        <input
-                          {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })}
-                          className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${error ? 'border-error focus:border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`}
-                          placeholder={`e.g. ${labelMap[key]?.replace(' *', '') || key}`}
-                        />
+                        <input {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`e.g. ${labelMap[key]?.replace(' *', '') || key}`} />
                       )}
-                      {error && <span className="text-error text-[10px] mt-1 ml-1 font-bold animate-fadeIn">{error.message}</span>}
+                      {error && <span className="text-error text-[10px] mt-1 ml-1 font-bold">{error.message}</span>}
                     </div>
                   );
                 })}
@@ -177,14 +149,9 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
           ))}
         </div>
       )}
-      <button
-        type="button"
-        onClick={() => fields.append(keys.reduce((acc, k) => ({...acc, [k]: ""}), {}))}
-        className="btn btn-ghost btn-sm text-primary hover:bg-primary/5 w-full border-dashed border-2 border-white/5 rounded-xl transition-all mt-3 h-10"
-      >
-        <FaPlusCircle className="mr-2" /> Add {label.replace(/s$/, '')}
-      </button>
+      <button type="button" onClick={() => fields.append(keys.reduce((acc, k) => ({...acc, [k]: ""}), {}))} className="btn btn-ghost btn-sm text-primary hover:bg-primary/5 w-full border-dashed border-2 border-white/5 rounded-xl transition-all mt-3 h-10"><FaPlusCircle className="mr-2" /> Add {label.replace(/s$/, '')}</button>
     </FormSection>
+  </>
   );
 });
 

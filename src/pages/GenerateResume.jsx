@@ -284,7 +284,7 @@ const GenerateResume = () => {
               )}
             </div>
 
-            <div id="identity"><FormSection title="Identity">
+            <FormSection id="identity" title="Identity">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                 <div className="form-control md:col-span-2">
                   <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
@@ -307,20 +307,21 @@ const GenerateResume = () => {
                   <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 border-white/5 bg-base-100 text-sm" placeholder="+1 234 567 890" />
                 </div>
               </div>
-            </FormSection></div>
+            </FormSection>
 
-            <div id="socialLinks"><RenderFieldArray fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} /></div>
-            <div id="summary"><FormSection title="Professional Summary">
+            <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
+
+            <FormSection id="summary" title="Professional Summary">
               <textarea {...register("summary", { required: "Professional Summary is required" })} className={`textarea textarea-bordered w-full h-24 bg-base-100 text-sm leading-relaxed ${errors.summary ? 'border-error' : 'border-white/5'}`} placeholder="Brief overview of your career..." />
-            </FormSection></div>
+            </FormSection>
 
-            <div id="skills"><RenderFieldArray fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} /></div>
-            <div id="experience"><RenderFieldArray fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} /></div>      
-            <div id="education"><RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} errors={errors} /></div>        
-            <div id="projects"><RenderFieldArray fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} errors={errors} /></div>
-            <div id="certifications"><RenderFieldArray fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} errors={errors} /></div>
-            <div id="achievements"><RenderFieldArray fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} errors={errors} /></div>
-            <div id="positionsOfResponsibility"><RenderFieldArray fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} errors={errors} /></div>
+            <RenderFieldArray id="skills" fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray id="experience" fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} />      
+            <RenderFieldArray id="education" fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} errors={errors} />        
+            <RenderFieldArray id="projects" fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray id="certifications" fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray id="achievements" fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} errors={errors} />
+            <RenderFieldArray id="positionsOfResponsibility" fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} errors={errors} />
 
             <div className="flex lg:hidden flex-col gap-4 pt-6 pb-12">
               <button type="button" onClick={handleSubmit(onSubmit)} className="btn btn-primary w-full rounded-2xl font-black shadow-lg shadow-primary/20">Preview & Export</button>
