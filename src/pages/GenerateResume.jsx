@@ -174,7 +174,7 @@ const GenerateResume = () => {
 
   return (
     <div className={`mx-auto p-4 md:p-8 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1440px]' : 'max-w-4xl'}`}>
-      <GenerationLoader isLoading={loading} />
+      <GenerationLoader isLoading={loading} onCancel={() => setLoading(false)} />
       
       {showPromptInput && (
         <div className="flex flex-col items-center justify-center py-10 md:py-16 gap-8 animate-fadeIn max-w-2xl mx-auto">
