@@ -17,15 +17,17 @@ const GenerateResume = () => {
       title: "", 
       email: "", 
       location: "", 
-      linkedin: "", 
-      gitHub: "", 
-      portfolio: "" 
+      phoneNumber: "",
     },
+    socialLinks: [],
     summary: "",
     skills: [],
     experience: [],
     education: [],
     projects: [],
+    certifications: [],
+    achievements: [],
+    positionsOfResponsibility: [],
   });
 
   const { register, handleSubmit, control, reset, watch } = useForm({
@@ -46,10 +48,14 @@ const GenerateResume = () => {
   const debouncedJD = useDebounce(jobDescription, 800);
 
   const fieldArrays = {
+    socialLinks: useFieldArray({ control, name: "socialLinks" }),
     skills: useFieldArray({ control, name: "skills" }),
     experience: useFieldArray({ control, name: "experience" }),
     education: useFieldArray({ control, name: "education" }),
     projects: useFieldArray({ control, name: "projects" }),
+    certifications: useFieldArray({ control, name: "certifications" }),
+    achievements: useFieldArray({ control, name: "achievements" }),
+    positionsOfResponsibility: useFieldArray({ control, name: "positionsOfResponsibility" }),
   };
 
   const onSubmit = useCallback((formData) => {
@@ -106,8 +112,6 @@ const GenerateResume = () => {
     return calculateATSScore(showFormUI ? formData : data, debouncedJD);
   }, [formData, data, debouncedJD, showFormUI]);
 
-  const [previewZoom, setPreviewZoom] = useState("fit");
-
   const [isSaving, setIsSaving] = useState(false);
 
   const resetGenerator = () => {
@@ -119,17 +123,17 @@ const GenerateResume = () => {
   };
 
   return (
-    <div className={`mx-auto p-4 md:p-10 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1400px]' : 'max-w-4xl'}`}>
+    <div className={`mx-auto p-4 md:p-8 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1440px]' : 'max-w-4xl'}`}>
       <GenerationLoader isLoading={loading} />
       {showPromptInput && (
-        <div className="flex flex-col items-center justify-center py-10 md:py-20 gap-8 md:gap-12 animate-fadeIn">
+        <div className="flex flex-col items-center justify-center py-10 md:py-16 gap-8 animate-fadeIn">
           <div className="text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2">
               <FaPaperPlane className="text-primary text-xs" />
               <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Engine Active</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
-            <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">Describe your professional background in plain English, and this AI-powered engine will architect a high-performance resume draft for you.</p>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">Craft your <span className="text-primary">Future.</span></h1>
+            <p className="text-slate-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed text-center">Describe your professional background in plain English, and this AI-powered engine will architect a high-performance resume draft for you.</p>
           </div>
 
           <div className="w-full max-w-2xl group">
@@ -139,7 +143,7 @@ const GenerateResume = () => {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="textarea w-full h-48 md:h-64 bg-transparent border-none text-base md:text-lg text-slate-200 focus:ring-0 p-6 md:p-8 leading-relaxed resize-none placeholder:text-slate-600"
+                  className="textarea w-full h-40 md:h-56 bg-transparent border-none text-base text-slate-200 focus:ring-0 p-6 md:p-8 leading-relaxed resize-none placeholder:text-slate-600"
                   placeholder="e.g. I am a Senior Frontend Engineer with 8 years of experience building scalable React applications. I have led teams of 5 and specialized in high-performance UI architecture..."
                 />
                 <div className="p-4 bg-white/5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -164,9 +168,9 @@ const GenerateResume = () => {
       )}
 
       {showFormUI && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start animate-fadeIn relative">
-          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-6 md:space-y-8">
-            <div className="flex items-center justify-between mb-2">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fadeIn relative">
+          <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
               {atsResult && (
                 <div className="flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-2xl">
@@ -179,52 +183,44 @@ const GenerateResume = () => {
             </div>
 
             <FormSection title="Identity">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                 <div className="form-control md:col-span-2">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
-                  <input {...register("personalInformation.fullName")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="John Doe" />
+                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name *</label>
+                  <input {...register("personalInformation.fullName")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="John Doe" />
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Job Title</label>
-                  <input {...register("personalInformation.title")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="Software Engineer" />
+                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Job Title *</label>
+                  <input {...register("personalInformation.title")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="Software Engineer" />
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Location</label>
-                  <input {...register("personalInformation.location")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="New York, NY" />
+                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Email *</label>
+                  <input {...register("personalInformation.email")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="john@example.com" />
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Email</label>
-                  <input {...register("personalInformation.email")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="john@example.com" />
+                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Location *</label>
+                  <input {...register("personalInformation.location")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="New York, NY" />
                 </div>
                 <div className="form-control">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
-                  <input {...register("personalInformation.phoneNumber")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="+1 234 567 890" />
-                </div>
-                <div className="form-control">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">LinkedIn URL</label>
-                  <input {...register("personalInformation.linkedin")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="linkedin.com/in/username" />
-                </div>
-                <div className="form-control">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">GitHub URL</label>
-                  <input {...register("personalInformation.gitHub")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="github.com/username" />
-                </div>
-                <div className="form-control md:col-span-2">
-                  <label className="label-text mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Portfolio Website</label>
-                  <input {...register("personalInformation.portfolio")} className="input bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="portfolio.com" />
+                  <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
+                  <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 bg-base-100 border-white/5 focus:border-primary/50 text-sm" placeholder="+1 234 567 890" />
                 </div>
               </div>
             </FormSection>
 
+            <RenderFieldArray fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} />
+
             <FormSection title="Professional Summary">
-              <textarea {...register("summary")} className="textarea w-full h-32 md:h-40 bg-base-100 border-white/5 focus:border-primary/50 text-sm leading-relaxed" placeholder="Brief overview of your career..." />
+              <textarea {...register("summary")} className="textarea textarea-bordered w-full h-24 md:h-32 bg-base-100 border-white/5 focus:border-primary/50 text-sm leading-relaxed" placeholder="Brief overview of your career..." />
             </FormSection>
 
-            <RenderFieldArray fields={fieldArrays.skills} label="Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} />
-            <RenderFieldArray fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} />      
+            <RenderFieldArray fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} />      
             <RenderFieldArray fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} />        
-            <RenderFieldArray fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.projects} label="Key Projects" name="projects" keys={["title", "description", "technologiesUsed"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.certifications} label="Certifications" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.achievements} label="Awards & Achievements" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} />
+            <RenderFieldArray fields={fieldArrays.positionsOfResponsibility} label="Leadership & Responsibility" name="positionsOfResponsibility" keys={["title", "organization", "duration", "description"]} register={register} watch={watch} />
 
-            {/* Mobile Save/Preview Buttons */}
             <div className="flex lg:hidden flex-col gap-4 pt-6">
               <button
                 type="button"
@@ -243,49 +239,25 @@ const GenerateResume = () => {
             </div>
           </form>
 
-          {/* Live Preview Panel - Document Viewer Style */}
-          <div className="hidden lg:flex lg:col-span-5 sticky top-24 h-[calc(100vh-140px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-inner font-sans">
-            {/* Preview Toolbar */}
+          {/* Live Preview Panel - Locked A4 Aspect Ratio */}
+          <div className="hidden lg:flex lg:col-span-5 sticky top-20 h-[calc(100vh-100px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl font-sans transition-all">
             <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span>
-                </div>
-                <div className="h-4 w-px bg-white/10"></div>
-                <div className="flex items-center gap-1.5">
-                  <button 
-                    onClick={() => setPreviewZoom("fit")}
-                    className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md transition-all ${previewZoom === 'fit' ? 'bg-primary/20 text-primary' : 'text-slate-500 hover:text-slate-300'}`}
-                  >
-                    Fit
-                  </button>
-                  <button 
-                    onClick={() => setPreviewZoom("fill")}
-                    className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md transition-all ${previewZoom === 'fill' ? 'bg-primary/20 text-primary' : 'text-slate-500 hover:text-slate-300'}`}
-                  >
-                    Fill
-                  </button>
-                </div>
+                <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live High-Fidelity Preview</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mr-2 flex items-center gap-1">
+                <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mr-2 flex items-center gap-1 opacity-60">
                   <FaSave className="text-[8px]" /> Draft Synced
                 </div>
                 <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">
                   Reset
                 </button>
-                <button
-                  onClick={handleSubmit(onSubmit)}
-                  className="btn btn-primary btn-xs h-8 px-4 rounded-lg font-black text-[10px] shadow-lg shadow-primary/10 uppercase tracking-widest"
-                >
-                  Generate Resume
-                </button>
               </div>
             </div>
 
-            <div className={`w-full h-full overflow-y-auto p-6 md:p-10 custom-scrollbar transition-all duration-500 ${previewZoom === 'fill' ? 'bg-white/5' : ''}`}>      
-               <div className={`transition-all duration-500 origin-top ${previewZoom === 'fill' ? 'scale-110' : 'scale-100'}`}>
+            <div className="w-full h-full overflow-y-auto p-4 custom-scrollbar bg-slate-900/50 backdrop-blur-sm">      
+               <div className="max-w-[210mm] mx-auto bg-white shadow-2xl origin-top transition-transform">
                  <Resume data={debouncedFormData} hideDownload={true} previewMode={true} />     
                </div>
             </div>

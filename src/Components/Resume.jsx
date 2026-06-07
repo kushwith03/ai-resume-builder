@@ -1,6 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import "daisyui";
-import { FaGithub, FaLinkedin, FaGlobe, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFilePdf } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumePDF from "./ResumePDF";
 
@@ -15,97 +15,71 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
 
   const formatUrl = (url) => {
     if (!url) return "";
-    return url.startsWith("http") ? url : `https://${url}`;
+    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
   };
 
   const resumeContent = (
     <div
-      className={`bg-white text-gray-900 transition-all ${  
+      className={`bg-white text-black transition-all ${  
         previewMode
-          ? "w-full aspect-[1/1.414] p-[5%] h-fit"
-          : "w-full max-w-[210mm] md:min-h-[297mm] min-h-0 mx-auto p-6 md:p-[15mm] mb-4 md:mb-0 border border-gray-200 shadow-sm"
+          ? "w-full min-h-[297mm] p-[10mm] shadow-none"
+          : "w-full max-w-[210mm] min-h-[297mm] mx-auto p-[15mm] border border-gray-200 shadow-sm"
       }`}
       style={{ fontFamily: "'Times New Roman', Times, serif", lineHeight: "1.2" }}
     >
-      {/* Header - Inspired by resume.tex */}
-      <div className="text-center">
-        <h1 className={`${previewMode ? 'text-xl' : 'text-3xl'} font-bold uppercase tracking-tight mb-1`}>
+      {/* Header - Optimized Two-Line Layout */}
+      <div className="text-center mb-4">
+        <h1 className="text-2xl font-bold uppercase tracking-tight mb-1 text-black">
           {data.personalInformation?.fullName || "Your Name"}
         </h1>
-        <div className={`flex flex-wrap justify-center items-center gap-x-2 gap-y-0.5 ${previewMode ? 'text-[9px]' : 'text-sm'} text-gray-700`}>
-          {data.personalInformation?.phoneNumber && (
+        
+        {/* Line 1: Basic Contact */}
+        <div className="flex flex-wrap justify-center items-center gap-x-2 text-[10px] text-gray-800">
+           {data.personalInformation?.phoneNumber && (
              <span>{data.personalInformation.phoneNumber}</span>
-          )}
-          {data.personalInformation?.phoneNumber && (data.personalInformation?.email || data.personalInformation?.location) && <span className="opacity-50">|</span>}
-          
-          {data.personalInformation?.email && (
-            <a href={`mailto:${data.personalInformation.email}`} className="hover:underline underline-offset-2">
-              {data.personalInformation.email}
-            </a>
-          )}
-          {data.personalInformation?.email && (data.personalInformation?.location || data.personalInformation?.linkedin) && <span className="opacity-50">|</span>}
+           )}
+           {data.personalInformation?.phoneNumber && (data.personalInformation?.email || data.personalInformation?.location) && <span className="text-gray-400">|</span>}
+           
+           {data.personalInformation?.email && (
+             <span className="font-medium">{data.personalInformation.email}</span>
+           )}
+           {data.personalInformation?.email && data.personalInformation?.location && <span className="text-gray-400">|</span>}
 
-          {data.personalInformation?.location && (
-            <span>{data.personalInformation.location}</span>
-          )}
-          {data.personalInformation?.location && (data.personalInformation?.linkedin || data.personalInformation?.gitHub) && <span className="opacity-50">|</span>}
-          
-          {data.personalInformation?.linkedin && (
-             <a href={formatUrl(data.personalInformation.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
-               linkedin.com/in/{data.personalInformation.linkedin.split('/').pop()}
-             </a>
-          )}
-          {data.personalInformation?.linkedin && (data.personalInformation?.gitHub || data.personalInformation?.portfolio) && <span className="opacity-50">|</span>}
-
-          {data.personalInformation?.gitHub && (
-             <a href={formatUrl(data.personalInformation.gitHub)} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
-               github.com/{data.personalInformation.gitHub.split('/').pop()}
-             </a>
-          )}
-          {data.personalInformation?.gitHub && data.personalInformation?.portfolio && <span className="opacity-50">|</span>}
-
-          {data.personalInformation?.portfolio && (
-             <a href={formatUrl(data.personalInformation.portfolio)} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
-               {data.personalInformation.portfolio.replace(/^https?:\/\//, '')}
-             </a>
-          )}
+           {data.personalInformation?.location && (
+             <span>{data.personalInformation.location}</span>
+           )}
         </div>
+
+        {/* Line 2: Flexible Professional Links */}
+        {data.socialLinks?.length > 0 && (
+          <div className="flex flex-wrap justify-center items-center gap-x-2 text-[10px] text-gray-800 mt-0.5">
+            {data.socialLinks.map((link, i) => (
+              <span key={i} className="flex items-center gap-x-2">
+                <span className="font-medium">
+                  {link.label}: <span className="font-normal">{formatUrl(link.url)}</span>
+                </span>
+                {i < data.socialLinks.length - 1 && <span className="text-gray-400">|</span>}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Summary Section */}
       {data.summary && (
-        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
-          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Summary</h2>       
-          <p className={`${previewMode ? 'text-[9px]' : 'text-xs'} text-justify leading-normal`}>{data.summary}</p>
+        <section className="mt-3">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Summary</h2>       
+          <p className="text-[10px] text-justify leading-snug">{data.summary}</p>
         </section>
       )}
 
-      {/* Education Section */}
-      {data.education?.length > 0 && (
-        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
-          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Education</h2>
-          {data.education.map((edu, index) => (
-            <div key={index} className={`${previewMode ? 'mb-1' : 'mb-2'}`}>
-              <div className="flex justify-between items-baseline">
-                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold`}>{edu.university}</span>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{edu.location}</span>
-              </div>
-              <div className="flex justify-between items-baseline italic">
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{edu.degree}</span>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{edu.graduationYear}</span>
-              </div>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Skills Section */}
+      {/* Technical Skills Section */}
       {data.skills?.length > 0 && (
-        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
-          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Technical Skills</h2>        
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Technical Skills</h2>        
           <div className="space-y-0.5">
             {data.skills.map((skillGroup, index) => (
-              <div key={index} className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>
+              <div key={index} className="text-[10px]">
                 <span className="font-bold">{skillGroup.category || skillGroup.title || "Skills"}: </span>
                 <span>{skillGroup.skills || skillGroup.level || ""}</span>
               </div>
@@ -114,23 +88,23 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Experience Section */}
+      {/* Work Experience Section */}
       {data.experience?.length > 0 && (
-        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
-          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Experience</h2>
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Experience</h2>
           {data.experience.map((exp, index) => (
-            <div key={index} className={`${previewMode ? 'mb-2' : 'mb-3'}`}>
+            <div key={index} className="mb-3">
               <div className="flex justify-between items-baseline">
-                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold`}>{exp.jobTitle}</span>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{exp.duration}</span>
+                <span className="text-[10px] font-bold">{exp.jobTitle}</span>
+                <span className="text-[9px]">{exp.duration}</span>
               </div>
               <div className="flex justify-between items-baseline italic mb-0.5">
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{exp.company}</span>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'}`}>{exp.location}</span>
+                <span className="text-[9px]">{exp.company}</span>
+                <span className="text-[9px]">{exp.location}</span>
               </div>
-              <ul className={`list-disc list-inside ${previewMode ? 'text-[9px]' : 'text-xs'} leading-tight`}>
+              <ul className="list-disc list-outside ml-4 text-[10px] leading-tight">
                 {exp.responsibility.split('\n').map((line, i) => (
-                  line.trim() && <li key={i} className="pl-1 -indent-4 ml-4 mb-0.5">{line.trim().replace(/^[-•]\s*/, '')}</li>
+                  line.trim() && <li key={i} className="mb-0.5">{line.trim().replace(/^[-•]\s*/, '')}</li>
                 ))}
               </ul>
             </div>
@@ -138,21 +112,85 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
+      {/* Education Section */}
+      {data.education?.length > 0 && (
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Education</h2>
+          {data.education.map((edu, index) => (
+            <div key={index} className="mb-2">
+              <div className="flex justify-between items-baseline">
+                <span className="text-[10px] font-bold">{edu.university}</span>
+                <span className="text-[9px]">{edu.graduationYear}</span>
+              </div>
+              <div className="flex justify-between items-baseline italic">
+                <span className="text-[9px]">{edu.degree}</span>
+                <span className="text-[9px]">{edu.location}</span>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
+
       {/* Projects Section */}
       {data.projects?.length > 0 && (
-        <section className={`${previewMode ? 'mt-3' : 'mt-5'}`}>
-          <h2 className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold uppercase border-b border-black mb-1`}>Projects</h2>
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Projects</h2>
           {data.projects.map((proj, index) => (
-            <div key={index} className={`${previewMode ? 'mb-2' : 'mb-3'}`}>
+            <div key={index} className="mb-2">
               <div className="flex justify-between items-baseline">
-                <span className={`${previewMode ? 'text-[10px]' : 'text-sm'} font-bold`}>{proj.title}</span>
-                <span className={`${previewMode ? 'text-[9px]' : 'text-xs'} italic`}>{proj.technologiesUsed}</span>
+                <span className="text-[10px] font-bold">{proj.title}</span>
+                <span className="text-[9px] italic">{proj.technologiesUsed}</span>
               </div>
-              <ul className={`list-disc list-inside ${previewMode ? 'text-[9px]' : 'text-xs'} leading-tight mt-0.5`}>
+              <ul className="list-disc list-outside ml-4 text-[10px] leading-tight mt-0.5">
                 {proj.description.split('\n').map((line, i) => (
-                  line.trim() && <li key={i} className="pl-1 -indent-4 ml-4 mb-0.5">{line.trim().replace(/^[-•]\s*/, '')}</li>
+                  line.trim() && <li key={i} className="mb-0.5">{line.trim().replace(/^[-•]\s*/, '')}</li>
                 ))}
               </ul>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {/* Certifications Section */}
+      {data.certifications?.length > 0 && (
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Certifications</h2>
+          <ul className="list-disc list-outside ml-4 text-[10px] leading-tight">
+            {data.certifications.map((cert, index) => (
+              <li key={index} className="mb-0.5">
+                <span className="font-bold">{cert.title}</span>, {cert.issuer} ({cert.date})
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Achievements Section */}
+      {data.achievements?.length > 0 && (
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Awards & Achievements</h2>
+          <ul className="list-disc list-outside ml-4 text-[10px] leading-tight">
+            {data.achievements.map((award, index) => (
+              <li key={index} className="mb-0.5">
+                <span className="font-bold">{award.award}</span>, {award.organization} ({award.date})
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Leadership Section */}
+      {data.positionsOfResponsibility?.length > 0 && (
+        <section className="mt-4">
+          <h2 className="text-[10px] font-bold uppercase border-b border-black mb-1">Leadership & Responsibility</h2>
+          {data.positionsOfResponsibility.map((pos, index) => (
+            <div key={index} className="mb-2">
+              <div className="flex justify-between items-baseline">
+                <span className="text-[10px] font-bold">{pos.title}</span>
+                <span className="text-[9px]">{pos.duration}</span>
+              </div>
+              <div className="text-[9px] italic mb-0.5">{pos.organization}</div>
+              <p className="text-[10px] leading-tight">{pos.description}</p>
             </div>
           ))}
         </section>

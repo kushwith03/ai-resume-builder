@@ -2,7 +2,7 @@ import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/rendere
 
 const styles = StyleSheet.create({
   page: {
-    padding: "0.5in",
+    padding: "0.4in",
     fontSize: 10,
     fontFamily: "Times-Roman",
     lineHeight: 1.2,
@@ -14,12 +14,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   name: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: "Times-Bold",
     marginBottom: 4,
     textTransform: "uppercase",
   },
   contact: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    width: "100%",
+    fontSize: 9,
+    marginBottom: 2,
+  },
+  social: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -34,7 +43,7 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   section: {
-    marginTop: 8,
+    marginTop: 10,
     marginBottom: 4,
   },
   sectionTitle: {
@@ -96,11 +105,15 @@ const ResumePDF = ({ data }) => {
 
   const {
     personalInformation = {},
+    socialLinks = [],
     summary = "",
     experience = [],
     education = [],
     skills = [],
     projects = [],
+    certifications = [],
+    achievements = [],
+    positionsOfResponsibility = [],
   } = data;
 
   const renderText = (text, fallback = "") => {
@@ -121,6 +134,8 @@ const ResumePDF = ({ data }) => {
         {/* Header Section */}
         <View style={styles.header}>
           <Text style={styles.name}>{fullName}</Text>
+          
+          {/* Line 1: Basic Contact */}
           <View style={styles.contact}>
             {personalInformation?.phoneNumber && (
               <Text style={styles.contactItem}>{renderText(personalInformation.phoneNumber)}</Text>
@@ -132,35 +147,29 @@ const ResumePDF = ({ data }) => {
             {personalInformation?.email && (
               <Text style={styles.contactItem}>{renderText(personalInformation.email)}</Text>
             )}
-            {personalInformation?.email && (personalInformation?.location || personalInformation?.linkedin) && (
+            {personalInformation?.email && personalInformation?.location && (
               <Text style={styles.contactSeparator}>|</Text>
             )}
 
             {personalInformation?.location && (
               <Text style={styles.contactItem}>{renderText(personalInformation.location)}</Text>
             )}
-            {personalInformation?.location && (personalInformation?.linkedin || personalInformation?.gitHub) && (
-              <Text style={styles.contactSeparator}>|</Text>
-            )}
-
-            {personalInformation?.linkedin && (
-              <Text style={styles.contactItem}>linkedin.com/in/{personalInformation.linkedin.split('/').pop()}</Text>
-            )}
-            {personalInformation?.linkedin && (personalInformation?.gitHub || personalInformation?.portfolio) && (
-              <Text style={styles.contactSeparator}>|</Text>
-            )}
-
-            {personalInformation?.gitHub && (
-              <Text style={styles.contactItem}>github.com/{personalInformation.gitHub.split('/').pop()}</Text>
-            )}
-            {personalInformation?.gitHub && personalInformation?.portfolio && (
-              <Text style={styles.contactSeparator}>|</Text>
-            )}
-
-            {personalInformation?.portfolio && (
-              <Text style={styles.contactItem}>{formatUrl(personalInformation.portfolio)}</Text>
-            )}
           </View>
+
+          {/* Line 2: Flexible Social Links */}
+          {socialLinks?.length > 0 && (
+            <View style={styles.social}>
+              {socialLinks.map((link, i) => (
+                <View key={i} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.contactItem}>
+                    <Text style={styles.bold}>{renderText(link.label)}: </Text>
+                    {formatUrl(link.url)}
+                  </Text>
+                  {i < socialLinks.length - 1 && <Text style={styles.contactSeparator}>|</Text>}
+                </View>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Summary Section */}
@@ -171,26 +180,7 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Education Section */}
-        {education?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
-            {education.map((edu, i) => (
-              <View key={i} style={{ marginBottom: 4 }}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.bold}>{renderText(edu?.university)}</Text>
-                  <Text>{renderText(edu?.location)}</Text>
-                </View>
-                <View style={styles.itemSubHeader}>
-                  <Text>{renderText(edu?.degree)}</Text>
-                  <Text>{renderText(edu?.graduationYear)}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Skills Section */}
+        {/* Technical Skills Section */}
         {skills?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Technical Skills</Text>
@@ -232,6 +222,25 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
+        {/* Education Section */}
+        {education?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Education</Text>
+            {education.map((edu, i) => (
+              <View key={i} style={{ marginBottom: 4 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.bold}>{renderText(edu?.university)}</Text>
+                  <Text>{renderText(edu?.graduationYear)}</Text>
+                </View>
+                <View style={styles.itemSubHeader}>
+                  <Text>{renderText(edu?.degree)}</Text>
+                  <Text>{renderText(edu?.location)}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
         {/* Projects Section */}
         {projects?.length > 0 && (
           <View style={styles.section}>
@@ -252,6 +261,53 @@ const ResumePDF = ({ data }) => {
                     )
                   ))}
                 </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Certifications Section */}
+        {certifications?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Certifications</Text>
+            {certifications.map((cert, i) => (
+              <View key={i} style={styles.bulletRow}>
+                <Text style={styles.bullet}>•</Text>
+                <Text style={styles.bulletText}>
+                  <Text style={styles.bold}>{renderText(cert.title)}</Text>, {renderText(cert.issuer)} ({renderText(cert.date)})
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Achievements Section */}
+        {achievements?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Awards & Achievements</Text>
+            {achievements.map((award, i) => (
+              <View key={i} style={styles.bulletRow}>
+                <Text style={styles.bullet}>•</Text>
+                <Text style={styles.bulletText}>
+                  <Text style={styles.bold}>{renderText(award.award)}</Text>, {renderText(award.organization)} ({renderText(award.date)})
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Leadership Section */}
+        {positionsOfResponsibility?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Leadership & Responsibility</Text>
+            {positionsOfResponsibility.map((pos, i) => (
+              <View key={i} style={{ marginBottom: 6 }}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.bold}>{renderText(pos?.title)}</Text>
+                  <Text>{renderText(pos?.duration)}</Text>
+                </View>
+                <Text style={styles.italic}>{renderText(pos?.organization)}</Text>
+                <Text style={styles.text}>{renderText(pos?.description)}</Text>
               </View>
             ))}
           </View>
