@@ -50,18 +50,25 @@ exports.generateResumeData = async (userDescription) => {
 
     const data = JSON.parse(text.trim());
 
-    const requiredSections = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
-    const missingSections = requiredSections.filter(section => !data[section]);
+    // Basic validation
+    const required = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
+    const missing = required.filter(s => !data[s]);
+    if (missing.length > 0) throw new Error(`Missing sections: ${missing.join(', ')}`);
 
-    if (missingSections.length > 0) {
-      throw new Error(`AI generated an incomplete resume. Missing: ${missingSections.join(', ')}`);
-    }
+    // Schema Migration: Ensure socialLinks is always a populated array if data exists
+    const socialLinks = Array.isArray(data.socialLinks) ? data.socialLinks : [];
+    
+    // Migration for AI hallucinations of flat keys
+    const info = data.personalInformation || {};
+    if (info.linkedin && !socialLinks.find(l => l.label === 'LinkedIn')) socialLinks.push({ label: 'LinkedIn', url: info.linkedin });
+    if (info.github && !socialLinks.find(l => l.label === 'GitHub')) socialLinks.push({ label: 'GitHub', url: info.github });
+    if (info.portfolio && !socialLinks.find(l => l.label === 'Portfolio')) socialLinks.push({ label: 'Portfolio', url: info.portfolio });
+    
+    data.socialLinks = socialLinks;
 
-    // Ensure all optional sections are at least empty arrays
-    const optionalSections = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility', 'socialLinks'];
-    optionalSections.forEach(section => {
-      if (!data[section]) data[section] = [];
-    });
+    // Ensure all optional sections are initialized
+    const optional = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility', 'socialLinks'];
+    optional.forEach(s => { if (!data[s]) data[s] = []; });
 
     return data;
   } catch (error) {

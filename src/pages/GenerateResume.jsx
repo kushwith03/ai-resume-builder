@@ -240,7 +240,6 @@ const GenerateResume = () => {
 
       {showFormUI && (
         <>
-          {/* Section Navigation Dock - Desktop Floating Rail (Outside animated div to fix visibility/clipping) */}
           <div className="hidden lg:flex fixed left-[max(1rem,calc(50vw-740px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
             {SECTIONS.map((section) => (
               <button
@@ -256,11 +255,11 @@ const GenerateResume = () => {
             ))}
           </div>
 
-          <div className="relative animate-fadeIn">
+          <div className="animate-fadeIn">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
               <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
-                {/* Mobile Sticky Navigation Dock (top-16 to avoid Navbar) */}
                 <div className="lg:hidden sticky top-16 z-[80] -mx-4 px-4 py-3 bg-base-300/80 backdrop-blur-lg border-b border-white/5 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2">
+
                   {SECTIONS.map((section) => (
                     <button
                       key={section.id}
