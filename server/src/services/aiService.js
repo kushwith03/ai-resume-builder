@@ -2,8 +2,29 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+/**
+ * Utility for exponential backoff retries
+ */
+const retryWithBackoff = async (fn, maxRetries = 3, baseDelay = 2000) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      const isServiceUnavailable = error.status === 503 || error.message?.includes('503') || error.message?.includes('Service Unavailable');
+      
+      if (isServiceUnavailable && attempt < maxRetries) {
+        const delay = baseDelay * Math.pow(2, attempt - 1);
+        console.warn(`[AI-RETRY] Attempt ${attempt} failed with 503. Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+
 exports.generateResumeData = async (userDescription) => {
-  console.log("[AI-DEBUG] Starting generation for user description");
+  console.log("[AI-DEBUG] Starting generation with gemini-3.5-flash");
   
   if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_google_gemini_api_key_here') {
     throw new Error('Missing Gemini API Key in environment variables');
@@ -42,12 +63,13 @@ exports.generateResumeData = async (userDescription) => {
   `;
 
   try {
-    const result = await model.generateContent(prompt);
+    // Execute content generation with exponential backoff
+    const result = await retryWithBackoff(() => model.generateContent(prompt));
+    
     const response = await result.response;
     const text = response.text();
     console.log("[AI-DEBUG] Raw model output received");
 
-    // Extract JSON using first "{" and last "}"
     const startIdx = text.indexOf('{');
     const endIdx = text.lastIndexOf('}');
     
@@ -61,14 +83,12 @@ exports.generateResumeData = async (userDescription) => {
     const data = JSON.parse(jsonString);
     console.log("[AI-DEBUG] Parse successful");
 
-    // Strict validation
     const required = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
     const missing = required.filter(s => !data[s]);
     if (missing.length > 0) {
       throw new Error(`AI generated data is missing required sections: ${missing.join(', ')}`);
     }
 
-    // Migration logic for social links
     const socialLinks = Array.isArray(data.socialLinks) ? data.socialLinks : [];
     const info = data.personalInformation || {};
     if (info.linkedin && !socialLinks.find(l => l.label === 'LinkedIn')) socialLinks.push({ label: 'LinkedIn', url: info.linkedin });
@@ -76,7 +96,6 @@ exports.generateResumeData = async (userDescription) => {
     if (info.portfolio && !socialLinks.find(l => l.label === 'Portfolio')) socialLinks.push({ label: 'Portfolio', url: info.portfolio });
     data.socialLinks = socialLinks;
 
-    // Ensure all optional sections are initialized as arrays
     const optional = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility'];
     optional.forEach(s => { if (!data[s]) data[s] = []; });
 
@@ -97,7 +116,6 @@ exports.generateResumeData = async (userDescription) => {
       throw authError;
     }
 
-    // Unmask the error message
     throw new Error(`AI Service Error: ${error.message}`);
   }
 };
