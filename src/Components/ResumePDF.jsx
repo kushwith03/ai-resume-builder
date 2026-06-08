@@ -127,6 +127,16 @@ const ResumePDF = ({ data }) => {
     return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
   };
 
+  const getInferredLabel = (url, customLabel) => {
+    if (customLabel && customLabel.trim()) return customLabel;
+    if (!url) return "Link";
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('linkedin.com')) return 'LinkedIn';
+    if (lowerUrl.includes('github.com')) return 'GitHub';
+    if (lowerUrl.includes('portfolio') || lowerUrl.includes('personal') || lowerUrl.includes('website')) return 'Portfolio';
+    return 'Link';
+  };
+
   const fullName = renderText(personalInformation?.fullName, "Your Name");
 
   return (
@@ -163,7 +173,7 @@ const ResumePDF = ({ data }) => {
               {socialLinks.map((link, i) => (
                 <View key={i} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.contactItem}>
-                    <Text style={styles.bold}>{renderText(link.label)}: </Text>
+                    <Text style={styles.bold}>{getInferredLabel(link.url, link.label)}: </Text>
                     {formatUrl(link.url)}
                   </Text>
                   {i < socialLinks.length - 1 && <Text style={styles.contactSeparator}>|</Text>}
