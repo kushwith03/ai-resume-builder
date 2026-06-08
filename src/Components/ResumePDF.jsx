@@ -238,7 +238,7 @@ const ResumePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
-              <View key={i} style={{ marginBottom: 4 }} wrap={false}>
+              <View key={i} style={{ marginBottom: 4 }}>
                 <View style={styles.itemHeader}>
                   <Text style={styles.bold}>{renderText(edu?.university)}</Text>
                   <Text>{renderText(edu?.graduationYear)}</Text>
@@ -282,7 +282,7 @@ const ResumePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Certifications</Text>
             {certifications.map((cert, i) => (
-              <View key={i} style={styles.bulletRow} wrap={false}>
+              <View key={i} style={styles.bulletRow}>
                 <Text style={styles.bullet}>•</Text>
                 <Text style={styles.bulletText}>
                   <Text style={styles.bold}>{renderText(cert.title)}</Text>, {renderText(cert.issuer)} ({renderText(cert.date)})
@@ -297,7 +297,7 @@ const ResumePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Awards & Achievements</Text>
             {achievements.map((award, i) => (
-              <View key={i} style={styles.bulletRow} wrap={false}>
+              <View key={i} style={styles.bulletRow}>
                 <Text style={styles.bullet}>•</Text>
                 <Text style={styles.bulletText}>
                   <Text style={styles.bold}>{renderText(award.award)}</Text>, {renderText(award.organization)} ({renderText(award.date)})
