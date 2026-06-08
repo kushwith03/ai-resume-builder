@@ -202,28 +202,28 @@ const GenerateResume = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Editor */}
-            <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4">
               <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
               <FormSection id="identity" title="Identity">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="form-control md:col-span-2">
-                    <label className="label-text mb-1 text-[9px] font-bold uppercase text-slate-500">Full Name *</label>
-                    <input {...register("personalInformation.fullName", { required: true })} className="input input-bordered h-10 bg-base-100 text-sm" placeholder="John Doe" />
+                    <label className="label-text mb-1 text-[9px] font-bold uppercase tracking-widest text-slate-500">Full Name *</label>
+                    <input {...register("personalInformation.fullName", { required: true })} className="input input-bordered h-9 px-3 bg-base-100 text-xs" placeholder="John Doe" />
                   </div>
                   <div className="form-control">
-                    <label className="label-text mb-1 text-[9px] font-bold uppercase text-slate-500">Job Title *</label>
-                    <input {...register("personalInformation.title", { required: true })} className="input input-bordered h-10 bg-base-100 text-sm" placeholder="Software Engineer" />
+                    <label className="label-text mb-1 text-[9px] font-bold uppercase tracking-widest text-slate-500">Job Title *</label>
+                    <input {...register("personalInformation.title", { required: true })} className="input input-bordered h-9 px-3 bg-base-100 text-xs" placeholder="Software Engineer" />
                   </div>
                   <div className="form-control">
-                    <label className="label-text mb-1 text-[9px] font-bold uppercase text-slate-500">Email *</label>
-                    <input {...register("personalInformation.email", { required: true })} className="input input-bordered h-10 bg-base-100 text-sm" placeholder="john@example.com" />
+                    <label className="label-text mb-1 text-[9px] font-bold uppercase tracking-widest text-slate-500">Email *</label>
+                    <input {...register("personalInformation.email", { required: true })} className="input input-bordered h-9 px-3 bg-base-100 text-xs" placeholder="john@example.com" />
                   </div>
                 </div>
               </FormSection>
 
               <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
               <FormSection id="summary" title="Professional Summary">
-                <textarea {...register("summary", { required: true })} className="textarea textarea-bordered w-full h-24 bg-base-100 text-sm" placeholder="Overview..." />
+                <textarea {...register("summary", { required: true })} className="textarea textarea-bordered w-full h-20 min-h-[80px] py-2 px-3 bg-base-100 text-xs leading-relaxed" placeholder="Overview..." />
               </FormSection>
               <RenderFieldArray id="skills" fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
               <RenderFieldArray id="experience" fields={fieldArrays.experience} label="Work Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} />

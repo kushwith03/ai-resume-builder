@@ -34,17 +34,17 @@ const FormSection = React.memo(({ title, children, defaultExpanded = true, id })
   const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
 
   return (
-    <div id={id} className={`form-control w-full mb-3 md:mb-4 p-4 md:p-5 bg-base-200/50 rounded-2xl md:rounded-3xl border border-white/5 shadow-lg transition-all hover:border-white/10 ${!isExpanded ? 'pb-4 md:pb-5' : ''} scroll-mt-24 target:ring-2 target:ring-primary/40 target:border-primary/40 transition-shadow duration-500`}>
+    <div id={id} className={`form-control w-full mb-3 p-3 md:p-4 bg-base-200/50 rounded-2xl md:rounded-3xl border border-white/5 shadow-lg transition-all hover:border-white/10 ${!isExpanded ? 'pb-3 md:pb-4' : ''} scroll-mt-24 target:ring-2 target:ring-primary/40 target:border-primary/40 transition-shadow duration-500`}>
       <div 
         className="flex items-center justify-between cursor-pointer group/header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <h3 className="text-base md:text-lg font-black text-white flex items-center gap-3">
-          <span className="w-1 h-5 bg-primary rounded-full shadow-lg shadow-primary/20 transition-all group-hover/header:h-6"></span> 
+        <h3 className="text-sm md:text-base font-black text-white flex items-center gap-2.5">
+          <span className="w-1 h-4 bg-primary rounded-full shadow-lg shadow-primary/20 transition-all group-hover/header:h-5"></span> 
           {title}
         </h3>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 opacity-0 group-hover/header:opacity-100 transition-opacity">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 opacity-0 group-hover/header:opacity-100 transition-opacity">
             {isExpanded ? "Minimize" : "Expand"}
           </span>
           <div className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
@@ -53,7 +53,7 @@ const FormSection = React.memo(({ title, children, defaultExpanded = true, id })
         </div>
       </div>
       {isExpanded && (
-        <div className="space-y-4 mt-5 md:mt-6 animate-fadeIn">
+        <div className="space-y-2 mt-3 md:mt-4 animate-fadeIn">
           {children}
         </div>
       )}
@@ -110,23 +110,23 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
       />
       <FormSection id={id} title={label}>
       {fields.fields.length === 0 ? (
-        <div className="py-6 text-center border border-dashed border-white/10 rounded-2xl bg-base-100/20">
-          <p className="text-slate-500 text-xs italic">No {label.toLowerCase()} added yet.</p>
+        <div className="py-4 text-center border border-dashed border-white/10 rounded-2xl bg-base-100/20">
+          <p className="text-slate-500 text-[10px] italic">No {label.toLowerCase()} added yet.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2 relative">
           {fields.fields.map((field, index) => (
-            <div key={field.id} className="p-4 md:p-5 bg-base-100/40 rounded-xl relative group border border-white/5 transition-all hover:border-primary/10">
-              <div className="flex justify-end gap-1.5 mb-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200">
-                <div className="flex items-center gap-1 bg-base-300/90 backdrop-blur px-2 py-1 rounded-lg border border-white/10 shadow-xl">
-                  <button type="button" onClick={() => fields.move(index, index - 1)} disabled={index === 0} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded disabled:opacity-20"><FaArrowUp className="text-[10px]" /></button>
-                  <button type="button" onClick={() => fields.move(index, index + 1)} disabled={index === fields.fields.length - 1} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded disabled:opacity-20"><FaArrowDown className="text-[10px]" /></button>
-                  <div className="w-px h-3 bg-white/10 mx-1"></div>
-                  <button type="button" onClick={() => handleDuplicate(index)} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:text-success"><FaCopy className="text-[10px]" /></button>
-                  <button type="button" onClick={() => handleRemove(index)} className="btn btn-ghost btn-xs h-6 w-6 p-0 rounded hover:text-error"><FaTrash className="text-[10px]" /></button>
+            <div key={field.id} className="p-3 md:p-4 bg-base-100/40 rounded-xl relative group border border-white/5 transition-all hover:border-primary/10">
+              <div className="absolute top-1.5 right-1.5 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200">
+                <div className="flex items-center gap-0.5 bg-base-300/95 backdrop-blur px-1.5 py-1 rounded-md border border-white/10 shadow-lg">
+                  <button type="button" onClick={() => fields.move(index, index - 1)} disabled={index === 0} className="btn btn-ghost btn-xs h-5 w-5 min-h-0 p-0 rounded disabled:opacity-20"><FaArrowUp className="text-[9px]" /></button>
+                  <button type="button" onClick={() => fields.move(index, index + 1)} disabled={index === fields.fields.length - 1} className="btn btn-ghost btn-xs h-5 w-5 min-h-0 p-0 rounded disabled:opacity-20"><FaArrowDown className="text-[9px]" /></button>
+                  <div className="w-px h-2.5 bg-white/10 mx-0.5"></div>
+                  <button type="button" onClick={() => handleDuplicate(index)} className="btn btn-ghost btn-xs h-5 w-5 min-h-0 p-0 rounded hover:text-success"><FaCopy className="text-[9px]" /></button>
+                  <button type="button" onClick={() => handleRemove(index)} className="btn btn-ghost btn-xs h-5 w-5 min-h-0 p-0 rounded hover:text-error"><FaTrash className="text-[9px]" /></button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                 {keys.map(key => {
                   const isTextArea = ["responsibility", "description", "summary"].includes(key);    
                   const isFullWidth = ["responsibility", "description", "summary", "technologiesUsed", "skills", "url"].includes(key);
@@ -134,13 +134,13 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
                   const error = errors?.[name]?.[index]?.[key];
                   return (
                     <div key={key} className={`form-control ${isFullWidth ? 'md:col-span-2' : ''}`}>
-                      <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error' : 'text-slate-500'}`}>{labelMap[key] || key}</label>
+                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error' : 'text-slate-500'}`}>{labelMap[key] || key}</label>
                       {isTextArea ? (
-                        <textarea {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`textarea textarea-bordered h-24 min-h-[100px] bg-base-100 text-sm leading-relaxed transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`Enter details for ${key}...`} />
+                        <textarea {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`textarea textarea-bordered h-20 min-h-[80px] py-2 px-3 bg-base-100 text-xs leading-relaxed transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`Enter details for ${key}...`} />
                       ) : (
-                        <input {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`input input-bordered h-10 bg-base-100 text-sm transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`e.g. ${labelMap[key]?.replace(' *', '') || key}`} />
+                        <input {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`input input-bordered h-9 px-3 bg-base-100 text-xs transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`e.g. ${labelMap[key]?.replace(' *', '') || key}`} />
                       )}
-                      {error && <span className="text-error text-[10px] mt-1 ml-1 font-bold">{error.message}</span>}
+                      {error && <span className="text-error text-[9px] mt-0.5 ml-1 font-bold">{error.message}</span>}
                     </div>
                   );
                 })}
@@ -149,7 +149,7 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
           ))}
         </div>
       )}
-      <button type="button" onClick={() => fields.append(keys.reduce((acc, k) => ({...acc, [k]: ""}), {}))} className="btn btn-ghost btn-sm text-primary hover:bg-primary/5 w-full border-dashed border-2 border-white/5 rounded-xl transition-all mt-3 h-10"><FaPlusCircle className="mr-2" /> Add {label.replace(/s$/, '')}</button>
+      <button type="button" onClick={() => fields.append(keys.reduce((acc, k) => ({...acc, [k]: ""}), {}))} className="btn btn-ghost btn-sm text-primary hover:bg-primary/5 w-full border-dashed border-2 border-white/5 rounded-xl transition-all mt-2 h-9 text-xs"><FaPlusCircle className="mr-1.5" /> Add {label.replace(/s$/, '')}</button>
     </FormSection>
   </>
   );
