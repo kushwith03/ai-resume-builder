@@ -1,105 +1,8 @@
-import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
-
-const styles = StyleSheet.create({
-  page: {
-    padding: "0.4in",
-    fontSize: 10,
-    fontFamily: "Times-Roman",
-    lineHeight: 1.2,
-    color: "#000",
-  },
-  header: {
-    marginBottom: 10,
-    width: "100%",
-    textAlign: "center",
-  },
-  name: {
-    fontSize: 22,
-    fontFamily: "Times-Bold",
-    marginBottom: 10,
-    textTransform: "uppercase",
-  },
-  contact: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    width: "100%",
-    fontSize: 9,
-    marginBottom: 4,
-  },
-  social: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    width: "100%",
-    fontSize: 9,
-    marginTop: 2,
-  },
-  contactItem: {
-    paddingHorizontal: 4,
-  },
-  contactSeparator: {
-    color: "#666",
-  },
-  section: {
-    marginTop: 10,
-    marginBottom: 4,
-  },
-  sectionTitle: {
-    fontSize: 10,
-    fontFamily: "Times-Bold",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#000",
-    marginBottom: 4,
-    paddingBottom: 1,
-    textTransform: "uppercase",
-  },
-  itemHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 1,
-  },
-  itemSubHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    fontFamily: "Times-Italic",
-    marginBottom: 2,
-  },
-  bold: {
-    fontFamily: "Times-Bold",
-  },
-  italic: {
-    fontFamily: "Times-Italic",
-  },
-  text: {
-    fontSize: 10,
-    lineHeight: 1.2,
-    textAlign: "justify",
-  },
-  bulletRow: {
-    flexDirection: "row",
-    marginBottom: 1,
-    paddingLeft: 10,
-  },
-  bullet: {
-    width: 10,
-    fontSize: 10,
-  },
-  bulletText: {
-    flex: 1,
-    fontSize: 10,
-  },
-  skillRow: {
-    flexDirection: "row",
-    marginBottom: 2,
-  },
-  skillLabel: {
-    fontFamily: "Times-Bold",
-    marginRight: 4,
-  }
-});
+import React from "react";
+import { Document, Page, Text, View } from "@react-pdf/renderer";
+import { pdfStyles as styles } from "./PDF/pdfStyles";
+import PDFHeader from "./PDF/PDFHeader";
+import { renderText } from "./PDF/pdfHelpers";
 
 const ResumePDF = ({ data }) => {
   if (!data) return null;
@@ -117,73 +20,13 @@ const ResumePDF = ({ data }) => {
     positionsOfResponsibility = [],
   } = data;
 
-  const renderText = (text, fallback = "") => {
-    if (!text || String(text).trim() === "") return fallback;
-    return String(text);
-  };
-
-  const formatUrl = (url) => {
-    if (!url) return "";
-    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  };
-
-  const getInferredLabel = (url, customLabel) => {
-    if (customLabel && customLabel.trim()) return customLabel;
-    if (!url) return "Link";
-    const lowerUrl = url.toLowerCase();
-    if (lowerUrl.includes('linkedin.com')) return 'LinkedIn';
-    if (lowerUrl.includes('github.com')) return 'GitHub';
-    if (lowerUrl.includes('portfolio') || lowerUrl.includes('personal') || lowerUrl.includes('website')) return 'Portfolio';
-    return 'Link';
-  };
-
   const fullName = renderText(personalInformation?.fullName, "Your Name");
 
   return (
     <Document title={`${fullName} - Professional Resume`}>
       <Page size="A4" style={styles.page}>
-        {/* Header Section */}
-        <View style={styles.header}>
-          <Text style={styles.name}>{fullName}</Text>
-          
-          {/* Line 1: Basic Contact */}
-          <View style={styles.contact}>
-            {personalInformation?.phoneNumber && (
-              <Text style={styles.contactItem}>{renderText(personalInformation.phoneNumber)}</Text>
-            )}
-            {personalInformation?.phoneNumber && (personalInformation?.email || personalInformation?.location) && (
-              <Text style={styles.contactSeparator}>|</Text>
-            )}
-            
-            {personalInformation?.email && (
-              <Text style={styles.contactItem}>{renderText(personalInformation.email)}</Text>
-            )}
-            {personalInformation?.email && personalInformation?.location && (
-              <Text style={styles.contactSeparator}>|</Text>
-            )}
+        <PDFHeader personalInformation={personalInformation} socialLinks={socialLinks} />
 
-            {personalInformation?.location && (
-              <Text style={styles.contactItem}>{renderText(personalInformation.location)}</Text>
-            )}
-          </View>
-
-          {/* Line 2: Flexible Social Links */}
-          {socialLinks?.length > 0 && (
-            <View style={styles.social}>
-              {socialLinks.map((link, i) => (
-                <View key={i} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.contactItem}>
-                    <Text style={styles.bold}>{getInferredLabel(link.url, link.label)}: </Text>
-                    {formatUrl(link.url)}
-                  </Text>
-                  {i < socialLinks.length - 1 && <Text style={styles.contactSeparator}>|</Text>}
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-
-        {/* Summary Section */}
         {summary && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Summary</Text>
@@ -191,7 +34,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Technical Skills Section */}
         {skills?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Technical Skills</Text>
@@ -204,7 +46,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Experience Section */}
         {experience?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Experience</Text>
@@ -233,7 +74,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Education Section */}
         {education?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
@@ -252,7 +92,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Projects Section */}
         {projects?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Projects</Text>
@@ -277,7 +116,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Certifications Section */}
         {certifications?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Certifications</Text>
@@ -292,7 +130,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Achievements Section */}
         {achievements?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Awards & Achievements</Text>
@@ -307,7 +144,6 @@ const ResumePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Leadership Section */}
         {positionsOfResponsibility?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Leadership & Responsibility</Text>
