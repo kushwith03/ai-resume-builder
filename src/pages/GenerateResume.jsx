@@ -29,30 +29,44 @@ const SECTIONS = [
  */
 const ScaledPreview = ({ children, containerClassName = "" }) => {
   const containerRef = useRef(null);
+  const contentRef = useRef(null);
   const [scale, setScale] = useState(1);
+  const [contentHeight, setContentHeight] = useState(297 * 3.7795); // default A4 px
 
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
+        // Use a safe padding margin (64px) to ensure no horizontal clipping
         const containerWidth = containerRef.current.offsetWidth;
-        const targetWidth = 210 * 3.7795275591; // 210mm in pixels at 96dpi
-        const newScale = Math.min(1, (containerWidth - 32) / targetWidth);
+        const targetWidth = 210 * 3.7795275591; 
+        const newScale = Math.min(1, (containerWidth - 64) / targetWidth);
         setScale(newScale);
+        
+        if (contentRef.current) {
+          setContentHeight(contentRef.current.offsetHeight);
+        }
       }
     };
 
+    const observer = new ResizeObserver(() => handleResize());
+    if (contentRef.current) observer.observe(contentRef.current);
+
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
+    };
   }, []);
 
   return (
-    <div ref={containerRef} className={`w-full flex justify-center items-start overflow-hidden ${containerClassName}`}>
-      <div style={{ 
+    <div ref={containerRef} className={`w-full flex justify-center items-start overflow-hidden ${containerClassName}`} style={{ height: contentHeight * scale }}>
+      <div ref={contentRef} style={{ 
         transform: `scale(${scale})`, 
         transformOrigin: "top center",
         width: "210mm",
-        height: `${297 * scale}mm`, // Adjust wrapper height to prevent excessive bottom gap
+        minWidth: "210mm",
+        flexShrink: 0,
         transition: "transform 0.2s ease-out"
       }}>
         {children}
@@ -430,7 +444,9 @@ const GenerateResume = () => {
                   </div>
                 </div>
                 <div className="w-full h-full overflow-y-auto p-2 md:p-3 custom-scrollbar bg-slate-900/50 backdrop-blur-sm flex justify-center items-start">      
-                   <div className="w-full max-w-[240mm] bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
+                  <ScaledPreview>
+                    <div className="bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
+                  </ScaledPreview>
                 </div>
               </div>
             </div>
@@ -444,7 +460,11 @@ const GenerateResume = () => {
             <h3 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">ATS Optimization</h3>
             <textarea value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} placeholder="Paste the target Job Description..." className="textarea textarea-bordered w-full h-32 bg-base-100 border-white/10 text-sm mt-4" />
           </div>
-          <Resume data={data} />
+          
+          <ScaledPreview containerClassName="bg-slate-900/20 p-4 md:p-8 rounded-3xl border border-white/5 shadow-2xl">
+            <div className="bg-white shadow-2xl origin-top"><Resume data={data} /></div>
+          </ScaledPreview>
+
           <div className="flex justify-center gap-4 pt-6">
             <button onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} className="btn btn-ghost text-slate-400 font-bold hover:text-white"><FaUndo className="mr-2 text-xs" /> Edit Draft</button>
             <button disabled={isSaving} onClick={async () => { setIsSaving(true); try { await saveResumeToDB(data, atsResult?.score || 0); toast.success("Saved to cloud"); } catch { toast.error("Database connection failure"); } finally { setIsSaving(false); } }} className="btn btn-primary px-8 rounded-xl font-black shadow-lg shadow-primary/20">{isSaving ? <span className="loading loading-spinner loading-xs"></span> : <FaSave className="mr-2" />}{isSaving ? "Saving..." : "Save Progress"}</button>
@@ -464,7 +484,11 @@ const GenerateResume = () => {
                   <button onClick={() => setShowMobilePreview(false)} className="btn btn-ghost btn-circle btn-sm text-white"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
                 </div>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 bg-slate-900/50"><div className="w-full max-w-[210mm] mx-auto bg-white shadow-2xl"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div></div>
+              <div className="flex-1 overflow-y-auto p-4 bg-slate-900/50">
+                <ScaledPreview>
+                  <div className="bg-white shadow-2xl origin-top"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
+                </ScaledPreview>
+              </div>
             </div>
           )}
         </>
