@@ -255,7 +255,6 @@ const GenerateResume = () => {
               </div>
             </div>
 
-            {/* Helper Section */}
             <div className="p-5 bg-base-200/50 border border-dashed border-white/10 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="space-y-1 text-center md:text-left">
                 <p className="text-xs font-bold text-white">Already have information elsewhere?</p>
@@ -274,7 +273,6 @@ const GenerateResume = () => {
               </button>
             </div>
 
-            {/* Examples Quick List */}
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
               <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">You can paste:</span>
               {['Resume Text', 'Career Description', 'AI-generated Profile', 'Old Content'].map((item) => (
@@ -290,7 +288,8 @@ const GenerateResume = () => {
 
       {showFormUI && (
         <>
-          <div className="hidden xl:flex fixed left-[max(0.5rem,calc(50vw-780px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
+          {/* Navigation Dock - Only visible on very wide screens to prevent overlap */}
+          <div className="hidden 2xl:flex fixed left-[max(1rem,calc(50vw-820px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
             {SECTIONS.map((section) => (
               <button
                 key={section.id}
@@ -306,24 +305,25 @@ const GenerateResume = () => {
           </div>
 
           <div className="animate-fadeIn">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+            {/* Horizontal Scrollable Nav - Visible on all screens up to 2XL to prevent side-nav overlap */}
+            <div className="2xl:hidden sticky top-[64px] md:top-[72px] z-[80] -mx-4 md:-mx-8 px-4 md:px-8 py-3 bg-base-300/80 backdrop-blur-lg border-b border-white/5 mb-6 overflow-x-auto no-scrollbar flex items-center gap-2">
+              {SECTIONS.map((section) => (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() => scrollToSection(section.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all border ${activeSection === section.id ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-transparent text-slate-500'}`}
+                >
+                  <span className="text-xs">{section.icon}</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">{section.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start relative">
+              {/* Editor Panel - Consistent 7/5 split for better preview width */}
               <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
-                <div className="lg:hidden sticky top-16 z-[80] -mx-4 px-4 py-3 bg-base-300/80 backdrop-blur-lg border-b border-white/5 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2">
-
-                  {SECTIONS.map((section) => (
-                    <button
-                      key={section.id}
-                      type="button"
-                      onClick={() => scrollToSection(section.id)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all border ${activeSection === section.id ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-transparent text-slate-500'}`}
-                    >
-                      <span className="text-xs">{section.icon}</span>
-                      <span className="text-[10px] font-black uppercase tracking-widest">{section.label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-2">
                   <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
                   {atsResult && (
                     <div className="flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 border border-white/10 rounded-2xl">
@@ -336,7 +336,7 @@ const GenerateResume = () => {
                 </div>
 
                 <FormSection id="identity" title="Identity">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="form-control md:col-span-2">
                       <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
                       <input {...register("personalInformation.fullName", { required: "Full Name is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.fullName ? 'border-error' : 'border-white/5'}`} placeholder="John Doe" />
@@ -380,21 +380,19 @@ const GenerateResume = () => {
                 </div>
               </form>
 
-              {/* Live Preview Panel */}
-              <div className="hidden lg:flex lg:col-span-5 sticky top-20 h-[calc(100vh-100px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl transition-all">
+              {/* Live Preview Panel - Wider split (5/12) and reduced internal padding */}
+              <div className="hidden lg:flex lg:col-span-5 sticky top-20 h-[calc(100vh-120px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl transition-all">
                 <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between backdrop-blur-md">
                   <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span></div>
                   <div className="flex items-center gap-2">
                     <button onClick={resetGenerator} className="btn btn-ghost btn-xs h-8 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 font-bold uppercase tracking-widest text-[9px]">Reset</button>
                     <div className="flex items-center bg-primary/10 rounded-lg p-0.5 border border-primary/20">
-                      <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-xs h-7 px-4 rounded-md font-black text-[10px] uppercase tracking-widest">View Result</button>
-                      <div className="w-px h-4 bg-primary/20 mx-1"></div>
-                      <button onClick={async () => { await handleSubmit((validData) => { setData(validData); setShowFormUI(false); setShowResumeUI(true); })(); }} className="btn btn-ghost btn-xs h-7 px-3 rounded-md font-bold text-[10px] text-primary uppercase tracking-widest">Download</button>
+                      <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-xs h-7 px-4 rounded-md font-black text-[10px] uppercase tracking-widest">Download</button>
                     </div>
                   </div>
                 </div>
-                <div className="w-full h-full overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-900/50 backdrop-blur-sm flex justify-center">      
-                   <div className="w-full max-w-[210mm] bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
+                <div className="w-full h-full overflow-y-auto p-2 md:p-3 custom-scrollbar bg-slate-900/50 backdrop-blur-sm flex justify-center items-start">      
+                   <div className="w-full max-w-[240mm] bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
                 </div>
               </div>
             </div>
@@ -416,7 +414,6 @@ const GenerateResume = () => {
         </div>
       )}
 
-      {/* Mobile Fullscreen Preview FAB & Overlay */}
       {showFormUI && (
         <>
           <button onClick={() => setShowMobilePreview(true)} className="lg:hidden fixed bottom-6 right-6 z-[90] btn btn-circle btn-primary shadow-2xl shadow-primary/40 animate-bounce-subtle"><FaMagic className="text-xl" /></button>
