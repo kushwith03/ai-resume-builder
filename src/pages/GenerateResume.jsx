@@ -290,7 +290,7 @@ const GenerateResume = () => {
 
       {showFormUI && (
         <>
-          <div className="hidden lg:flex fixed left-[max(1rem,calc(50vw-740px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
+          <div className="hidden xl:flex fixed left-[max(0.5rem,calc(50vw-780px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
             {SECTIONS.map((section) => (
               <button
                 key={section.id}
