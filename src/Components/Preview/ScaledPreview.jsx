@@ -1,9 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-/**
- * ScaledPreview component ensures the Resume renders at full A4 dimensions
- * but scales down visually to fit its container, maintaining exact proportions.
- */
 const ScaledPreview = ({ children, containerClassName = "" }) => {
   const containerRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -14,9 +10,9 @@ const ScaledPreview = ({ children, containerClassName = "" }) => {
       if (!containerRef.current || !wrapperRef.current || !contentRef.current) return;
       
       const containerWidth = containerRef.current.offsetWidth;
-      // 210mm in pixels at standard 96dpi is ~793.7px
-      const targetWidth = 793.7;
-      const scale = Math.min(1, containerWidth / targetWidth);
+      const targetWidth = 793.7; 
+      
+      const scale = Math.min(1, (containerWidth * 0.9) / targetWidth);
       
       const scaledWidth = targetWidth * scale;
       const offsetX = Math.max(0, (containerWidth - scaledWidth) / 2);
@@ -35,9 +31,7 @@ const ScaledPreview = ({ children, containerClassName = "" }) => {
     if (containerRef.current) observer.observe(containerRef.current);
     if (contentRef.current) observer.observe(contentRef.current);
 
-    // Initial scale
     updateScale();
-
     return () => observer.disconnect();
   }, [children]);
 

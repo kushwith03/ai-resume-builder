@@ -3,11 +3,6 @@ import "daisyui";
 import { FaFilePdf } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumePDF from "./ResumePDF";
-
-/**
- * Resume Component - Canonical rendering for Web Preview.
- * Matches ResumePDF.jsx exactly in dimensions, spacing, and typography.
- */
 import { formatUrl, getInferredLabel } from "../utils/resumeHelpers";
 
 const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
@@ -19,21 +14,19 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
 
   if (!data) return null;
 
-  // PDF-to-Web Style Mapping (1pt = 1.333px at 96dpi)
   const styles = {
     page: {
       width: "210mm",
-      minHeight: "297mm",
-      padding: "0.33in", // Exact match to PDF (24pt)
+      padding: "18pt 24pt",
       backgroundColor: "#fff",
       color: "#000",
       fontFamily: "'Times New Roman', Times, serif",
       fontSize: "10pt",
       lineHeight: "1.15",
     },
-    h1: { fontSize: "22pt", fontWeight: "bold", marginBottom: "8pt", textAlign: "center", textTransform: "uppercase" },
-    contact: { fontSize: "9pt", marginBottom: "4pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8pt" },
-    social: { fontSize: "9pt", marginTop: "2pt", marginBottom: "4pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8pt" },
+    h1: { fontSize: "22pt", fontWeight: "bold", marginBottom: "14pt", textAlign: "center", textTransform: "uppercase" },
+    contact: { fontSize: "9pt", marginBottom: "2pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8pt" },
+    social: { fontSize: "9pt", marginTop: "0pt", marginBottom: "4pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8pt" },
     section: { marginTop: "8pt", marginBottom: "4pt" },
     sectionTitle: { fontSize: "10pt", fontWeight: "bold", textTransform: "uppercase", borderBottom: "0.5pt solid #000", marginBottom: "4pt", paddingBottom: "1pt" },
     itemHeader: { display: "flex", justifyContent: "space-between", fontWeight: "bold", marginBottom: "1pt" },
@@ -48,7 +41,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
 
   const resumeContent = (
     <div style={styles.page} className="shadow-2xl mx-auto origin-top transition-transform duration-300">
-      {/* Header */}
       <div style={{ textAlign: "center" }}>
         <h1 style={styles.h1}>{data.personalInformation?.fullName || "Your Name"}</h1>
         
@@ -73,7 +65,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         )}
       </div>
 
-      {/* Summary Section */}
       {data.summary && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Summary</h2>
@@ -81,7 +72,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Technical Skills Section */}
       {data.skills?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Technical Skills</h2>
@@ -94,7 +84,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Experience Section */}
       {data.experience?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Experience</h2>
@@ -123,7 +112,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Education Section */}
       {data.education?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Education</h2>
@@ -142,7 +130,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Projects Section */}
       {data.projects?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Projects</h2>
@@ -167,7 +154,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Certifications Section */}
       {data.certifications?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Certifications</h2>
@@ -182,7 +168,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Achievements Section */}
       {data.achievements?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Awards & Achievements</h2>
@@ -197,7 +182,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         </section>
       )}
 
-      {/* Leadership Section */}
       {data.positionsOfResponsibility?.length > 0 && (
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>Leadership & Responsibility</h2>

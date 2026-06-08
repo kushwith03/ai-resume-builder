@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaPlusCircle, FaTrash, FaCopy, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import ConfirmModal from './ConfirmModal';
-
 const labelMap = {
   fullName: "Full Name *",
   email: "Email Address *",
@@ -10,7 +9,6 @@ const labelMap = {
   linkedin: "LinkedIn URL",
   gitHub: "GitHub URL",
   summary: "Professional Summary *",
-  title: "Title / Name *",
   category: "Skill Category (e.g. Languages) *",
   skills: "Skills (comma separated) *",
   jobTitle: "Job Title *",
@@ -25,9 +23,9 @@ const labelMap = {
   label: "Link Label (Optional - e.g. Portfolio)",
   url: "Link URL *",
   issuer: "Issuing Organization",
-  date: "Date Received",
   award: "Award / Achievement Name *",
   organization: "Organization",
+  date: "Date Received"
 };
 
 const FormSection = React.memo(({ title, children, defaultExpanded = true, id }) => {
