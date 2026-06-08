@@ -3,11 +3,13 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 exports.generateResumeData = async (userDescription) => {
+  console.log("[AI-DEBUG] Starting generation for user description");
+  
   if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_google_gemini_api_key_here') {
-    throw new Error('Missing Gemini API Key. Please add a valid key to server/.env');
+    throw new Error('Missing Gemini API Key in environment variables');
   }
 
-  const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const prompt = `
   You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
@@ -42,39 +44,49 @@ exports.generateResumeData = async (userDescription) => {
   try {
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    let text = response.text();
+    const text = response.text();
+    console.log("[AI-DEBUG] Raw model output received");
 
-    if (text.includes('```')) {
-      text = text.replace(/```json\n?/, '').replace(/```\n?/, '').replace(/\n?```/, '');
+    // Extract JSON using first "{" and last "}"
+    const startIdx = text.indexOf('{');
+    const endIdx = text.lastIndexOf('}');
+    
+    if (startIdx === -1 || endIdx === -1) {
+      console.error("[AI-DEBUG] Parse failure: No JSON object found in response");
+      throw new Error("AI response did not contain a valid JSON object");
     }
 
-    const data = JSON.parse(text.trim());
+    const jsonString = text.substring(startIdx, endIdx + 1);
+    console.log("[AI-DEBUG] Attempting to parse JSON");
+    const data = JSON.parse(jsonString);
+    console.log("[AI-DEBUG] Parse successful");
 
-    // Basic validation
+    // Strict validation
     const required = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
     const missing = required.filter(s => !data[s]);
-    if (missing.length > 0) throw new Error(`Missing sections: ${missing.join(', ')}`);
+    if (missing.length > 0) {
+      throw new Error(`AI generated data is missing required sections: ${missing.join(', ')}`);
+    }
 
-    // Schema Migration: Ensure socialLinks is always a populated array if data exists
+    // Migration logic for social links
     const socialLinks = Array.isArray(data.socialLinks) ? data.socialLinks : [];
-    
-    // Migration for AI hallucinations of flat keys
     const info = data.personalInformation || {};
     if (info.linkedin && !socialLinks.find(l => l.label === 'LinkedIn')) socialLinks.push({ label: 'LinkedIn', url: info.linkedin });
     if (info.github && !socialLinks.find(l => l.label === 'GitHub')) socialLinks.push({ label: 'GitHub', url: info.github });
     if (info.portfolio && !socialLinks.find(l => l.label === 'Portfolio')) socialLinks.push({ label: 'Portfolio', url: info.portfolio });
-    
     data.socialLinks = socialLinks;
 
-    // Ensure all optional sections are initialized
-    const optional = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility', 'socialLinks'];
+    // Ensure all optional sections are initialized as arrays
+    const optional = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility'];
     optional.forEach(s => { if (!data[s]) data[s] = []; });
 
+    console.log("[AI-DEBUG] Returning processed data");
     return data;
   } catch (error) {
-    // Handle Gemini API Quota / Rate Limit errors
+    console.error("[AI-DEBUG] Exception caught:", error.message);
+    
     if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
-      const quotaError = new Error('AI generation is temporarily busy due to high demand (free-tier quota reached). Please try again in a minute.');
+      const quotaError = new Error('AI quota reached. Please try again in a minute.');
       quotaError.status = 429;
       throw quotaError;
     }
@@ -85,7 +97,7 @@ exports.generateResumeData = async (userDescription) => {
       throw authError;
     }
 
-    console.error("Internal Gemini Error:", error);
-    throw new Error('The AI service encountered an unexpected issue. Please retry shortly.');
+    // Unmask the error message
+    throw new Error(`AI Service Error: ${error.message}`);
   }
 };
