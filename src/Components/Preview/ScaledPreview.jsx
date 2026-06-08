@@ -1,0 +1,62 @@
+import React, { useEffect, useRef } from "react";
+
+/**
+ * ScaledPreview component ensures the Resume renders at full A4 dimensions
+ * but scales down visually to fit its container, maintaining exact proportions.
+ */
+const ScaledPreview = ({ children, containerClassName = "" }) => {
+  const containerRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (!containerRef.current || !wrapperRef.current || !contentRef.current) return;
+      
+      const containerWidth = containerRef.current.offsetWidth;
+      // 210mm in pixels at standard 96dpi is ~793.7px
+      const targetWidth = 793.7;
+      const scale = Math.min(1, containerWidth / targetWidth);
+      
+      contentRef.current.style.transform = `scale(${scale})`;
+      
+      const contentHeight = contentRef.current.offsetHeight;
+      wrapperRef.current.style.height = `${contentHeight * scale}px`;
+    };
+
+    const observer = new ResizeObserver(() => {
+      window.requestAnimationFrame(updateScale);
+    });
+
+    if (containerRef.current) observer.observe(containerRef.current);
+    if (contentRef.current) observer.observe(contentRef.current);
+
+    // Initial scale
+    updateScale();
+
+    return () => observer.disconnect();
+  }, [children]);
+
+  return (
+    <div ref={containerRef} className={`w-full flex justify-center ${containerClassName}`}>
+      <div ref={wrapperRef} className="relative overflow-hidden w-full transition-all duration-200">
+        <div 
+          ref={contentRef} 
+          style={{ 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            margin: '0 auto',
+            width: '210mm',
+            transformOrigin: 'top center'
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ScaledPreview;

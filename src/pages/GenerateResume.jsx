@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
-import { FaPaperPlane, FaSave, FaUndo, FaMagic } from "react-icons/fa";
+import { FaSave, FaUndo, FaMagic } from "react-icons/fa";
 import { generateResume, trackAnalytics, saveResumeToDB } from "../api/ResumeService";
 import { useForm, useFieldArray } from "react-hook-form";
 import Resume from "../Components/Resume";
@@ -9,78 +9,10 @@ import { calculateATSScore } from "../services/atsService";
 import { useDebounce } from "../hooks/useDebounce";
 import FormSection, { RenderFieldArray } from "../Components/ResumeFormSections";
 import GenerationLoader from "../Components/GenerationLoader";
-
-const SECTIONS = [
-  { id: 'identity', label: 'Identity', icon: <FaUser /> },
-  { id: 'socialLinks', label: 'Links', icon: <FaLink /> },
-  { id: 'summary', label: 'Summary', icon: <FaAlignLeft /> },
-  { id: 'skills', label: 'Skills', icon: <FaCode /> },
-  { id: 'experience', label: 'Experience', icon: <FaBriefcase /> },
-  { id: 'education', label: 'Education', icon: <FaGraduationCap /> },
-  { id: 'projects', label: 'Projects', icon: <FaPaperPlane /> },
-  { id: 'certifications', label: 'Certs', icon: <FaCertificate /> },
-  { id: 'achievements', label: 'Awards', icon: <FaTrophy /> },
-  { id: 'positionsOfResponsibility', label: 'Leadership', icon: <FaUsers /> },
-];
-
-/**
- * ScaledPreview component ensures the Resume renders at full A4 dimensions
- * but scales down visually to fit its container, maintaining exact proportions.
- */
-const ScaledPreview = ({ children, containerClassName = "" }) => {
-  const containerRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    const updateScale = () => {
-      if (!containerRef.current || !wrapperRef.current || !contentRef.current) return;
-      
-      const containerWidth = containerRef.current.offsetWidth;
-      // 210mm in pixels at standard 96dpi is ~793.7px
-      const targetWidth = 793.7;
-      const scale = Math.min(1, containerWidth / targetWidth);
-      
-      contentRef.current.style.transform = `scale(${scale})`;
-      
-      const contentHeight = contentRef.current.offsetHeight;
-      wrapperRef.current.style.height = `${contentHeight * scale}px`;
-    };
-
-    const observer = new ResizeObserver(() => {
-      window.requestAnimationFrame(updateScale);
-    });
-
-    if (containerRef.current) observer.observe(containerRef.current);
-    if (contentRef.current) observer.observe(contentRef.current);
-
-    // Initial scale
-    updateScale();
-
-    return () => observer.disconnect();
-  }, [children]);
-
-  return (
-    <div ref={containerRef} className={`w-full flex justify-center ${containerClassName}`}>
-      <div ref={wrapperRef} className="relative overflow-hidden w-full transition-all duration-200">
-        <div 
-          ref={contentRef} 
-          style={{ 
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            margin: '0 auto',
-            width: '210mm',
-            transformOrigin: 'top center'
-          }}
-        >
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
+import { SECTIONS } from "../utils/constants";
+import ScaledPreview from "../Components/Preview/ScaledPreview";
+import PromptInput from "../Components/Editor/PromptInput";
+import SectionNav from "../Components/Editor/SectionNav";
 
 const GenerateResume = () => {
   const [data, setData] = useState({
@@ -267,118 +199,22 @@ const GenerateResume = () => {
       <GenerationLoader isLoading={loading} onCancel={() => setLoading(false)} />
       
       {showPromptInput && (
-        <div className="flex flex-col items-center justify-center py-10 md:py-16 gap-8 animate-fadeIn max-w-2xl mx-auto">
-          <div className="text-center space-y-4">
-            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">Create Your <span className="text-primary">Resume</span></h1>
-          </div>
-
-          <div className="w-full space-y-4">
-            {hasDraft && (
-              <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 animate-fadeIn">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                  <span className="text-sm font-medium text-white">You have an unsaved resume draft.</span>
-                </div>
-                <div className="flex gap-2 w-full md:w-auto">
-                  <button onClick={() => { localStorage.removeItem('resume_draft'); setHasDraft(false); }} className="btn btn-ghost btn-sm text-slate-400 hover:text-white flex-1 md:flex-none">Discard</button>
-                  <button onClick={handleRestoreDraft} className="btn btn-primary btn-sm flex-1 md:flex-none">Restore Draft</button>
-                </div>
-              </div>
-            )}
-
-            <div className="relative bg-base-200 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="textarea w-full h-48 md:h-64 bg-transparent border-none text-sm text-slate-200 focus:ring-0 p-6 leading-relaxed resize-none placeholder:text-slate-600"
-                placeholder={`Describe yourself, paste resume content, or paste AI-generated profile information.\n\nExamples:\n• Final year CSE student skilled in Java and React...\n• Existing resume text...\n• ChatGPT / Gemini / Claude output...`}
-              />
-              
-              <div className="absolute top-4 right-6 flex items-center gap-3">
-                <span className={`text-[10px] font-mono ${description.length < 50 ? 'text-slate-500' : 'text-primary'}`}>
-                  {description.length} characters
-                </span>
-              </div>
-
-              <div className="p-4 bg-white/5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p className="text-[10px] text-slate-500 font-medium md:ml-2">
-                  Describe yourself, paste resume content, or paste AI-generated profile information.
-                </p>
-                <button
-                  onClick={handleGenerate}
-                  disabled={loading || description.length < 30}
-                  className="btn btn-primary w-full md:w-auto px-8 rounded-xl font-black shadow-lg shadow-primary/20"
-                >
-                  {loading ? <span className="loading loading-spinner loading-sm"></span> : "Generate Resume"}
-                </button>
-              </div>
-            </div>
-
-            <div className="p-5 bg-base-200/50 border border-dashed border-white/10 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="space-y-1 text-center md:text-left">
-                <p className="text-xs font-bold text-white">Already have information elsewhere?</p>
-                <p className="text-[10px] text-slate-500">Use ChatGPT, Gemini, or Claude to organize it first.</p>
-              </div>
-              <button 
-                type="button"
-                onClick={() => {
-                  const prompt = `Create a structured professional profile using all information you know about me or that I provide.\n\nThe information I provide may be:\n* a career description\n* existing resume text\n* AI-generated profile information\n* project details\n* messy notes\n* professional summaries\n* mixed information from multiple sources\n\nYour task:\n* Extract useful information\n* Organize information professionally\n* Remove duplicate or unnecessary information\n* Convert work into impact-driven bullet points\n* Group technical skills logically\n* Improve wording while preserving facts\n* Prioritize explicit instructions over raw text\n\nInclude sections when information exists:\n* Personal Information\n* Education\n* Experience\n* Projects\n* Skills\n* Certifications\n* Achievements\n* Positions of Responsibility\n* Professional Links\n\nRequirements:\n* Use concise professional language\n* Remove conversational filler\n* Do not include greetings or explanations\n* Return only structured profile content\n* If information is missing, do not invent details\n\nMy information:`;
-                  navigator.clipboard.writeText(prompt);
-                  toast.success("AI Prompt copied to clipboard");
-                }}
-                className="btn btn-ghost btn-sm text-[10px] font-black uppercase tracking-widest border border-white/5 bg-white/5 hover:bg-white/10 rounded-lg h-9"
-              >
-                Copy AI Prompt
-              </button>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2">
-              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">You can paste:</span>
-              {['Resume Text', 'Career Description', 'AI-generated Profile', 'Old Content'].map((item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-slate-700"></div>
-                  <span className="text-[10px] text-slate-500 font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <PromptInput 
+          hasDraft={hasDraft}
+          setHasDraft={setHasDraft}
+          handleRestoreDraft={handleRestoreDraft}
+          description={description}
+          setDescription={setDescription}
+          handleGenerate={handleGenerate}
+          loading={loading}
+        />
       )}
 
       {showFormUI && (
         <>
-          {/* Navigation Dock - Only visible on very wide screens to prevent overlap */}
-          <div className="hidden 2xl:flex fixed left-[max(1rem,calc(50vw-820px))] top-1/2 -translate-y-1/2 flex-col gap-2 p-2 bg-base-200/50 backdrop-blur-md border border-white/5 rounded-2xl shadow-2xl z-[150] transition-all">
-            {SECTIONS.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all group relative ${activeSection === section.id ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-500 hover:bg-white/5 hover:text-white'}`}
-              >
-                <span className="text-sm">{section.icon}</span>
-                <div className="absolute left-14 px-3 py-1.5 bg-base-300 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-2xl">
-                  {section.label}
-                </div>
-              </button>
-            ))}
-          </div>
+          <SectionNav activeSection={activeSection} onNavClick={scrollToSection} />
 
           <div className="animate-fadeIn">
-            {/* Horizontal Scrollable Nav - Visible on all screens up to 2XL to prevent side-nav overlap */}
-            <div className="2xl:hidden sticky top-[64px] md:top-[72px] z-[80] -mx-4 md:-mx-8 px-4 md:px-8 py-3 bg-base-300/80 backdrop-blur-lg border-b border-white/5 mb-6 overflow-x-auto no-scrollbar flex items-center gap-2">
-              {SECTIONS.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => scrollToSection(section.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all border ${activeSection === section.id ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-transparent text-slate-500'}`}
-                >
-                  <span className="text-xs">{section.icon}</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest">{section.label}</span>
-                </button>
-              ))}
-            </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start relative">
               {/* Editor Panel - Consistent 7/5 split for better preview width */}
               <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
