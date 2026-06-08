@@ -8,6 +8,8 @@ import ResumePDF from "./ResumePDF";
  * Resume Component - Canonical rendering for Web Preview.
  * Matches ResumePDF.jsx exactly in dimensions, spacing, and typography.
  */
+import { formatUrl, getInferredLabel } from "../utils/resumeHelpers";
+
 const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
   const [isClient, setIsClient] = useState(false);
 
@@ -16,21 +18,6 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
   }, []);
 
   if (!data) return null;
-
-  const formatUrl = (url) => {
-    if (!url) return "";
-    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  };
-
-  const getInferredLabel = (url, customLabel) => {
-    if (customLabel && customLabel.trim()) return customLabel;
-    if (!url) return "Link";
-    const lowerUrl = url.toLowerCase();
-    if (lowerUrl.includes('linkedin.com')) return 'LinkedIn';
-    if (lowerUrl.includes('github.com')) return 'GitHub';
-    if (lowerUrl.includes('portfolio') || lowerUrl.includes('personal') || lowerUrl.includes('website')) return 'Portfolio';
-    return 'Link';
-  };
 
   // PDF-to-Web Style Mapping (1pt = 1.333px at 96dpi)
   const styles = {
