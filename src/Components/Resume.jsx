@@ -24,24 +24,24 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
     page: {
       width: "210mm",
       minHeight: "297mm",
-      padding: "0.4in", // Exact match to PDF
+      padding: "0.33in", // Exact match to PDF (24pt)
       backgroundColor: "#fff",
       color: "#000",
       fontFamily: "'Times New Roman', Times, serif",
       fontSize: "10pt",
-      lineHeight: "1.2",
+      lineHeight: "1.15",
     },
-    h1: { fontSize: "22pt", fontWeight: "bold", marginBottom: "10pt", textAlign: "center", textTransform: "uppercase" },
+    h1: { fontSize: "22pt", fontWeight: "bold", marginBottom: "8pt", textAlign: "center", textTransform: "uppercase" },
     contact: { fontSize: "9pt", marginBottom: "4pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8pt" },
     social: { fontSize: "9pt", marginTop: "2pt", marginBottom: "4pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8pt" },
-    section: { marginTop: "10pt", marginBottom: "4pt" },
+    section: { marginTop: "8pt", marginBottom: "4pt" },
     sectionTitle: { fontSize: "10pt", fontWeight: "bold", textTransform: "uppercase", borderBottom: "0.5pt solid #000", marginBottom: "4pt", paddingBottom: "1pt" },
     itemHeader: { display: "flex", justifyContent: "space-between", fontWeight: "bold", marginBottom: "1pt" },
     itemSubHeader: { display: "flex", justifyContent: "space-between", fontStyle: "italic", marginBottom: "2pt", fontSize: "9pt" },
     bulletList: { paddingLeft: "10pt", listStyleType: "none", margin: 0 },
     bulletItem: { display: "flex", marginBottom: "1pt", fontSize: "10pt" },
     bulletIcon: { width: "10pt", flexShrink: 0 },
-    text: { fontSize: "10pt", textAlign: "justify" },
+    text: { fontSize: "10pt", textAlign: "justify", lineHeight: "1.15" },
     skillRow: { display: "flex", marginBottom: "2pt", fontSize: "10pt" },
     skillLabel: { fontWeight: "bold", marginRight: "4pt" }
   };

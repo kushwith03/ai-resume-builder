@@ -2,21 +2,21 @@ import { StyleSheet } from "@react-pdf/renderer";
 
 export const pdfStyles = StyleSheet.create({
   page: {
-    padding: "0.4in",
+    padding: 24, // Reduced from 0.4in to ~0.33in for higher capacity
     fontSize: 10,
     fontFamily: "Times-Roman",
-    lineHeight: 1.2,
+    lineHeight: 1.15,
     color: "#000",
   },
   header: {
-    marginBottom: 10,
+    marginBottom: 8,
     width: "100%",
     textAlign: "center",
   },
   name: {
     fontSize: 22,
     fontFamily: "Times-Bold",
-    marginBottom: 10,
+    marginBottom: 8,
     textTransform: "uppercase",
   },
   contact: {
@@ -44,7 +44,7 @@ export const pdfStyles = StyleSheet.create({
     color: "#666",
   },
   section: {
-    marginTop: 10,
+    marginTop: 8,
     marginBottom: 4,
   },
   sectionTitle: {
@@ -75,7 +75,7 @@ export const pdfStyles = StyleSheet.create({
   },
   text: {
     fontSize: 10,
-    lineHeight: 1.2,
+    lineHeight: 1.15,
     textAlign: "justify",
   },
   bulletRow: {

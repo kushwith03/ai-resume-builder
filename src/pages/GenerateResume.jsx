@@ -195,8 +195,9 @@ const GenerateResume = () => {
   };
 
   return (
-    <div className={`mx-auto p-4 md:p-8 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1440px]' : 'max-w-4xl'}`}>
+    <div className={`mx-auto p-4 md:p-8 min-h-[90vh] pb-24 md:pb-32 transition-all duration-500 ${showFormUI ? 'max-w-[1600px]' : 'max-w-4xl'}`}>
       <GenerationLoader isLoading={loading} onCancel={() => setLoading(false)} />
+
       
       {showPromptInput && (
         <PromptInput 
@@ -216,8 +217,8 @@ const GenerateResume = () => {
 
           <div className="animate-fadeIn">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start relative">
-              {/* Editor Panel - Consistent 7/5 split for better preview width */}
-              <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 space-y-4 md:space-y-6">
+              {/* Editor Panel - 50/50 split on large screens, slightly narrower on XL for massive preview */}
+              <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-6 xl:col-span-5 space-y-4 md:space-y-6">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
                   {atsResult && (
@@ -275,8 +276,8 @@ const GenerateResume = () => {
                 </div>
               </form>
 
-              {/* Live Preview Panel - Wider split (5/12) and reduced internal padding */}
-              <div className="hidden lg:flex lg:col-span-5 sticky top-20 h-[calc(100vh-120px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl transition-all">
+              {/* Live Preview Panel - 50% on LG, massive 58% on XL to maximize visibility */}
+              <div className="hidden lg:flex lg:col-span-6 xl:col-span-7 sticky top-20 h-[calc(100vh-120px)] flex-col bg-base-300/30 rounded-3xl border border-white/5 overflow-hidden shadow-2xl transition-all">
                 <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between backdrop-blur-md">
                   <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Preview</span></div>
                   <div className="flex items-center gap-2">

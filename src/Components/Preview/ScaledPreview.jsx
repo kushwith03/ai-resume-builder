@@ -18,7 +18,11 @@ const ScaledPreview = ({ children, containerClassName = "" }) => {
       const targetWidth = 793.7;
       const scale = Math.min(1, containerWidth / targetWidth);
       
+      const scaledWidth = targetWidth * scale;
+      const offsetX = Math.max(0, (containerWidth - scaledWidth) / 2);
+
       contentRef.current.style.transform = `scale(${scale})`;
+      contentRef.current.style.left = `${offsetX}px`;
       
       const contentHeight = contentRef.current.offsetHeight;
       wrapperRef.current.style.height = `${contentHeight * scale}px`;
@@ -46,10 +50,8 @@ const ScaledPreview = ({ children, containerClassName = "" }) => {
             position: 'absolute',
             top: 0,
             left: 0,
-            right: 0,
-            margin: '0 auto',
             width: '210mm',
-            transformOrigin: 'top center'
+            transformOrigin: 'top left'
           }}
         >
           {children}
