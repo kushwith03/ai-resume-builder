@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { FaPaperPlane, FaSave, FaChartBar, FaUndo, FaMagic, FaUser, FaBriefcase, FaGraduationCap, FaCode, FaCertificate, FaTrophy, FaUsers, FaLink, FaAlignLeft } from "react-icons/fa";
 import { generateResume, trackAnalytics, saveResumeToDB } from "../api/ResumeService";
