@@ -231,26 +231,26 @@ const GenerateResume = () => {
                 </div>
 
                 <FormSection id="identity" title="Identity">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="form-control md:col-span-2">
                       <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
-                      <input {...register("personalInformation.fullName", { required: "Full Name is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.fullName ? 'border-error' : 'border-white/5'}`} placeholder="John Doe" />
+                      <input {...register("personalInformation.fullName", { required: "Full Name is required" })} className={`input input-bordered h-9 bg-base-100 text-xs ${errors.personalInformation?.fullName ? 'border-error' : 'border-white/5'}`} placeholder="John Doe" />
                     </div>
                     <div className="form-control">
                       <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.title ? 'text-error' : 'text-slate-500'}`}>Job Title *</label>
-                      <input {...register("personalInformation.title", { required: "Job Title is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.title ? 'border-error' : 'border-white/5'}`} placeholder="Software Engineer" />
+                      <input {...register("personalInformation.title", { required: "Job Title is required" })} className={`input input-bordered h-9 bg-base-100 text-xs ${errors.personalInformation?.title ? 'border-error' : 'border-white/5'}`} placeholder="Software Engineer" />
                     </div>
                     <div className="form-control">
                       <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.email ? 'text-error' : 'text-slate-500'}`}>Email *</label>
-                      <input {...register("personalInformation.email", { required: "Email is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.email ? 'border-error' : 'border-white/5'}`} placeholder="john@example.com" />
+                      <input {...register("personalInformation.email", { required: "Email is required" })} className={`input input-bordered h-9 bg-base-100 text-xs ${errors.personalInformation?.email ? 'border-error' : 'border-white/5'}`} placeholder="john@example.com" />
                     </div>
                     <div className="form-control">
                       <label className={`label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.location ? 'text-error' : 'text-slate-500'}`}>Location *</label>
-                      <input {...register("personalInformation.location", { required: "Location is required" })} className={`input input-bordered h-10 bg-base-100 text-sm ${errors.personalInformation?.location ? 'border-error' : 'border-white/5'}`} placeholder="New York, NY" />
+                      <input {...register("personalInformation.location", { required: "Location is required" })} className={`input input-bordered h-9 bg-base-100 text-xs ${errors.personalInformation?.location ? 'border-error' : 'border-white/5'}`} placeholder="New York, NY" />
                     </div>
                     <div className="form-control">
                       <label className="label-text mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
-                      <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-10 border-white/5 bg-base-100 text-sm" placeholder="+1 234 567 890" />
+                      <input {...register("personalInformation.phoneNumber")} className="input input-bordered h-9 border-white/5 bg-base-100 text-xs" placeholder="+1 234 567 890" />
                     </div>
                   </div>
                 </FormSection>
@@ -258,7 +258,7 @@ const GenerateResume = () => {
                 <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
 
                 <FormSection id="summary" title="Professional Summary">
-                  <textarea {...register("summary", { required: "Professional Summary is required" })} className={`textarea textarea-bordered w-full h-24 bg-base-100 text-sm leading-relaxed ${errors.summary ? 'border-error' : 'border-white/5'}`} placeholder="Brief overview of your career..." />
+                  <textarea {...register("summary", { required: "Professional Summary is required" })} className={`textarea textarea-bordered w-full h-20 min-h-[80px] py-2 px-3 bg-base-100 text-xs leading-relaxed ${errors.summary ? 'border-error' : 'border-white/5'}`} placeholder="Brief overview of your career..." />
                 </FormSection>
 
                 <RenderFieldArray id="skills" fields={fieldArrays.skills} label="Technical Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
