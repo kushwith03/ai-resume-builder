@@ -9,7 +9,7 @@ exports.generateResumeData = async (userDescription) => {
     throw new Error('Missing Gemini API Key in environment variables');
   }
 
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
   const prompt = `
   You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
