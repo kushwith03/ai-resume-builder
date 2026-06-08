@@ -28,49 +28,9 @@ const SECTIONS = [
  * but scales down visually to fit its container, maintaining exact proportions.
  */
 const ScaledPreview = ({ children, containerClassName = "" }) => {
-  const containerRef = useRef(null);
-  const contentRef = useRef(null);
-  const [scale, setScale] = useState(1);
-  const [contentHeight, setContentHeight] = useState(297 * 3.7795); // default A4 px
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        // Use a safe padding margin (64px) to ensure no horizontal clipping
-        const containerWidth = containerRef.current.offsetWidth;
-        const targetWidth = 210 * 3.7795275591; 
-        const newScale = Math.min(1, (containerWidth - 64) / targetWidth);
-        setScale(newScale);
-        
-        if (contentRef.current) {
-          setContentHeight(contentRef.current.offsetHeight);
-        }
-      }
-    };
-
-    const observer = new ResizeObserver(() => handleResize());
-    if (contentRef.current) observer.observe(contentRef.current);
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      observer.disconnect();
-    };
-  }, []);
-
   return (
-    <div ref={containerRef} className={`w-full flex justify-center items-start overflow-hidden ${containerClassName}`} style={{ height: contentHeight * scale }}>
-      <div ref={contentRef} style={{ 
-        transform: `scale(${scale})`, 
-        transformOrigin: "top center",
-        width: "210mm",
-        minWidth: "210mm",
-        flexShrink: 0,
-        transition: "transform 0.2s ease-out"
-      }}>
-        {children}
-      </div>
+    <div className={`w-full flex justify-center items-start overflow-hidden ${containerClassName}`}>
+      {children}
     </div>
   );
 };
