@@ -205,17 +205,17 @@ const GenerateResume = () => {
                 <FormSection id="identity" title="Identity">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="form-control md:col-span-2">
-                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name *</label>
+                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.fullName ? 'text-error' : 'text-slate-500'}`}>Full Name <span className="text-error">*</span></label>
                       <input {...register("personalInformation.fullName", { required: "Full Name is required" })} className={`input input-bordered h-9 px-3 bg-base-100 text-xs transition-all ${errors.personalInformation?.fullName ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder="e.g. Full Name" />
                       {errors.personalInformation?.fullName && <span className="text-error text-[9px] mt-0.5 ml-1 font-bold">{errors.personalInformation.fullName.message}</span>}
                     </div>
                     <div className="form-control">
-                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.email ? 'text-error' : 'text-slate-500'}`}>Email *</label>
+                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.email ? 'text-error' : 'text-slate-500'}`}>Email <span className="text-error">*</span></label>
                       <input {...register("personalInformation.email", { required: "Email is required" })} className={`input input-bordered h-9 px-3 bg-base-100 text-xs transition-all ${errors.personalInformation?.email ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder="e.g. Email Address" />
                       {errors.personalInformation?.email && <span className="text-error text-[9px] mt-0.5 ml-1 font-bold">{errors.personalInformation.email.message}</span>}
                     </div>
                     <div className="form-control">
-                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.location ? 'text-error' : 'text-slate-500'}`}>Location *</label>
+                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.personalInformation?.location ? 'text-error' : 'text-slate-500'}`}>Location <span className="text-error">*</span></label>
                       <input {...register("personalInformation.location", { required: "Location is required" })} className={`input input-bordered h-9 px-3 bg-base-100 text-xs transition-all ${errors.personalInformation?.location ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder="e.g. City, Country" />
                       {errors.personalInformation?.location && <span className="text-error text-[9px] mt-0.5 ml-1 font-bold">{errors.personalInformation.location.message}</span>}
                     </div>
@@ -229,7 +229,7 @@ const GenerateResume = () => {
                 <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["url"]} register={register} watch={watch} errors={errors} />
                 <FormSection id="summary" title="Summary">
                   <div className="form-control">
-                    <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.summary ? 'text-error' : 'text-slate-500'}`}>Professional Summary *</label>
+                    <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.summary ? 'text-error' : 'text-slate-500'}`}>Professional Summary <span className="text-error">*</span></label>
                     <textarea {...register("summary", { required: "Professional Summary is required" })} className={`textarea textarea-bordered w-full h-20 min-h-[80px] py-2 px-3 bg-base-100 text-xs leading-relaxed transition-all ${errors.summary ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder="Enter professional summary..." />
                     {errors.summary && <span className="text-error text-[9px] mt-0.5 ml-1 font-bold">{errors.summary.message}</span>}
                   </div>

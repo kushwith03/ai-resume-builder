@@ -135,7 +135,10 @@ export const RenderFieldArray = React.memo(({ fields, label, name, keys, registe
                   const error = errors?.[name]?.[index]?.[key];
                   return (
                     <div key={key} className={`form-control ${isFullWidth ? 'md:col-span-2' : ''}`}>
-                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error' : 'text-slate-500'}`}>{labelMap[key] || key}</label>
+                      <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${error ? 'text-error' : 'text-slate-500'}`}>
+                        {labelMap[key]?.replace(' *', '') || key} 
+                        {isRequired && <span className="text-error ml-1">*</span>}
+                      </label>
                       {isTextArea ? (
                         <textarea {...register(`${name}.${index}.${key}`, { required: isRequired ? `${labelMap[key].replace(' *', '')} is required` : false })} className={`textarea textarea-bordered h-20 min-h-[80px] py-2 px-3 bg-base-100 text-xs leading-relaxed transition-all ${error ? 'border-error ring-1 ring-error/20' : 'border-white/5 focus:border-primary/50'}`} placeholder={`Enter details for ${key}...`} />
                       ) : (
