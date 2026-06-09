@@ -271,7 +271,7 @@ const GenerateResume = () => {
             <textarea value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} placeholder="Paste the target Job Description..." className="textarea textarea-bordered w-full h-24 bg-base-100 border-white/10 text-sm" />
           </div>
 
-          <div className="flex justify-start pb-1">
+          <div className="flex justify-end pb-1">
             <button 
               onClick={() => { setShowResumeUI(false); setShowFormUI(true); }} 
               className="btn btn-outline btn-sm border-white/10 text-slate-400 hover:bg-white/5 hover:text-white hover:border-white/20 px-6 rounded-xl font-bold transition-all flex items-center gap-2"
