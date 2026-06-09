@@ -244,7 +244,7 @@ const GenerateResume = () => {
 
               <div className="hidden lg:flex lg:col-span-6 xl:col-span-5 h-full flex-col bg-base-300/30 rounded-t-3xl border-x border-t border-white/5 overflow-hidden shadow-2xl">
                 <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase text-slate-400">Changes are working</span></div>
+                  <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase text-slate-400">Live Preview</span></div>
                   <div className="flex items-center gap-2">
                     <button onClick={resetGenerator} className="btn btn-ghost btn-xs text-slate-400 font-bold uppercase text-[9px]">Reset</button>
                     <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-xs px-4 rounded-md font-black text-[10px] uppercase">Download</button>
