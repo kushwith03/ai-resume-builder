@@ -37,7 +37,7 @@ const PDFHeader = ({ personalInformation, socialLinks }) => {
         <View style={styles.social}>
           {socialLinks.map((link, i) => (
             <View key={i} style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Link src={normalizeUrl(link.url)} style={{ textDecoration: 'none' }}>
+              <Link src={normalizeUrl(link.url)} style={{ color: '#000', textDecoration: 'none' }}>
                 <Text style={styles.contactItem}>
                   {formatUrl(link.url)}
                 </Text>
