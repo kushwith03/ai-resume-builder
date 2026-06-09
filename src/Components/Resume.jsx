@@ -160,7 +160,8 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
             <div key={i} style={styles.bulletItem}>
               <span style={styles.bulletIcon}>•</span>
               <span>
-                <span style={{ fontWeight: "bold" }}>{cert.title}</span>, {cert.issuer} ({cert.date})
+                <span style={{ fontWeight: "bold" }}>{cert.title}</span>, {cert.issuer}
+                {cert.date && String(cert.date).trim() ? ` (${String(cert.date).trim()})` : ""}
               </span>
             </div>
           ))}
@@ -174,7 +175,8 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
             <div key={i} style={styles.bulletItem}>
               <span style={styles.bulletIcon}>•</span>
               <span>
-                <span style={{ fontWeight: "bold" }}>{award.award}</span>, {award.organization} ({award.date})
+                <span style={{ fontWeight: "bold" }}>{award.award}</span>, {award.organization}
+                {award.date && String(award.date).trim() ? ` (${String(award.date).trim()})` : ""}
               </span>
             </div>
           ))}

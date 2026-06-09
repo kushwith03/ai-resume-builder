@@ -123,7 +123,8 @@ const ResumePDF = ({ data }) => {
               <View key={i} style={styles.bulletRow}>
                 <Text style={styles.bullet}>•</Text>
                 <Text style={styles.bulletText}>
-                  <Text style={styles.bold}>{renderText(cert.title)}</Text>, {renderText(cert.issuer)} ({renderText(cert.date)})
+                  <Text style={styles.bold}>{renderText(cert.title)}</Text>, {renderText(cert.issuer)}
+                  {cert.date && String(cert.date).trim() ? ` (${String(cert.date).trim()})` : ""}
                 </Text>
               </View>
             ))}
@@ -137,7 +138,8 @@ const ResumePDF = ({ data }) => {
               <View key={i} style={styles.bulletRow}>
                 <Text style={styles.bullet}>•</Text>
                 <Text style={styles.bulletText}>
-                  <Text style={styles.bold}>{renderText(award.award)}</Text>, {renderText(award.organization)} ({renderText(award.date)})
+                  <Text style={styles.bold}>{renderText(award.award)}</Text>, {renderText(award.organization)}
+                  {award.date && String(award.date).trim() ? ` (${String(award.date).trim()})` : ""}
                 </Text>
               </View>
             ))}
