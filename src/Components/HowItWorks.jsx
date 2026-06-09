@@ -1,68 +1,89 @@
 import React from 'react';
-import { FaMagic, FaEdit, FaChartLine, FaFilePdf, FaChevronRight } from "react-icons/fa";
+import { FaMagic, FaEdit, FaChartLine, FaFilePdf, FaChevronRight, FaRegFileAlt, FaFileContract } from "react-icons/fa";
 
 const HowItWorks = () => {
   return (
-    <div className="py-20 relative z-10">
+    <div className="py-24 relative z-10 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-primary font-black tracking-widest text-[10px] uppercase mb-4 block">How It Works</span>
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Transform your career story in four simple steps.</h2>
-          <p className="text-slate-400 text-lg">From raw notes to an ATS-optimized professional PDF in minutes, not hours.</p>
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <span className="text-primary font-black tracking-widest text-[10px] uppercase mb-4 block">Transformation Pipeline</span>
+          <h2 className="text-3xl md:text-5xl font-black text-white mb-6">From raw notes to professional PDF.</h2>
+          <p className="text-slate-400 text-lg">Our AI-driven workflow handles the complexity so you can focus on your story.</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 relative">
-          {/* Connecting line for desktop with arrows */}
-          <div className="hidden lg:flex absolute top-[45%] left-0 w-full justify-around items-center -z-10 px-12">
-            <div className="flex-1 h-px bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 relative">
-              <FaChevronRight className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-primary/40" />
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative">
+          {/* Start Element: Messy Input */}
+          <div className="flex flex-col items-center gap-3 mb-8 lg:mb-0 animate-pulse">
+            <div className="w-16 h-20 bg-white/5 border-2 border-dashed border-white/10 rounded-lg flex flex-col p-2 gap-1.5 rotate-[-6deg] opacity-40">
+              <div className="h-1 w-full bg-slate-600 rounded-full"></div>
+              <div className="h-1 w-4/5 bg-slate-600 rounded-full"></div>
+              <div className="h-1 w-5/6 bg-slate-600 rounded-full"></div>
+              <div className="mt-auto h-1 w-2/3 bg-slate-700 rounded-full"></div>
             </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 relative">
-              <FaChevronRight className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-primary/40" />
-            </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 relative">
-              <FaChevronRight className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-primary/40" />
-            </div>
-          </div>
-          
-          {/* Step 1 */}
-          <div className="p-8 rounded-3xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300">
-            <div className="absolute -top-4 -left-4 w-12 h-12 bg-base-300 border border-white/10 text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg transform group-hover:scale-110 group-hover:-rotate-3 transition-transform group-hover:bg-primary group-hover:border-primary group-hover:shadow-primary/20 z-20">01</div>
-            <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-6 text-slate-500 group-hover:text-primary transition-colors">
-              <FaEdit className="text-lg" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-3 mt-2">Describe Yourself</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Paste your career notes, old resume content, or a brief profile description.</p>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Messy Input</span>
           </div>
 
-          {/* Step 2 */}
-          <div className="p-8 rounded-3xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300">
-            <div className="absolute -top-4 -left-4 w-12 h-12 bg-base-300 border border-white/10 text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg transform group-hover:scale-110 group-hover:-rotate-3 transition-transform group-hover:bg-primary group-hover:border-primary group-hover:shadow-primary/20 z-20">02</div>
-            <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-6 text-slate-500 group-hover:text-primary transition-colors">
-              <FaMagic className="text-lg" />
+          <div className="hidden lg:block text-primary/20"><FaChevronRight /></div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-1 w-full">
+            {/* Step 1 */}
+            <div className="p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[160px]">
+              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">01</div>
+              <div className="flex items-center gap-3 mb-3">
+                <FaEdit className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="font-bold text-white">Describe</h3>
+              </div>
+              <p className="text-[13px] text-slate-400 leading-relaxed">Paste your raw notes or old resume text.</p>
             </div>
-            <h3 className="text-lg font-bold text-white mb-3 mt-2">AI Generation</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Gemini AI transforms your raw information into structured professional content.</p>
+
+            {/* Step 2 */}
+            <div className="p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[160px]">
+              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">02</div>
+              <div className="flex items-center gap-3 mb-3">
+                <FaMagic className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="font-bold text-white">Generate</h3>
+              </div>
+              <p className="text-[13px] text-slate-400 leading-relaxed">AI structures and polishes the content.</p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[160px]">
+              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-2xl flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">03</div>
+              <div className="flex items-center gap-3 mb-3">
+                <FaChartLine className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="font-bold text-white">Optimize</h3>
+              </div>
+              <p className="text-[13px] text-slate-400 leading-relaxed">Match keywords for ATS scoring.</p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[160px]">
+              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-2xl flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">04</div>
+              <div className="flex items-center gap-3 mb-3">
+                <FaFilePdf className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="font-bold text-white">Export</h3>
+              </div>
+              <p className="text-[13px] text-slate-400 leading-relaxed">Download a professional PDF.</p>
+            </div>
           </div>
 
-          {/* Step 3 */}
-          <div className="p-8 rounded-3xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300">
-            <div className="absolute -top-4 -left-4 w-12 h-12 bg-base-300 border border-white/10 text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg transform group-hover:scale-110 group-hover:-rotate-3 transition-transform group-hover:bg-primary group-hover:border-primary group-hover:shadow-primary/20 z-20">03</div>
-            <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-6 text-slate-500 group-hover:text-primary transition-colors">
-              <FaChartLine className="text-lg" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-3 mt-2">Edit & Optimize</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Refine your sections and match keywords to target a specific job description.</p>
-          </div>
+          <div className="hidden lg:block text-primary/20"><FaChevronRight /></div>
 
-          {/* Step 4 */}
-          <div className="p-8 rounded-3xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300">
-            <div className="absolute -top-4 -left-4 w-12 h-12 bg-base-300 border border-white/10 text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg transform group-hover:scale-110 group-hover:-rotate-3 transition-transform group-hover:bg-primary group-hover:border-primary group-hover:shadow-primary/20 z-20">04</div>
-            <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-6 text-slate-500 group-hover:text-primary transition-colors">
-              <FaFilePdf className="text-lg" />
+          {/* End Element: Polished Output */}
+          <div className="flex flex-col items-center gap-3 mt-8 lg:mt-0 group">
+            <div className="w-16 h-20 bg-white border border-white shadow-[0_0_30px_rgba(255,255,255,0.1)] rounded-lg flex flex-col p-2 gap-1.5 transform group-hover:scale-105 transition-transform">
+              <div className="h-1.5 w-1/2 bg-slate-900 rounded-full mx-auto mb-1"></div>
+              <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+              <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+              <div className="h-1 w-full bg-slate-200 rounded-full"></div>
+              <div className="h-1 w-4/5 bg-slate-200 rounded-full"></div>
+              <div className="mt-auto flex justify-between">
+                <div className="w-3 h-3 rounded-full bg-primary/20"></div>
+                <div className="w-3 h-3 rounded-full bg-primary/20"></div>
+              </div>
             </div>
-            <h3 className="text-lg font-bold text-white mb-3 mt-2">Download PDF</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Export a beautifully formatted, ATS-friendly professional PDF document.</p>
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">Professional PDF</span>
           </div>
         </div>
       </div>
