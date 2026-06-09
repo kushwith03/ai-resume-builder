@@ -20,6 +20,8 @@ const labelMap = {
   graduationYear: "Graduation Year / Date *",
   description: "Description / Bullet Points (one per line) *",
   technologiesUsed: "Tech Stack / Tools",
+  githubUrl: "Repository",
+  liveUrl: "Live Demo",
   label: "Link Label (Optional - e.g. Portfolio)",
   url: "Link URL *",
   issuer: "Issuing Organization",

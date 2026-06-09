@@ -1,8 +1,9 @@
 import React from "react";
-import { Document, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Link } from "@react-pdf/renderer";
 import { pdfStyles as styles } from "./PDF/pdfStyles";
 import PDFHeader from "./PDF/PDFHeader";
 import { renderText } from "./PDF/pdfHelpers";
+import { normalizeUrl } from "../utils/resumeHelpers";
 
 const ResumePDF = ({ data }) => {
   if (!data) return null;
@@ -98,7 +99,22 @@ const ResumePDF = ({ data }) => {
             {projects.map((proj, i) => (
               <View key={i} style={{ marginBottom: 6 }}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.bold}>{renderText(proj?.title)}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={styles.bold}>{renderText(proj?.title)}</Text>
+                    {(proj?.githubUrl || proj?.liveUrl) && (
+                      <Text style={{ fontSize: 9, fontWeight: 'normal' }}>
+                        {' '}| {proj.githubUrl && proj.liveUrl ? (
+                          <>
+                            <Link src={normalizeUrl(proj.githubUrl)} style={{ color: '#000', textDecoration: 'none' }}>GitHub</Link> | <Link src={normalizeUrl(proj.liveUrl)} style={{ color: '#000', textDecoration: 'none' }}>Live Demo</Link>
+                          </>
+                        ) : proj.githubUrl ? (
+                          <Link src={normalizeUrl(proj.githubUrl)} style={{ color: '#000', textDecoration: 'none' }}>GitHub</Link>
+                        ) : (
+                          <Link src={normalizeUrl(proj.liveUrl)} style={{ color: '#000', textDecoration: 'none' }}>Live Demo</Link>
+                        )}
+                      </Text>
+                    )}
+                  </View>
                   <Text style={styles.italic}>{renderText(proj?.technologiesUsed)}</Text>
                 </View>
                 <View>

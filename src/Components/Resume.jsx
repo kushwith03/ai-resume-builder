@@ -3,7 +3,7 @@ import "daisyui";
 import { FaFilePdf } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumePDF from "./ResumePDF";
-import { formatUrl, getInferredLabel } from "../utils/resumeHelpers";
+import { formatUrl, getInferredLabel, normalizeUrl } from "../utils/resumeHelpers";
 
 const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
   const [isClient, setIsClient] = useState(false);
@@ -135,11 +135,26 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
           {data.projects.map((proj, i) => (
             <div key={i} style={{ marginBottom: "6pt" }}>
               <div style={styles.itemHeader}>
-                <span>{proj.title}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "6pt" }}>
+                  <span>{proj.title}</span>
+                  {(proj.githubUrl || proj.liveUrl) && (
+                    <span style={{ fontWeight: "normal", fontSize: "9pt" }}>
+                      | {proj.githubUrl && proj.liveUrl ? (
+                        <>
+                          <a href={normalizeUrl(proj.githubUrl)} target="_blank" rel="noopener noreferrer" style={{ color: "#000", textDecoration: "none" }}>GitHub</a> | <a href={normalizeUrl(proj.liveUrl)} target="_blank" rel="noopener noreferrer" style={{ color: "#000", textDecoration: "none" }}>Live Demo</a>
+                        </>
+                      ) : proj.githubUrl ? (
+                        <a href={normalizeUrl(proj.githubUrl)} target="_blank" rel="noopener noreferrer" style={{ color: "#000", textDecoration: "none" }}>GitHub</a>
+                      ) : (
+                        <a href={normalizeUrl(proj.liveUrl)} target="_blank" rel="noopener noreferrer" style={{ color: "#000", textDecoration: "none" }}>Live Demo</a>
+                      )}
+                    </span>
+                  )}
+                </div>
                 <span style={{ fontWeight: "normal", fontStyle: "italic", fontSize: "9pt" }}>{proj.technologiesUsed}</span>
               </div>
               <ul style={styles.bulletList}>
-                {proj.description.split('\n').map((line, li) => (
+                {(proj.description || "").split('\n').map((line, li) => (
                   line.trim() && (
                     <li key={li} style={styles.bulletItem}>
                       <span style={styles.bulletIcon}>•</span>
