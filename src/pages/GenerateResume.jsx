@@ -166,15 +166,18 @@ const GenerateResume = () => {
       <GenerationLoader isLoading={loading} onCancel={() => setLoading(false)} />
       
       {showPromptInput && (
-        <PromptInput 
-          hasDraft={hasDraft}
-          setHasDraft={setHasDraft}
-          handleRestoreDraft={handleRestoreDraft}
-          description={description}
-          setDescription={setDescription}
-          handleGenerate={handleGenerate}
-          loading={loading}
-        />
+        <>
+          <PromptInput 
+            hasDraft={hasDraft}
+            setHasDraft={setHasDraft}
+            handleRestoreDraft={handleRestoreDraft}
+            description={description}
+            setDescription={setDescription}
+            handleGenerate={handleGenerate}
+            loading={loading}
+          />
+          <HowItWorks />
+        </>
       )}
 
       {showFormUI && (
