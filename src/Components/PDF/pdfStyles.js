@@ -2,10 +2,10 @@ import { StyleSheet } from "@react-pdf/renderer";
 
 export const pdfStyles = StyleSheet.create({
   page: {
-    paddingTop: 18,
-    paddingBottom: 18,
-    paddingLeft: 24,
-    paddingRight: 24,
+    paddingTop: 30,
+    paddingBottom: 30,
+    paddingLeft: 36,
+    paddingRight: 36,
     fontSize: 10,
     fontFamily: "Times-Roman",
     lineHeight: 1.15,
@@ -17,10 +17,10 @@ export const pdfStyles = StyleSheet.create({
     textAlign: "center",
   },
   name: {
-    fontSize: 22,
+    fontSize: 17,
     fontFamily: "Times-Bold",
-    marginBottom: 14,
-    textTransform: "uppercase",
+    marginBottom: 3,
+    textTransform: "none",
   },
   contact: {
     flexDirection: "row",
@@ -28,7 +28,7 @@ export const pdfStyles = StyleSheet.create({
     alignItems: "center",
     flexWrap: "wrap",
     width: "100%",
-    fontSize: 9,
+    fontSize: 10,
     marginBottom: 2,
   },
   social: {
@@ -37,7 +37,7 @@ export const pdfStyles = StyleSheet.create({
     alignItems: "center",
     flexWrap: "wrap",
     width: "100%",
-    fontSize: 9,
+    fontSize: 10,
     marginTop: 0,
   },
   contactItem: {
@@ -47,28 +47,29 @@ export const pdfStyles = StyleSheet.create({
     color: "#000",
   },
   section: {
-    marginTop: 8,
-    marginBottom: 4,
+    marginTop: 7,
+    marginBottom: 0,
   },
   sectionTitle: {
     fontSize: 10,
     fontFamily: "Times-Bold",
     borderBottomWidth: 0.5,
     borderBottomColor: "#000",
-    marginBottom: 4,
-    paddingBottom: 1,
+    marginBottom: 3,
+    paddingBottom: 0,
     textTransform: "uppercase",
   },
   itemHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 1,
+    marginBottom: 0,
   },
   itemSubHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     fontFamily: "Times-Italic",
     marginBottom: 2,
+    fontSize: 10,
   },
   bold: {
     fontFamily: "Times-Bold",
@@ -84,7 +85,8 @@ export const pdfStyles = StyleSheet.create({
   bulletRow: {
     flexDirection: "row",
     marginBottom: 1,
-    paddingLeft: 10,
+    paddingLeft: 14,
+    marginTop: 2,
   },
   bullet: {
     width: 10,
@@ -97,6 +99,7 @@ export const pdfStyles = StyleSheet.create({
   skillRow: {
     flexDirection: "row",
     marginBottom: 2,
+    fontSize: 10,
   },
   skillLabel: {
     fontFamily: "Times-Bold",
