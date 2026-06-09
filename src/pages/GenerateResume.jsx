@@ -188,7 +188,7 @@ const GenerateResume = () => {
               <form 
                 id="editor-panel"
                 onSubmit={handleSubmit(onSubmit)} 
-                className="lg:col-span-6 xl:col-span-7 h-full overflow-y-auto custom-scrollbar pr-2 space-y-4 pt-4 pb-32"
+                className="lg:col-span-6 xl:col-span-7 h-full overflow-y-scroll overflow-x-hidden custom-scrollbar pr-2 space-y-4 pt-4 pb-32"
               >
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Editor</h2>
@@ -250,13 +250,13 @@ const GenerateResume = () => {
 
               <div className="hidden lg:flex lg:col-span-6 xl:col-span-5 h-full flex-col bg-base-300/30 rounded-t-3xl border-x border-t border-white/5 overflow-hidden shadow-2xl">
                 <div className="w-full p-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase text-slate-400">changes visible</span></div>
+                  <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-success animate-pulse"></div><span className="text-[10px] font-black uppercase text-slate-400">Live Preview</span></div>
                   <div className="flex items-center gap-2">
                     <button onClick={resetGenerator} className="btn btn-ghost btn-xs text-slate-400 font-bold uppercase text-[9px]">Reset</button>
                     <button onClick={handleSubmit(onSubmit)} className="btn btn-primary btn-xs px-4 rounded-md font-black text-[10px] uppercase">Download</button>
                   </div>
                 </div>
-                <div className="flex-1 overflow-y-auto bg-slate-900/50 flex justify-center items-start pt-10 custom-scrollbar">      
+                <div className="flex-1 overflow-y-scroll overflow-x-hidden bg-slate-900/50 flex justify-center items-start pt-10 custom-scrollbar">      
                   <ScaledPreview>
                     <div className="bg-white shadow-2xl origin-top h-fit mb-10"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
                   </ScaledPreview>
@@ -343,7 +343,7 @@ const GenerateResume = () => {
                   <button onClick={() => setShowMobilePreview(false)} className="btn btn-ghost btn-circle btn-sm text-white"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
                 </div>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 bg-slate-900/50">
+              <div className="flex-1 overflow-y-scroll overflow-x-hidden p-4 bg-slate-900/50">
                 <ScaledPreview>
                   <div className="bg-white shadow-2xl origin-top"><Resume data={debouncedFormData} hideDownload={true} previewMode={true} /></div>
                 </ScaledPreview>
