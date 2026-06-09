@@ -24,7 +24,7 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
       fontSize: "10pt",
       lineHeight: "1.15",
     },
-    h1: { fontSize: "17pt", fontWeight: "bold", marginBottom: "3pt", textAlign: "center", textTransform: "none" },
+    h1: { fontSize: "17pt", fontWeight: "bold", marginBottom: "5pt", textAlign: "center", textTransform: "none" },
     contact: { fontSize: "10pt", marginBottom: "2pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "4pt" },
     social: { fontSize: "10pt", marginTop: "0pt", marginBottom: "0pt", textAlign: "center", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "4pt" },
     section: { marginTop: "7pt", marginBottom: "0pt" },

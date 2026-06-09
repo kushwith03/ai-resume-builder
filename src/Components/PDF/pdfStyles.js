@@ -19,7 +19,7 @@ export const pdfStyles = StyleSheet.create({
   name: {
     fontSize: 17,
     fontFamily: "Times-Bold",
-    marginBottom: 3,
+    marginBottom: 5,
     textTransform: "none",
   },
   contact: {
