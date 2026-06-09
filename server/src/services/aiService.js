@@ -2,35 +2,44 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+const PRIMARY_MODEL = "gemini-3.5-flash";
+const FALLBACK_MODEL = "gemini-3.1-flash-lite";
+
 /**
- * Utility for exponential backoff retries
+ * Checks if an error is a temporary service failure that should be retried.
  */
-const retryWithBackoff = async (fn, maxRetries = 3, baseDelay = 2000) => {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      const isServiceUnavailable = error.status === 503 || error.message?.includes('503') || error.message?.includes('Service Unavailable');
-      
-      if (isServiceUnavailable && attempt < maxRetries) {
-        const delay = baseDelay * Math.pow(2, attempt - 1);
-        console.warn(`[AI-RETRY] Attempt ${attempt} failed with 503. Retrying in ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        continue;
-      }
-      throw error;
-    }
+const isRetryableError = (error) => {
+  const status = error.status || (error.response ? error.response.status : null);
+  // Retry on 429 (Rate Limit) and 5xx (Server Errors)
+  return status === 429 || (status >= 500 && status <= 504);
+};
+
+/**
+ * Core function to call Gemini API and handle raw output
+ */
+const callGemini = async (modelName, prompt) => {
+  console.log(`[AI-LOG] Using model: ${modelName}`);
+  const model = genAI.getGenerativeModel({ model: modelName });
+  
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  
+  const startIdx = text.indexOf('{');
+  const endIdx = text.lastIndexOf('}');
+  
+  if (startIdx === -1 || endIdx === -1) {
+    throw new Error("AI response did not contain a valid JSON object");
   }
+
+  return JSON.parse(text.substring(startIdx, endIdx + 1));
 };
 
 exports.generateResumeData = async (userDescription) => {
-  console.log("[AI-DEBUG] Starting generation with gemini-3.5-flash");
-  
   if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_google_gemini_api_key_here') {
-    throw new Error('Missing Gemini API Key in environment variables');
+    console.error("[AI-ERROR] Missing Gemini API Key");
+    throw new Error("AI service configuration error.");
   }
-
-  const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
   const prompt = `
   You are an expert resume writer. Generate a professional resume in JSON format based on the following user description: "${userDescription}".
@@ -62,60 +71,71 @@ exports.generateResumeData = async (userDescription) => {
   5. Only return raw JSON. No markdown formatting.
   `;
 
-  try {
-    // Execute content generation with exponential backoff
-    const result = await retryWithBackoff(() => model.generateContent(prompt));
-    
-    const response = await result.response;
-    const text = response.text();
-    console.log("[AI-DEBUG] Raw model output received");
+  let lastError = null;
 
-    const startIdx = text.indexOf('{');
-    const endIdx = text.lastIndexOf('}');
-    
-    if (startIdx === -1 || endIdx === -1) {
-      console.error("[AI-DEBUG] Parse failure: No JSON object found in response");
-      throw new Error("AI response did not contain a valid JSON object");
+  // 1. Primary Model Attempts (Max 3)
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      if (attempt > 1) {
+        const delay = attempt === 2 ? 2000 : 4000;
+        console.log(`[AI-LOG] Retry attempt ${attempt} for ${PRIMARY_MODEL} after ${delay}ms`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+
+      const data = await callGemini(PRIMARY_MODEL, prompt);
+      return processResumeData(data);
+
+    } catch (error) {
+      lastError = error;
+      console.error(`[AI-LOG] Attempt ${attempt} failed for ${PRIMARY_MODEL}: ${error.message}`);
+      
+      if (!isRetryableError(error)) {
+        break; // Stop retrying if error is not temporary (e.g., auth, safety)
+      }
     }
-
-    const jsonString = text.substring(startIdx, endIdx + 1);
-    console.log("[AI-DEBUG] Attempting to parse JSON");
-    const data = JSON.parse(jsonString);
-    console.log("[AI-DEBUG] Parse successful");
-
-    const required = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
-    const missing = required.filter(s => !data[s]);
-    if (missing.length > 0) {
-      throw new Error(`AI generated data is missing required sections: ${missing.join(', ')}`);
-    }
-
-    const socialLinks = Array.isArray(data.socialLinks) ? data.socialLinks : [];
-    const info = data.personalInformation || {};
-    if (info.linkedin && !socialLinks.find(l => l.label === 'LinkedIn')) socialLinks.push({ label: 'LinkedIn', url: info.linkedin });
-    if (info.github && !socialLinks.find(l => l.label === 'GitHub')) socialLinks.push({ label: 'GitHub', url: info.github });
-    if (info.portfolio && !socialLinks.find(l => l.label === 'Portfolio')) socialLinks.push({ label: 'Portfolio', url: info.portfolio });
-    data.socialLinks = socialLinks;
-
-    const optional = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility'];
-    optional.forEach(s => { if (!data[s]) data[s] = []; });
-
-    console.log("[AI-DEBUG] Returning processed data");
-    return data;
-  } catch (error) {
-    console.error("[AI-DEBUG] Exception caught:", error.message);
-    
-    if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
-      const quotaError = new Error('AI quota reached. Please try again in a minute.');
-      quotaError.status = 429;
-      throw quotaError;
-    }
-
-    if (error.message?.includes('API key not valid')) {
-      const authError = new Error('Invalid Gemini API Key configuration.');
-      authError.status = 401;
-      throw authError;
-    }
-
-    throw new Error(`AI Service Error: ${error.message}`);
   }
+
+  // 2. Fallback Model Attempt (If primary failed with retryable errors)
+  if (lastError && isRetryableError(lastError)) {
+    console.warn(`[AI-LOG] Fallback activation: Switching to ${FALLBACK_MODEL}`);
+    try {
+      const data = await callGemini(FALLBACK_MODEL, prompt);
+      return processResumeData(data);
+    } catch (fallbackError) {
+      console.error(`[AI-LOG] Final failure for ${FALLBACK_MODEL}: ${fallbackError.message}`);
+      lastError = fallbackError;
+    }
+  }
+
+  // 3. Final Error Handling
+  console.error(`[AI-ERROR] Final failure reason: ${lastError.message}`);
+  const finalError = new Error("AI service is currently busy. Please try again in a few moments.");
+  finalError.status = lastError.status || 503;
+  throw finalError;
 };
+
+/**
+ * Utility to post-process and validate AI generated data
+ */
+function processResumeData(data) {
+  const required = ['personalInformation', 'summary', 'skills', 'experience', 'education'];
+  const missing = required.filter(s => !data[s]);
+  if (missing.length > 0) {
+    throw new Error(`AI generated data is missing required sections: ${missing.join(', ')}`);
+  }
+
+  const socialLinks = Array.isArray(data.socialLinks) ? data.socialLinks : [];
+  const info = data.personalInformation || {};
+  
+  // Backwards compatibility for legacy model output formats
+  if (info.linkedin && !socialLinks.find(l => l.label === 'LinkedIn')) socialLinks.push({ label: 'LinkedIn', url: info.linkedin });
+  if (info.github && !socialLinks.find(l => l.label === 'GitHub')) socialLinks.push({ label: 'GitHub', url: info.github });
+  if (info.portfolio && !socialLinks.find(l => l.label === 'Portfolio')) socialLinks.push({ label: 'Portfolio', url: info.portfolio });
+  
+  data.socialLinks = socialLinks;
+
+  const optional = ['projects', 'certifications', 'achievements', 'positionsOfResponsibility'];
+  optional.forEach(s => { if (!data[s]) data[s] = []; });
+
+  return data;
+}
