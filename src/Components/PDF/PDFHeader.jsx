@@ -38,7 +38,6 @@ const PDFHeader = ({ personalInformation, socialLinks }) => {
           {socialLinks.map((link, i) => (
             <View key={i} style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.contactItem}>
-                <Text style={styles.bold}>{getInferredLabel(link.url, link.label)}: </Text>
                 {formatUrl(link.url)}
               </Text>
               {i < socialLinks.length - 1 && <Text style={styles.contactSeparator}>|</Text>}

@@ -46,19 +46,18 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
         
         <div style={styles.contact}>
           {data.personalInformation?.phoneNumber && <span>{data.personalInformation.phoneNumber}</span>}
-          {data.personalInformation?.phoneNumber && (data.personalInformation?.email || data.personalInformation?.location) && <span style={{ color: "#666" }}>|</span>}
-          {data.personalInformation?.email && <span style={{ fontWeight: "bold" }}>{data.personalInformation.email}</span>}
-          {data.personalInformation?.email && data.personalInformation?.location && <span style={{ color: "#666" }}>|</span>}
+          {data.personalInformation?.phoneNumber && (data.personalInformation?.email || data.personalInformation?.location) && <span style={{ color: "#000" }}>|</span>}
+          {data.personalInformation?.email && <span>{data.personalInformation.email}</span>}
+          {data.personalInformation?.email && data.personalInformation?.location && <span style={{ color: "#000" }}>|</span>}
           {data.personalInformation?.location && <span>{data.personalInformation.location}</span>}
         </div>
 
         {data.socialLinks?.length > 0 && (
           <div style={styles.social}>
             {data.socialLinks.map((link, i) => (
-              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "4pt" }}>
-                <span style={{ fontWeight: "bold" }}>{getInferredLabel(link.url, link.label)}:</span>
+              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "8pt" }}>
                 <span>{formatUrl(link.url)}</span>
-                {i < data.socialLinks.length - 1 && <span style={{ color: "#666", marginLeft: "4pt" }}>|</span>}
+                {i < data.socialLinks.length - 1 && <span style={{ color: "#000" }}>|</span>}
               </span>
             ))}
           </div>

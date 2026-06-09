@@ -44,7 +44,7 @@ export const pdfStyles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   contactSeparator: {
-    color: "#666",
+    color: "#000",
   },
   section: {
     marginTop: 8,
