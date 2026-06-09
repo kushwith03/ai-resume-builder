@@ -19,6 +19,7 @@ const labelMap = {
   university: "Institution / University *",
   graduationYear: "Graduation Year / Date *",
   academicScore: "Academic Score (e.g. CGPA, GPA, %)",
+  title: "Title / Name *",
   description: "Description / Bullet Points (one per line) *",
   technologiesUsed: "Tech Stack / Tools",
   githubUrl: "Repository",
