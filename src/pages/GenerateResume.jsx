@@ -230,7 +230,7 @@ const GenerateResume = () => {
                 </FormSection>
                 <RenderFieldArray id="skills" fields={fieldArrays.skills} label="Skills" name="skills" keys={["category", "skills"]} register={register} watch={watch} errors={errors} />
                 <RenderFieldArray id="experience" fields={fieldArrays.experience} label="Experience" name="experience" keys={["jobTitle", "company", "duration", "responsibility"]} register={register} watch={watch} errors={errors} />      
-                <RenderFieldArray id="education" fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear"]} register={register} watch={watch} errors={errors} />        
+                <RenderFieldArray id="education" fields={fieldArrays.education} label="Education" name="education" keys={["degree", "university", "location", "graduationYear", "academicScore"]} register={register} watch={watch} errors={errors} />        
                 <RenderFieldArray id="projects" fields={fieldArrays.projects} label="Projects" name="projects" keys={["title", "description", "technologiesUsed", "githubUrl", "liveUrl"]} register={register} watch={watch} errors={errors} />
                 <RenderFieldArray id="certifications" fields={fieldArrays.certifications} label="Certs" name="certifications" keys={["title", "issuer", "date"]} register={register} watch={watch} errors={errors} />
                 <RenderFieldArray id="achievements" fields={fieldArrays.achievements} label="Awards" name="achievements" keys={["award", "organization", "date"]} register={register} watch={watch} errors={errors} />

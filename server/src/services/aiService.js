@@ -56,7 +56,7 @@ exports.generateResumeData = async (userDescription) => {
     "summary": "string (professional summary)",
     "skills": [{"category": "string (e.g. Programming Languages)", "skills": "string (comma separated list)"}],
     "experience": [{"jobTitle": "string", "company": "string", "duration": "string", "responsibility": "string (multiple lines if needed)"}],
-    "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string"}],
+    "education": [{"degree": "string", "university": "string", "location": "string", "graduationYear": "string", "academicScore": "string (optional, e.g. CGPA, GPA, Percentage)"}],
     "projects": [{"title": "string", "description": "string", "technologiesUsed": "string", "githubUrl": "string (optional URL)", "liveUrl": "string (optional URL)"}],
     "certifications": [{"title": "string", "issuer": "string", "date": "string"}],
     "achievements": [{"award": "string", "organization": "string", "date": "string"}],

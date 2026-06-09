@@ -88,6 +88,9 @@ const ResumePDF = ({ data }) => {
                   <Text>{renderText(edu?.degree)}</Text>
                   <Text>{renderText(edu?.location)}</Text>
                 </View>
+                {edu?.academicScore && String(edu.academicScore).trim() && (
+                  <Text style={{ fontSize: 10, marginBottom: 2 }}>{String(edu.academicScore).trim()}</Text>
+                )}
               </View>
             ))}
           </View>

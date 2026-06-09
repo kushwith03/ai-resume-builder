@@ -124,6 +124,9 @@ const Resume = memo(({ data, hideDownload = false, previewMode = false }) => {
                 <span>{edu.degree}</span>
                 <span>{edu.location}</span>
               </div>
+              {edu.academicScore && String(edu.academicScore).trim() && (
+                <div style={{ fontSize: "10pt", marginBottom: "2pt" }}>{String(edu.academicScore).trim()}</div>
+              )}
             </div>
           ))}
         </section>
