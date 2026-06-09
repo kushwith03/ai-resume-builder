@@ -226,7 +226,7 @@ const GenerateResume = () => {
                   </div>
                 </FormSection>
 
-                <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["label", "url"]} register={register} watch={watch} errors={errors} />
+                <RenderFieldArray id="socialLinks" fields={fieldArrays.socialLinks} label="Professional Links" name="socialLinks" keys={["url"]} register={register} watch={watch} errors={errors} />
                 <FormSection id="summary" title="Summary">
                   <div className="form-control">
                     <label className={`label-text mb-1 text-[9px] font-bold uppercase tracking-widest ml-1 ${errors.summary ? 'text-error' : 'text-slate-500'}`}>Professional Summary *</label>
