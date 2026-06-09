@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text } from "@react-pdf/renderer";
+import { View, Text, Link } from "@react-pdf/renderer";
 import { pdfStyles as styles } from "./pdfStyles";
-import { formatUrl, getInferredLabel } from "../../utils/resumeHelpers";
+import { formatUrl, getInferredLabel, normalizeUrl } from "../../utils/resumeHelpers";
 
 const PDFHeader = ({ personalInformation, socialLinks }) => {
   const renderText = (text, fallback = "") => {
@@ -37,9 +37,11 @@ const PDFHeader = ({ personalInformation, socialLinks }) => {
         <View style={styles.social}>
           {socialLinks.map((link, i) => (
             <View key={i} style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.contactItem}>
-                {formatUrl(link.url)}
-              </Text>
+              <Link src={normalizeUrl(link.url)} style={{ textDecoration: 'none' }}>
+                <Text style={styles.contactItem}>
+                  {formatUrl(link.url)}
+                </Text>
+              </Link>
               {i < socialLinks.length - 1 && <Text style={styles.contactSeparator}>|</Text>}
             </View>
           ))}
