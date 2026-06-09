@@ -15,6 +15,7 @@ import { SECTIONS } from "../utils/constants";
 import ScaledPreview from "../Components/Preview/ScaledPreview";
 import PromptInput from "../Components/Editor/PromptInput";
 import SectionNav from "../Components/Editor/SectionNav";
+import HowItWorks from "../Components/HowItWorks";
 
 const GenerateResume = () => {
   const [data, setData] = useState({
@@ -347,3 +348,4 @@ const GenerateResume = () => {
 };
 
 export default GenerateResume;
+GenerateResume;
