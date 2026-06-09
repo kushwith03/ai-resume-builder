@@ -3,93 +3,60 @@ import { FaMagic, FaEdit, FaChartLine, FaFilePdf, FaChevronRight } from "react-i
 
 const HowItWorks = () => {
   return (
-    <div className="py-24 relative z-10 overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <span className="text-primary font-black tracking-widest text-[10px] uppercase mb-4 block">Transformation Pipeline</span>
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-6">From raw notes to professional PDF.</h2>
-          <p className="text-slate-400 text-lg">Our AI-driven workflow handles the complexity so you can focus on your story.</p>
+    <div className="py-12 relative z-10 overflow-hidden">
+      <div className="max-w-[1400px] mx-auto px-6">
+        <div className="text-center mb-10">
+          <span className="text-primary font-black tracking-widest text-[10px] uppercase block">How It Works</span>
         </div>
         
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 relative">
-          {/* Start Element: Messy Input */}
-          <div className="flex flex-col items-center gap-4 shrink-0 mb-8 lg:mb-0">
-            <div className="w-20 h-24 bg-white/5 border-2 border-dashed border-white/10 rounded-lg flex flex-col p-2.5 gap-2 rotate-[-6deg] opacity-40 animate-pulse">
-              <div className="h-1 w-full bg-slate-600 rounded-full"></div>
-              <div className="h-1 w-4/5 bg-slate-600 rounded-full"></div>
-              <div className="h-1 w-5/6 bg-slate-600 rounded-full"></div>
-              <div className="mt-auto h-1 w-2/3 bg-slate-700 rounded-full"></div>
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Messy Input</span>
-          </div>
-
-          <div className="hidden lg:block text-primary/20 shrink-0 mx-2"><FaChevronRight className="text-xl" /></div>
-
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-4 relative">
           {/* Steps Pipeline */}
-          <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap items-center justify-center gap-6 lg:gap-8 w-full lg:w-auto">
+          <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap items-center justify-center gap-4 lg:gap-4 w-full">
             {/* Step 1 */}
-            <div className="w-full sm:w-[260px] p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[130px] shrink-0">
-              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">01</div>
-              <div className="flex items-center gap-3 mb-2">
-                <FaEdit className="text-slate-500 group-hover:text-primary transition-colors text-lg" />
-                <h3 className="text-lg font-bold text-white whitespace-nowrap">Describe</h3>
+            <div className="w-full sm:w-1/2 lg:flex-1 p-5 rounded-xl bg-base-100 border border-white/5 relative group hover:border-primary/20 transition-all duration-300 flex flex-col items-start min-h-[110px]">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-6 h-6 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-[10px] group-hover:bg-primary transition-colors shrink-0">01</div>
+                <FaEdit className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="text-sm font-bold text-white whitespace-nowrap">Describe</h3>
               </div>
-              <p className="text-sm text-slate-400 leading-relaxed">Paste your raw notes or old resume text.</p>
+              <p className="text-[12px] text-slate-500 leading-snug">Paste your raw notes or old resume text.</p>
             </div>
 
-            <div className="hidden lg:block text-primary/10 shrink-0"><FaChevronRight /></div>
+            <div className="hidden lg:block text-primary/10 shrink-0 mx-1"><FaChevronRight className="text-xs" /></div>
 
             {/* Step 2 */}
-            <div className="w-full sm:w-[260px] p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[130px] shrink-0">
-              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">02</div>
-              <div className="flex items-center gap-3 mb-2">
-                <FaMagic className="text-slate-500 group-hover:text-primary transition-colors text-lg" />
-                <h3 className="text-lg font-bold text-white whitespace-nowrap">Generate</h3>
+            <div className="w-full sm:w-1/2 lg:flex-1 p-5 rounded-xl bg-base-100 border border-white/5 relative group hover:border-primary/20 transition-all duration-300 flex flex-col items-start min-h-[110px]">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-6 h-6 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-[10px] group-hover:bg-primary transition-colors shrink-0">02</div>
+                <FaMagic className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="text-sm font-bold text-white whitespace-nowrap">Generate</h3>
               </div>
-              <p className="text-sm text-slate-400 leading-relaxed">AI structures and polishes the content.</p>
+              <p className="text-[12px] text-slate-500 leading-snug">AI structures and polishes the content.</p>
             </div>
 
-            <div className="hidden lg:block text-primary/10 shrink-0"><FaChevronRight /></div>
+            <div className="hidden lg:block text-primary/10 shrink-0 mx-1"><FaChevronRight className="text-xs" /></div>
 
             {/* Step 3 */}
-            <div className="w-full sm:w-[260px] p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[130px] shrink-0">
-              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">03</div>
-              <div className="flex items-center gap-3 mb-2">
-                <FaChartLine className="text-slate-500 group-hover:text-primary transition-colors text-lg" />
-                <h3 className="text-lg font-bold text-white whitespace-nowrap">Optimize</h3>
+            <div className="w-full sm:w-1/2 lg:flex-1 p-5 rounded-xl bg-base-100 border border-white/5 relative group hover:border-primary/20 transition-all duration-300 flex flex-col items-start min-h-[110px]">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-6 h-6 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-[10px] group-hover:bg-primary transition-colors shrink-0">03</div>
+                <FaChartLine className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="text-sm font-bold text-white whitespace-nowrap">Optimize</h3>
               </div>
-              <p className="text-sm text-slate-400 leading-relaxed">Match keywords for ATS scoring.</p>
+              <p className="text-[12px] text-slate-500 leading-snug">Match keywords for ATS scoring.</p>
             </div>
 
-            <div className="hidden lg:block text-primary/10 shrink-0"><FaChevronRight /></div>
+            <div className="hidden lg:block text-primary/10 shrink-0 mx-1"><FaChevronRight className="text-xs" /></div>
 
             {/* Step 4 */}
-            <div className="w-full sm:w-[260px] p-6 rounded-2xl bg-base-100 border border-white/5 relative group hover:border-primary/30 transition-all duration-300 flex flex-col items-start min-h-[130px] shrink-0">
-              <div className="w-8 h-8 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-xs shadow-lg mb-4 group-hover:bg-primary transition-colors">04</div>
-              <div className="flex items-center gap-3 mb-2">
-                <FaFilePdf className="text-slate-500 group-hover:text-primary transition-colors text-lg" />
-                <h3 className="text-lg font-bold text-white whitespace-nowrap">Export</h3>
+            <div className="w-full sm:w-1/2 lg:flex-1 p-5 rounded-xl bg-base-100 border border-white/5 relative group hover:border-primary/20 transition-all duration-300 flex flex-col items-start min-h-[110px]">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-6 h-6 bg-base-300 border border-white/10 text-white rounded-lg flex items-center justify-center font-black text-[10px] group-hover:bg-primary transition-colors shrink-0">04</div>
+                <FaFilePdf className="text-slate-500 group-hover:text-primary transition-colors" />
+                <h3 className="text-sm font-bold text-white whitespace-nowrap">Download</h3>
               </div>
-              <p className="text-sm text-slate-400 leading-relaxed">Download a professional PDF.</p>
+              <p className="text-[12px] text-slate-500 leading-snug">Export a professional PDF document.</p>
             </div>
-          </div>
-
-          <div className="hidden lg:block text-primary/20 shrink-0 mx-2"><FaChevronRight className="text-xl" /></div>
-
-          {/* End Element: Polished Output */}
-          <div className="flex flex-col items-center gap-4 shrink-0 mt-8 lg:mt-0">
-            <div className="w-20 h-24 bg-white border border-white shadow-[0_0_40px_rgba(255,255,255,0.15)] rounded-lg flex flex-col p-2.5 gap-2 transform hover:scale-110 transition-transform group cursor-default">
-              <div className="h-2 w-1/2 bg-slate-900 rounded-full mx-auto mb-1"></div>
-              <div className="h-1 w-full bg-slate-200 rounded-full"></div>
-              <div className="h-1 w-full bg-slate-200 rounded-full"></div>
-              <div className="h-1 w-full bg-slate-200 rounded-full"></div>
-              <div className="h-1 w-4/5 bg-slate-200 rounded-full"></div>
-              <div className="mt-auto flex justify-between">
-                <div className="w-4 h-4 rounded-full bg-primary/20 group-hover:bg-primary/40 transition-colors"></div>
-                <div className="w-4 h-4 rounded-full bg-primary/20 group-hover:bg-primary/40 transition-colors"></div>
-              </div>
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">Professional PDF</span>
           </div>
         </div>
       </div>
